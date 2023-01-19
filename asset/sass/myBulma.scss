@@ -1,0 +1,60 @@
+@charset "utf-8";
+
+// Import fonts
+// @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+@font-face {
+    font-family: FakePearl-ExtraLight;
+    src: url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-ExtraLight.woff2) format("woff2")
+    , url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-ExtraLight.woff) format("woff");
+  }
+
+// Set your brand colors (initial variables)
+$blue: #04b5fb;
+// $turquoise: hsl(171, 100%, 41%);
+$secondary-orange: #dd5b0b;
+$black:        hsl(197, 47%, 4%);
+$black-bis:    hsl(197, 47%, 7%);
+$black-ter:    hsl(197, 47%, 14%);
+
+$grey-darker:  hsl(197, 47%, 21%);
+$grey-dark:    hsl(197, 47%, 29%);
+$grey:         hsl(197, 47%, 48%);
+$grey-light:   hsl(197, 47%, 71%);
+$grey-lighter: hsl(197, 47%, 86%);
+$grey-lightest: hsl(197, 47%, 93%);
+
+$white-ter:    hsl(197, 47%, 96%);
+$white-bis:    hsl(197, 47%, 98%);
+// $pink: #FA7C91;
+// $brown: #757763;
+// $beige-light: #D0D1CD;
+// $beige-lighter: #EFF0EB;
+
+// Update Bulma's global variables (derived variables)
+$family-sans-serif: FakePearl-ExtraLight;
+// $grey-dark: $brown;
+// $grey-light: $beige-light;
+$primary: $blue;
+$link: $secondary-orange;
+// $widescreen-enabled: false;
+// $fullhd-enabled: false;
+
+// Update some of Bulma's component variables
+// $body-background-color: $beige-lighter;
+// $control-border-width: 2px;
+// $input-border-color: transparent;
+// $input-shadow: none;
+
+// Import only what you need from Bulma
+@import "../vendors/bulma-0.9.4/bulma.sass";
+// @import "../vendors/bulma-0.9.4/sass/utilities/_all.sass";
+// @import "../vendors/bulma-0.9.4/sass/base/_all.sass";
+// @import "../vendors/bulma-0.9.4/sass/elements/_all.sass";
+// @import "../vendors/bulma-0.9.4/sass/form/_all.sass";
+// @import "../vendors/bulma-0.9.4/sass/components/navbar.sass";
+// @import "../vendors/bulma-0.9.4/sass/components/card.sass";
+// @import "../vendors/bulma-0.9.4/sass/components/dropdown.sass";
+// @import "../vendors/bulma-0.9.4/sass/components/menu.sass";
+// @import "../vendors/bulma-0.9.4/sass/components/modal.sass";
+// @import "../vendors/bulma-0.9.4/sass/layout/footer.sass";
+// @import "../vendors/bulma-0.9.4/sass/layout/section.sass";

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign up</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../asset/css/myBulma.css" />
+  </head>
+  <body>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-half">
+        <section class="section">
+          <!-- 標題 -->
+          <div class="content has-text-centered"><h1>註冊</h1></div>
+          <!-- 表單 -->
+          <form
+            class="box"
+            action="/ConPoolJndiDemo/register"
+            method="post"
+            id="form-signup"
+          >
+            <div class="content"><p>請填寫以下欄位</p></div>
+            <div class="field">
+              <label class="label" for="input-username">帳號</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="username"
+                  placeholder="e.g. alexyang"
+                  id="input-username"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-password">密碼</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="password"
+                  name="password"
+                  placeholder="********"
+                  id="input-password"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-last-name">姓氏</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="lastName"
+                  placeholder="楊"
+                  id="input-last-name"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-first-name">名字</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="firstName"
+                  placeholder="艾力克斯"
+                  id="input-first-name"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-email">Email</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="email"
+                  name="email"
+                  placeholder="alexyang@email.com"
+                  id="input-email"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-job">工作</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="job"
+                  placeholder="卡車司機"
+                  id="input-job"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-area">地區</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="area"
+                  placeholder="桃園市"
+                  id="input-area"
+                />
+              </div>
+            </div>
+
+            <!-- 表單按鈕 -->
+            <div class="field is-grouped">
+              <div class="control">
+                <button
+                  class="button is-primary has-text-centered"
+                  type="submit"
+                  id="btn-signup"
+                >
+                  註冊
+                </button>
+              </div>
+              <div class="control">
+                <button
+                  class="button is-light has-text-centered"
+                  type="button"
+                  id="btn-back"
+                >
+                  回到首頁
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("btn-back").addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+      });
+    </script>
+  </body>
+</html>

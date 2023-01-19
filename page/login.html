@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../asset/css/myBulma.css" />
+  </head>
+  <body>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-half">
+        <section class="section">
+          <!-- 標題 -->
+          <div class="content has-text-centered"><h1>登入</h1></div>
+          <!-- 表單 -->
+          <form
+            class="box"
+            action="/ConPoolJndiDemo/login"
+            method="post"
+            id="form-login"
+          >
+            <div class="field">
+              <label class="label" for="input-username">帳號</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="text"
+                  name="username"
+                  placeholder="e.g. alexyang"
+                  id="input-username"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="input-password">密碼</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="password"
+                  name="password"
+                  placeholder="********"
+                  id="input-password"
+                />
+              </div>
+            </div>
+
+            <!-- 表單按鈕 -->
+            <div class="field is-grouped">
+              <div class="control">
+                <button
+                  class="button is-primary has-text-centered"
+                  type="submit"
+                  id="btn-login"
+                >
+                  登入
+                </button>
+              </div>
+              <div class="control">
+                <button
+                  class="button is-info is-light has-text-centered"
+                  type="button"
+                  id="btn-signup"
+                >
+                  註冊
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("btn-signup").addEventListener("click", () => {
+          window.location.href = "signup.html";
+        });
+      });
+    </script>
+  </body>
+</html>
