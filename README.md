@@ -37,7 +37,7 @@ page 存放每個人負責的功能對應的資料夾，各自存放專屬其功
   
 ## 版本控制
 請以 dev 分支進行開發，main 分支當作是正式環境的版本。  
-有新的開發進度後，我會確認兩個分支是否有衝突，沒有的話就會將 dev 分支 的新進度[併入](https://git-scm.com/docs/git-merge)到 main 分支，讓兩者同步。
+有新的開發進度後，我會確認兩個分支是否有衝突，沒有的話就會將 dev 分支的新進度[併入](https://git-scm.com/docs/git-merge)到 main 分支，讓兩者同步。
 > Demo 網頁使用 [GitHub Pages](https://pages.github.com) 功能，以 main 分支作為來源。
 
 ## CSS 框架
@@ -98,7 +98,7 @@ page 存放每個人負責的功能對應的資料夾，各自存放專屬其功
       - control
   - control 底下僅可包含這四種 Bulma 元素：input / select / button / icon
 - [燈箱 / Modal](https://bulma.io/documentation/components/modal/)
-  - 使用步驟較複雜，除了本體的 html 代碼外，還要準備按鈕跟偵測事件的 js，但可以帶來更好的體驗
+  - 使用步驟較複雜，除了本體的 html 外，還要準備按鈕跟偵測事件的 js，但可以帶來更好的體驗
   - modal
     - modal-background
     - modal-content
@@ -113,12 +113,12 @@ page 存放每個人負責的功能對應的資料夾，各自存放專屬其功
 - [字體排版 / Typography](https://bulma.io/documentation/helpers/typography-helpers/)
   - 針對性地設定字體大小或對齊方式
 
-> 注意： 少數元件須額外補上 JavaScript 才能正常運作 (尋找元素 -> 綁定事件 -> 設定事件觸發的動作)，可參考 Bulma 範例提供的代碼。  
+> 注意： 少數元件須額外補上 JavaScript 才能正常運作 (尋找元素 -> 綁定事件 -> 設定事件觸發的動作)，其介紹都有附上範例代碼。  
 
 > 關於 icon：必須在 head 標籤裡引入 [Font Awesome](https://fontawesome.com)，並使用 fas 這一系列；同一頁面內使用不同系列的 icon，將無法顯示。
 
 ### 自訂
-Bulma 的原始碼內分別有兩個檔案包含：初始變數 (initial variables)，和從初始變數設定而來的衍生變數 (derived variables)。Bulma 的 CSS class 便是基於這些變數所組合出來的各種樣式。也因此，[自訂樣式的過程](https://bulma.io/documentation/customize/with-sass-cli/)就是根據那些變數名稱重新定義後，編譯出一個我們所需的 css 檔，即 my-bulma.css。  
+Bulma 的原始碼內分別有兩個檔案包含：初始變數 (initial variables)，和從初始變數設定而來的衍生變數 (derived variables)。Bulma 的 CSS class 便是透過 [Sass](https://sass-lang.com/guide) 工具，基於這些變數組合出來的各種樣式。也因此，[自訂樣式的過程](https://bulma.io/documentation/customize/with-sass-cli/)就是將變數重新定義後，編譯出一個我們所需的 css 檔，即 my-bulma.css。  
 如果你對顏色、字體、間隔等各種參數有整體性的想法，是會影響到所有人的頁面，就提出來討論吧！只要能稍加研究一下，認識到該調整哪些變數，自訂的過程其實很快，一點也不麻煩。
 
 ## Anything Else
