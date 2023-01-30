@@ -67,12 +67,12 @@ class Header extends HTMLElement {
           <div class="navbar-dropdown">
             <a class="navbar-item"> 我的頁面 </a>
             <a class="navbar-item"> 我的訂單 </a>
-            <a href="/page/friend/friend_main.html" class="navbar-item">
+            <a href="page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
             <a class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="/index_not_in.html" class="navbar-item"> 登出 </a>
+            <a href="index_not_in.html" class="navbar-item"> 登出 </a>
           </div>
         </div>
       </div>
