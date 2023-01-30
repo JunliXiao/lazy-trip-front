@@ -15,7 +15,7 @@ function updateUserList() {
     list_users.innerHTML = "";
     fetch("https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app/api/v1/users")
         .then((res) => res.json())
-        .then((users) => data.forEach(user => {
+        .then((users) => users.forEach(user => {
             let newItem = document.createElement("li");
             let text = document.createTextNode(user.fullname);
             newItem.appendChild(text);
