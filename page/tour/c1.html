@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>後台</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+      integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      nav {
+        float: left;
+      }
+      nav > ul > li > div {
+        text-align: center;
+        margin: 20px 30px;
+        padding: 10px;
+        border-radius: 20px;
+      }
+      nav > ul > li > div:hover {
+        background-color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+      section {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+      }
+      section li {
+        margin-bottom: 20px;
+      }
+      nav {
+        background-color: rgb(250, 217, 156);
+        width: 220px;
+        height: calc(100vh - 30px);
+      }
+      h2 span {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+
+      .show {
+        display: show;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div
+        style="
+          width: 100vw;
+          height: 30px;
+          background-color: rgb(252, 180, 45);
+          text-align: center;
+        "
+      ></div>
+    </header>
+    <nav>
+      <ul>
+        <li class="trip_info">
+          <div class="trip_info">
+            <span>行程基本資料</span>
+          </div>
+        </li>
+        <li class="trip_plan">
+          <div class="trip_plan">
+            <span>行程規劃</span>
+          </div>
+          <div class="trip_query hidden">
+            <span>查詢 / 加入景點</span>
+          </div>
+          <div class="trip_list" style="display: none">
+            <span>行程管理</span>
+          </div>
+        </li>
+        <li class="attraction_create">
+          <div class="attraction_create">
+            <span>創建新景點</span>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <!-- 行程管理 -->
+    <section class="trip_list_page" style="display: none">
+      <article>
+        <h2><span>行程管理</span></h2>
+        <table class="table is-hoverable is-bordered is-fullwidth">
+          <thead>
+            <tr>
+              <th><abbr title="trip_name">行程名稱</abbr></th>
+              <th><abbr title="trip_start_date">出發日期</abbr></th>
+              <th><abbr title="trip_end_date">結束日期</abbr></th>
+              <th><abbr title="people">人數</abbr></th>
+              <th><abbr title="trip_price">總價</abbr></th>
+              <th><abbr title="trip_img_upload">圖片</abbr></th>
+              <th>
+                <abbr title="trip_detail">明細</abbr>
+              </th>
+              <th>
+                <abbr title="edit">修改</abbr>
+              </th>
+              <th>
+                <abbr title="delete">刪除</abbr>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>花東三日遊｜綺麗溫泉渡假村＆海崖谷賞海景｜</th>
+              <td>2023/1/1</td>
+              <td>2023/1/10</td>
+              <td>10</td>
+              <td>20000</td>
+              <td>
+                <img
+                  src="../pic/05.jpg"
+                  alt=""
+                  style="width: 50px; height: 50px"
+                />
+              </td>
+              <td><button class="trip_detail">明細</button></td>
+              <td><button class="edit">修改</button></td>
+              <td><button class="delete">刪除</button></td>
+            </tr>
+            <tr>
+              <th>
+                台北信義區 | PaintSip 畫飲 | ABSTRACT GOLD LEAF 閃耀金箔抽象
+              </th>
+              <td>2023/2/3</td>
+              <td>2023/2/3</td>
+              <td>2</td>
+              <td>2000</td>
+              <td>
+                <img
+                  src="../pic/02.jpg"
+                  alt=""
+                  style="width: 50px; height: 50px"
+                />
+              </td>
+              <td><button class="trip_detail">明細</button></td>
+              <td><button class="edit">修改</button></td>
+              <td><button class="delete">刪除</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+    <!-- 填寫基本資料 -->
+    <section class="trip_query_page">
+      <article>
+        <ul>
+          <li>
+            <h2>
+              <span>行程上架</span>
+              <br />
+              <span>填寫基本資料</span>
+            </h2>
+          </li>
+          <li>
+            <label for="trip_name">行程名稱：</label>
+            <input type="text" name="trip_name" id="trip_name" />
+          </li>
+          <li>
+            <label for="trip_start_date">出發日期：</label>
+            <input type="date" name="trip_start_date" id="trip_start_date" />
+          </li>
+          <li>
+            <label for="trip_end_date">結束日期：</label>
+            <input type="date" name="trip_end_date" id="trip_end_date" />
+          </li>
+          <li>
+            <label for="people">人數：</label>
+            <input type="number" name="people" id="people" min="0" max="999" />
+          </li>
+          <li>
+            <label for="trip_price">總價：</label>
+            <input type="text" name="trip_price" id="trip_price" />
+          </li>
+          <li>
+            <label for="trip_img_upload">圖片上傳：</label>
+            <input type="file" name="trip_img_upload" id="trip_img_upload" />
+          </li>
+        </ul>
+        <button type="submit" class="button comfirm_btn">確認</button>
+        <button type="reset" class="button clear>btn">清除</button>
+      </article>
+    </section>
+    <!-- 搜尋景點 -->
+    <section class="dayTrip_query_page" style="display: none">
+      <article>
+        <h2>
+          <span>每日行程規劃</span>
+          <br />
+          <span>花東三日遊｜綺麗溫泉渡假村＆海崖谷賞海景｜</span>
+          <br />
+          <span>2023.01.01 - 2023.01.04</span>
+        </h2>
+        <br />
+        <ul>
+          <li class="trip_date">
+            <label for="trip_date">日期：</label>
+            <input type="date" name="trip_date" id="trip_date" />
+          </li>
+          <li>
+            <label for="attraction_search">搜尋景點：</label>
+            <input
+              type="search"
+              name="attraction_search"
+              id="attraction_search"
+            />
+          </li>
+          <li>
+            <label for="attraction_time">開始時間：</label>
+            <input type="time" name="attraction_time" id="attraction_time" />
+          </li>
+          <li>
+            <label for="attraction_stay_hour">預計停留時間</label>
+            <input
+              type="number"
+              min="0"
+              max="23"
+              name="attraction_stay_hour"
+              id="attraction_stay_hour"
+            />
+            <span>小時</span>
+            <input
+              type="number"
+              min="0"
+              max="59"
+              name="attraction_stay_min"
+              id="attraction_stay_min"
+            />
+            <span>分</span>
+          </li>
+          <li>
+            <label for="trip_end_date">結束時間：</label>
+            <input
+              type="date"
+              name="trip_end_date"
+              id="trip_end_date"
+              readonly
+            />
+          </li>
+        </ul>
+        <button type="submit" class="button comfirm_btn">確認</button>
+        <button type="reset" class="button clear>btn">清除</button>
+      </article>
+      <footer></footer>
+    </section>
+    <!-- 創建新景點 -->
+    <section class="attraction_create_page" style="display: none">
+      <article>
+        <h2>
+          <span>創建新景點</span>
+        </h2>
+        <br />
+        <ul>
+          <li class="attraction_name">
+            <label for="attraction_name">輸入景點名稱：</label>
+            <input type="text" name="attraction_name" id="attraction_name" />
+          </li>
+          <li>
+            <label for="attraction_location">輸入景點地址：</label>
+            <input
+              type="text"
+              name="attraction_location"
+              id="attraction_location"
+            />
+          </li>
+          <li>
+            <label for="latitude">經度：</label>
+            <input type="text" name="latitude" id="latitude" readonly />
+          </li>
+          <li>
+            <label for="longtitude">緯度：</label>
+            <input type="text" name="longtitude" id="longtitude" readonly />
+          </li>
+          <li>
+            <label for="attraction_info">輸入景點簡介：</label>
+            <br />
+            <textarea
+              name="attraction_info"
+              id="attraction_info"
+              cols="30"
+              rows="5"
+            ></textarea>
+          </li>
+        </ul>
+        <button type="submit" class="button comfirm_btn">確認</button>
+        <button type="reset" class="button clear>btn">清除</button>
+      </article>
+      <footer></footer>
+    </section>
+
+    <footer
+      style="
+        width: 100vw;
+        height: 60px;
+        background-color: rgb(252, 180, 45);
+        position: absolute;
+        bottom: 0;
+        text-align: center;
+      "
+    ></footer>
+    <script src="./JS/jquery-3.6.3.min.js"></script>
+    <script>
+      $(".trip_info").on("click", function () {
+        $(".trip_query_page").css("display", "");
+        $(".dayTrip_query_page").css("display", "none");
+        $(".trip_list_page").css("display", "none");
+        $(".attraction_create_page").css("display", "none");
+      });
+      $("div.trip_plan").on("click", function () {
+        $("div.trip_query").toggleClass("show").removeClass("hidden");
+        $("div.trip_list").css("display", "");
+      });
+      $("button.button.comfirm_btn").on("click", function () {
+        $(".dayTrip_query_page").css("display", "");
+        $(".trip_query_page").css("display", "none");
+      });
+      $(".trip_list").on("click", function () {
+        $(".trip_list_page").css("display", "");
+        $(".trip_query_page").css("display", "none");
+        $(".dayTrip_query_page").css("display", "none");
+        $(".attraction_create_page").css("display", "none");
+      });
+      $(".attraction_create").on("click", function () {
+        $(".attraction_create_page").css("display", "");
+        $(".trip_query_page").css("display", "none");
+        $(".dayTrip_query_page").css("display", "none");
+        $(".trip_list_page").css("display", "none");
+      });
+      $(".trip_query").on("click", function () {
+        $(".dayTrip_query_page").css("display", "");
+        $(".trip_list_page").css("display", "none");
+        $(".attraction_create_page").css("display", "none");
+        $(".trip_query_page").css("display", "none");
+      });
+    </script>
+  </body>
+</html>

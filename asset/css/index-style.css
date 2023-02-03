@@ -5,8 +5,8 @@ div.hero-body > * {
 #picture-behind-search {
     background: radial-gradient(
             circle,
-            rgba(255, 255, 255, 0.85) 25%,
-            rgba(255, 255, 255, 0.65) 90%
+            rgba(255, 255, 255, 0.85) 30%,
+            rgba(255, 255, 255, 0.8) 80%
         ),
         url('../img/blossom.jpg');
 }

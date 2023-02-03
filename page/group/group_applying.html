@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io | 揪團 | 申請中成員</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io | 揪團</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+      div.div_line {
+        border-bottom: 1px solid;
+        border-color: #cfcff8;
+        height: 1px;
+        padding-top: 1px;
+      }
+      div#gp_basic_info {
+        height: 400px;
+        margin-top: 50px;
+        text-align: center;
+        position: relative;
+      }
+      label.info {
+        font-size: 16px;
+      }
+      label.spe_need {
+        font-size: 16px;
+      }
+      div#mem_to_add {
+        padding: 1px;
+        margin: 1px;
+        border: rgb(220, 220, 220) 2px solid;
+        border-radius: 10px;
+        height: 250px;
+      }
+      img.img_member_list {
+        width: 15px;
+        height: 15px;
+      }
+      div.is_applying {
+        border-bottom: 0.8px dashed rgb(243, 216, 127);
+        padding-bottom: 5px;
+        margin-bottom: 7px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+             src="https://bulma.io/images/bulma-logo.png"
+             width="112"
+             height="28"
+           /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a href="../group/group_all.html" class="navbar-item"> 揪團 </a>
+          </div>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-8">
+        <section class="section">
+          <!-- 標題 -->
+          <div class="content has-text-centered"><h1>申請中成員</h1></div>
+          <div class="content has-text-centered"><h3>揪團名</h3></div>
+          <!-- 表單 -->
+          <form class="box" action="#" method="post" id="form_gp_setting">
+            <!--新增成員-->
+            <div class="field">
+              <label class="label" for="gp_name">申請中成員</label>
+            </div>
+            <div id="mem_to_add" style="overflow-y: auto; font-size: 22px">
+              <div class="field is_applying">
+                <label>
+                  <input type="checkbox" name="to_add_mems" class="mems" />
+                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <ul>
+                    <li>
+                      <label style="font-size: 16px">簡介:</label>
+                      <label class="info"
+                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                    <li>
+                      <label style="font-size: 16px">特殊需求:</label>
+                      <label class="spe_need"
+                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                  </ul>
+                </label>
+              </div>
+              <div class="field is_applying">
+                <label>
+                  <input type="checkbox" name="to_add_mems" class="mems" />
+                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <ul>
+                    <li>
+                      <label style="font-size: 16px">簡介:</label>
+                      <label class="info"
+                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                    <li>
+                      <label style="font-size: 16px">特殊需求:</label>
+                      <label class="spe_need"
+                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                  </ul>
+                </label>
+              </div>
+              <div class="field is_applying">
+                <label>
+                  <input type="checkbox" name="to_add_mems" class="mems" />
+                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <ul>
+                    <li>
+                      <label style="font-size: 16px">簡介:</label>
+                      <label class="info"
+                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                    <li>
+                      <label style="font-size: 16px">特殊需求:</label>
+                      <label class="spe_need"
+                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
+                      >
+                    </li>
+                  </ul>
+                </label>
+              </div>
+            </div>
+            <!-- 表單按鈕 -->
+            <div class="field is-grouped">
+              <div class="control">
+                <button
+                  class="button is-primary has-text-centered"
+                  type="submit"
+                  id="btn_gp_amend"
+                >
+                  新增
+                </button>
+              </div>
+              <div class="control">
+                <button
+                  class="button is-info is-light has-text-centered"
+                  type="button"
+                  id="btn_gp_del"
+                >
+                  刪除
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+    <footer class="footer">
+      <div class="columns">
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      window.onload = function () {
+        let gp_amend_el = document.getElementById("btn_gp_amend");
+        let set_check_join = document.getElementById("check_join");
+        let set_any_join = document.getElementById("any_join");
+        let btn_amend = document.getElementById("btn_uncheckmem");
+        gp_amend_el.onclick = (e) => {
+          if ($("input.mems:checked").length != 0) {
+            alert("新增成功!");
+            //預計放入直接前往該揪團主頁
+          } else {
+            alert("請確認要新增的成員!");
+            e.preventDefault();
+          }
+        };
+
+        $("#btn_gp_del").on("click", function (e) {
+          var r = confirm("確定要拒絕以上成員嗎");
+          if (r == true) {
+            alert("刪除成功!");
+          } else {
+            e.preventDefault();
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
