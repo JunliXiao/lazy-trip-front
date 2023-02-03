@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io | 揪團</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      #search_fd {
+        cursor: pointer;
+      }
+      #fs_alert {
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        /* display: block; */
+        display: none;
+        z-index: 999;
+      }
+      .fs_alert_bg {
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.671);
+        position: fixed;
+        top: 0;
+      }
+      div.group_member_list {
+        height: 320px;
+        text-align: center;
+        margin-left: 15px;
+        margin-top: 15px;
+        border-radius: 10px;
+        border: rgba(0, 0, 0, 0.283) solid;
+        padding-top: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+      .fs_alert_show {
+        max-width: 450px;
+        min-width: 400px;
+
+        background-color: white;
+        position: absolute;
+        top: 120px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        z-index: 2;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .fs_alert_title {
+        font-size: 26px;
+        text-align: center;
+        margin: 20px;
+        font-weight: bold;
+      }
+      .fs_alert_title_suc {
+        color: var(--main_c);
+      }
+      .fs_alert_txt {
+        width: 80%;
+        word-wrap: break-word;
+        font-size: 16px;
+        padding: 0 20px;
+        text-align: center;
+        margin: 0px auto 15px auto;
+      }
+      #alert_ok {
+        margin: 20px auto 45px auto;
+      }
+      .btn_s {
+        width: 100px;
+        border-radius: 8px;
+        font-size: var(--main_font);
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+        margin: 10px;
+      }
+      .icon_setting {
+        cursor: pointer;
+      }
+      div.trip_info {
+        text-align: right;
+        position: relative;
+        font-size: 16px;
+      }
+      div.group_message {
+        padding: 10px;
+      }
+      div.group_member {
+        margin-left: 2px;
+        border-radius: 10px;
+        padding: 1px;
+      }
+      div.content_area {
+        border-radius: 10px;
+        padding: 1px;
+        overflow: auto;
+        overflow-x: hidden;
+        box-shadow: 2px 5px 5px 0px #88888842;
+      }
+      span.time {
+        font-size: 14px;
+      }
+      img.img_content {
+        width: 100px;
+        height: 80px;
+      }
+      img.img_member_list {
+        width: 15px;
+        height: 15px;
+      }
+      div#search_rs {
+        display: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 導覽列 -->
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+             src="https://bulma.io/images/bulma-logo.png"
+             width="112"
+             height="28"
+           /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a href="../group/group_all.html" class="navbar-item"> 揪團 </a>
+          </div>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!--彈窗-->
+    <div id="fs_alert">
+      <div class="fs_alert_bg"></div>
+      <div class="fs_alert_show">
+        <div class="fs_alert_title">請輸入想找的朋友ID</div>
+        <input
+          class="input fs_alert_txt"
+          id="fd_id"
+          type="text"
+          placeholder="請輸入ID"
+        />
+        <span class="icon" id="search_fd">
+          <i class="fa-solid fas fa-lg fa-magnifying-glass"></i>
+        </span>
+        <div id="search_rs">沒有結果</div>
+        <div class="btn_s button" id="alert_ok">OK</div>
+      </div>
+    </div>
+
+    <!--揪團名-->
+    <div class="column">
+      <div class="content has-text-centered"><h1>揪團名揪團名</h1></div>
+    </div>
+
+    <!--資訊欄-->
+    <div
+      class="columns"
+      style="border-bottom: 0.8px solid; border-color: #cfcff8"
+    >
+      <div class="column is-8"></div>
+      <div class="column is-3 trip_info">
+        <span>當前行程:</span>
+        <span class="trip_name">台北->台中</span>
+        <p></p>
+        <span> 日期:</span>
+        <span class="trip_date">01/25->01/28</span>
+      </div>
+      <div class="column is-1">
+        <span class="icon_setting"><i class="fa-solid fa-gear"></i></span>
+      </div>
+    </div>
+
+    <!--討論區-->
+    <div class="columns">
+      <div class="column is-1"></div>
+      <div class="column is-9 content has-text" style="margin-bottom: 12px">
+        <h2>討論區</h2>
+      </div>
+      <button
+        class="button is-2 is-primary"
+        id="invite_fd"
+        style="border-radius: 10px; margin-top: 10px"
+      >
+        邀請朋友
+      </button>
+    </div>
+
+    <div class="columns" style="height: 350px">
+      <div class="column is-1"></div>
+      <div class="column is-9 content_area content">
+        <section class="section" style="border-radius: 10px; padding: 20px">
+          <!--單一留言-->
+          <article class="message is-primary">
+            <div class="columns group_message message-body">
+              <img src="./test.png" class="column is-1 img_content" />
+              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-2 content_time">
+                <span class="time">2023-1-26</span>
+                <p></p>
+                <span class="time">16:08:08</span>
+              </div>
+            </div>
+          </article>
+          <article class="message is-primary">
+            <div class="columns group_message message-body">
+              <img src="./test.png" class="column is-1 img_content" />
+              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-2 content_time">
+                <span class="time">2023-1-26</span>
+                <p></p>
+                <span class="time">16:08:08</span>
+              </div>
+            </div>
+          </article>
+          <article class="message is-primary">
+            <div class="columns group_message message-body">
+              <img src="./test.png" class="column is-1 img_content" />
+              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-2 content_time">
+                <span class="time">2023-1-26</span>
+                <p></p>
+                <span class="time">16:08:08</span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+      <div class="column is-1 group_member">
+        <div class="columns" style="height: 300px">
+          <div class="column group_member_list">
+            <div
+              class="field"
+              style="border-bottom: 1.5px solid rgba(0, 0, 0, 0.283)"
+            >
+              <label>成員列表</label>
+            </div>
+            <div class="field">
+              <label
+                ><img
+                  class="img_member_list"
+                  src="./test.png"
+                />asdsaasa1</label
+              >
+            </div>
+            <div class="field">
+              <label
+                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+              >
+            </div>
+            <div class="field">
+              <label
+                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+              >
+            </div>
+            <div class="field">
+              <label
+                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-1"></div>
+      <div class="field column is-9">
+        <label class="label">留言</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="請輸入想說的話" />
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="columns">
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      window.addEventListener("load", function () {
+        let setting_el = document.getElementsByClassName("icon_setting");
+        setting_el[0].onclick = () => {
+          console.log("sayhi");
+        };
+        let invite_fd_el = document.getElementById("invite_fd");
+        invite_fd_el.onclick = () => {
+          let show_alert = document.getElementById("fs_alert");
+          show_alert.style.display = "block";
+          let close_alert = document.getElementById("alert_ok");
+          function close() {
+            show_alert.style.display = "none";
+          }
+          close_alert.addEventListener("click", close);
+        };
+        let search_fd_el = document.getElementById("search_fd");
+        search_fd_el.onclick = () => {
+          let search_fd_ct = document.getElementById("fd_id");
+          var submit_vl = fd_id.value;
+          // console.log(submit_vl);
+          var search_rs_txt = document.getElementById("search_rs");
+          search_rs_txt.innerText = submit_vl;
+          search_rs_txt.style.display = "block";
+        };
+        search_rs.onclick = () => {
+          alert("已發送邀請");
+        };
+      });
+    </script>
+  </body>
+</html>

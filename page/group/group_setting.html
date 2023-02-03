@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io | 揪團 | 揪團設定</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io | 揪團</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+      div.div_line {
+        border-bottom: 1px solid;
+        border-color: #cfcff8;
+        height: 1px;
+        padding-top: 1px;
+      }
+      div#gp_basic_info {
+        height: 400px;
+        margin-top: 50px;
+        text-align: center;
+        position: relative;
+      }
+
+      button#gp_delete {
+        background-color: rgba(255, 0, 0, 0.358);
+      }
+      div#mem_to_del {
+        padding: 1px;
+        margin: 1px;
+        border: rgb(220, 220, 220) 2px solid;
+        border-radius: 10px;
+        height: 250px;
+      }
+      img.img_member_list {
+        width: 15px;
+        height: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+             src="https://bulma.io/images/bulma-logo.png"
+             width="112"
+             height="28"
+           /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a href="../group/group_all.html" class="navbar-item"> 揪團 </a>
+          </div>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-half">
+        <section class="section">
+          <!-- 標題 -->
+          <div class="content has-text-centered"><h1>揪團設定</h1></div>
+          <!-- 表單 -->
+          <form class="box" action="#" method="post" id="form_gp_setting">
+            <div class="field">
+              <label class="label" for="gp_name">揪團名稱</label>
+              <div class="control">
+                <input class="input" type="text" name="gp_name" id="gp_name" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="gp_mem_num">揪團人數上限</label>
+              <div class="control">
+                <input
+                  class="input"
+                  type="number"
+                  name="number"
+                  id="gp_mem_num"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>加入方式: </label>
+              <input type="radio" name="how_2_join" id="check_join" checked />
+              <label for="check_join">審核加入</label>
+              <input type="radio" name="how_2_join" id="any_join" />
+              <label for="any_join">直接加入</label>
+              <button
+                class="button is-primary has-text-centered is-small"
+                id="btn_uncheckmem"
+              >
+                申請者審核
+              </button>
+            </div>
+
+            <!--移除成員-->
+            <div class="field">
+              <label class="label" for="gp_name">移除成員</label>
+            </div>
+            <div id="mem_to_del">
+              <div class="field">
+                <label>
+                  <input type="checkbox" name="to_add_mems" />
+                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                </label>
+              </div>
+              <div class="field">
+                <label>
+                  <input type="checkbox" name="to_add_mems" />
+                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                </label>
+              </div>
+            </div>
+            <!-- 表單按鈕 -->
+            <div class="field is-grouped">
+              <div class="control">
+                <button
+                  class="button is-primary has-text-centered"
+                  type="submit"
+                  id="btn_gp_amend"
+                >
+                  修改
+                </button>
+              </div>
+              <div class="control">
+                <button
+                  class="button is-info is-light has-text-centered"
+                  type="button"
+                  id="btn_gp_delete"
+                >
+                  刪除
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>
+    <footer class="footer">
+      <div class="columns">
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      window.onload = function () {
+        let gp_amend_el = document.getElementById("btn_gp_amend");
+        let gp_name_el = document.getElementById("gp_name");
+        let gp_mem_num_el = document.getElementById("gp_mem_num");
+        let set_check_join = document.getElementById("check_join");
+        let set_any_join = document.getElementById("any_join");
+        let btn_amend = document.getElementById("btn_uncheckmem");
+        gp_amend_el.onclick = (e) => {
+          if (gp_mem_num_el.value != "" && gp_name_el.value != "") {
+            alert("修改成功!");
+            //預計放入直接前往該揪團主頁
+          } else {
+            alert("請確認修改資訊!");
+            e.preventDefault();
+          }
+        };
+        //審核申請有勾選才會出現:
+        // $("#check_join").on("change", function () {
+        //   btn_amend.style.display = "inline-block";
+        //   console.log("??");
+        // });
+        // $("#any_join").on("change", function () {
+        //   // btn_amend.style.display = "none";
+        //   console.log("??");
+        // });
+        $("#btn_gp_delete").on("click", function (e) {
+          var r = confirm("確定要刪除此揪團嗎");
+          if (r == true) {
+            alert("刪除成功!");
+          } else {
+            e.preventDefault();
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
