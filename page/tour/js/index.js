@@ -244,5 +244,5 @@ function randomRbgColor() {
 
 // ================edit編輯觸發跳轉下個視窗=======================
 $("a.trip_edit").on("click", function () {
-  location = "../LazyTrip-Yifan/3new.html";
+  location = "../3.html";
 });
