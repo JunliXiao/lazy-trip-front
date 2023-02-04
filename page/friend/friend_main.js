@@ -4,7 +4,6 @@
 //     .then((res) => res.json())
 //     .catch((err) => console.log(err));
 
-const btn_get_all_users = document.getElementById("btn-get-all-users");    
 const btn_show_friends = document.getElementById("btn-show-friends");
 const list_users = document.getElementById("list-users");
 const friends_summary = document.getElementById("friends_summary");
