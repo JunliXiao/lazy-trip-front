@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io</title>
+    <!-- Bulma 原廠 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      section,
+      main {
+        background-color: #eef2f3;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 導覽列 -->
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+            src="https://bulma.io/images/bulma-logo.png"
+            width="112"
+            height="28"
+          /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+
+          <a href="#" class="navbar-item"> 揪團 </a>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 內容 -->
+
+    <!-- 訂房功能列 -->
+    <section>
+      <form action="#" method="#">
+        <!-- 訂房功能第一列 -->
+        <div id="function_bar_row1" class="columns control">
+          <div class="column is-one-twelfths"></div>
+          <!-- 搜尋框 -->
+          <div id="function_bar_row1_1" class="column is-four-twelfths">
+            <input type="search" class="input" placeholder="輸入飯店或目的地" />
+          </div>
+          <!-- 入住/退房 -->
+          <div
+            id="function_bar_row1_2"
+            class="column is-four-twelfths field has-addons"
+          >
+            <p class="control">
+              <button type="button" class="button is-small">
+                <span>入住日期 ----/--/--</span>
+              </button>
+            </p>
+
+            <p class="control">
+              <button type="button" class="button is-small">
+                <span>退房日期 ----/--/--</span>
+              </button>
+            </p>
+          </div>
+          <!-- 客房數量 -->
+          <div id="function_bar_row1_3" class="column is-two-twelfths">
+            <button type="button" class="button is-small">
+              <span>1間客房 1位旅客</span>
+            </button>
+          </div>
+          <!-- 搜尋按鈕 -->
+          <div id="function_bar_row1_4" class="column is-two-twelfths">
+            <button type="submit" class="button is-info is-small">
+              <span>搜尋</span>
+            </button>
+          </div>
+          <div class="column is-one-twelfths"></div>
+        </div>
+
+        <!-- 訂房功能第二列 -->
+        <div id="function_bar_row2" class="columns">
+          <!-- 排序方式 -->
+          <div class="column is-one-twelfths"></div>
+          <div id="function_bar_row2_1" class="column is-two-twelfths select">
+            <select>
+              <option value="">價格最高優先</option>
+              <option value="">價格最低優先</option>
+              <option value="">評分最高優先</option>
+            </select>
+          </div>
+
+          <!-- 每晚價格篩選 -->
+          <div id="function_bar_row2_2" class="column is-four-twelfths">
+            <input type="range" min="1" max="99999" value="1" />
+            <span>$1</span>
+          </div>
+          <!-- 查看地圖 -->
+          <div id="function_bar_row2_3" class="column is-four-twelfths">
+            <a href="tw.yahoo.com">查看地圖</a>
+          </div>
+          <div class="column is-one-twelfths"></div>
+        </div>
+      </form>
+    </section>
+    <main>
+      <hr />
+      <section>
+        <!--飯店圖片區-->
+        <div class="columns">
+          <div class="column" style="border: 1px solid gray">
+            <img src="../../asset/img/banqcansarHotel.webp" alt="" />
+          </div>
+          <div class="column" style="border: 1px solid gray">
+            <img src="#" alt="另一張圖" />
+          </div>
+        </div>
+        <!--飯店簡介區和地圖區-->
+        <div class="columns">
+          <div class="column" style="border: 1px solid gray">
+            <div><a href="#">飯店名稱</a></div>
+            <div>地址</div>
+            <div>評分</div>
+            <div>飯店簡介</div>
+          </div>
+          <div class="column" style="border: 1px solid gray">
+            <a href="#">Google地圖</a>
+          </div>
+        </div>
+        <!--房型內容-->
+        <div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>客房預覽</th>
+                <th>客房類型</th>
+                <th>適合人數</th>
+                <th>X晚價格</th>
+                <th>選擇數量</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <img src="../../asset/img/banqcansarHotel.webp" alt="" />
+                </td>
+                <td><span>豪華雙人房</span></td>
+                <td><span>3</span></td>
+                <td><span>$1000</span></td>
+                <td>
+                  <div class="control">
+                    <input type="text" class="input" />
+                  </div>
+                </td>
+                <td>
+                  <button type="button" class="button is-info is small">
+                    加入行程
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- <div id="row_search">
+      <form action="#" method="#">
+        <div id="row_search_search">
+          <input type="search" placeholder="輸入飯店或目的地" />
+        </div>
+        <div id="row_search_checkin&checkout"></div>
+        <div id="row_search_rooms_count&guest_count">
+          <button type="button"><span>客房</span></button>
+        </div>
+      </form>
+    </div>
+    <div id="sort"></div>
+    -->
+    <!--<section
+      class="hero is-medium has-background-primary-light has-text-centered"
+    >
+      <div id="picture-behind-search" class="hero-body">
+        <p class="title">Happy New Year 兔 You！</p>
+        <div class="columns">
+          <div class="column"></div>
+          <div class="column">
+            <input
+              class="input is-primary"
+              type="text"
+              placeholder="輸入你想去的地方..."
+            />
+          </div>
+          <div class="column"></div>
+        </div>
+      </div>
+    </section>-->
+
+    <!--<div class="columns">
+      <div class="column">
+        <section class="section">
+          <div class="content">
+            <h4>內容</h4>
+            <ul>
+              <li>廠商行程</li>
+              <li>推薦文章</li>
+              <li>...</li>
+            </ul>
+
+            <article class="message is-primary">
+              <div class="message-header">
+                <p>切版</p>
+              </div>
+              <div class="message-body">
+                <ul>
+                  <li>AAA</li>
+                  <li>BBB</li>
+                  <li>CCC</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+      <div class="column"></div>
+    </div>-->
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+      <div class="columns">
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="asset/js/bulma-init.js"></script>
+  </body>
+</html>

@@ -112,12 +112,14 @@ class Footer extends HTMLElement {
 
 // 測試用
 class Example extends HTMLElement {
+
   constructor() {
     super();
+    this.addEventListener("click", () => {console.log(`Hello ${this.getAttribute('foo')}`)});
   }
 
   connectedCallback() {
-    this.innerHTML = `<button class='button is-success'>Success</button>`;
+    this.innerHTML = `<button class='button is-info is-outlined'>${this.textContent}</button>`;
   }
 }
 
