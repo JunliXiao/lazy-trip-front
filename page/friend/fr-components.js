@@ -22,6 +22,20 @@ class Friend extends HTMLElement {
               <p class="title is-4">${this.getAttribute("fullname")}</p>
               <p class="subtitle is-6">@${this.getAttribute("username")}</p>
             </div>
+            <div class="media-right">
+              <span class="icon is-medium">
+                <i class="fas fa-lg fa-info-circle"></i>
+              </span>
+              <span class="icon is-medium">
+                <i class="fas fa-lg fa-check-square"></i>
+              </span>        
+              <span class="icon is-medium">
+                <i class="fas fa-lg fa-exclamation-triangle"></i>
+              </span>                
+              <span class="icon is-medium">
+                <i class="fas fa-lg fa-ban"></i>
+              </span>          
+            </div>
           </div>
 
           <div class="content">
