@@ -7,8 +7,8 @@
 const btn_show_friends = document.getElementById("btn-show-friends");
 const list_users = document.getElementById("list-users");
 const friends_summary = document.getElementById("friends_summary");
-const api_root = "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app";
-// const api_root = "http://127.0.0.1:8080";
+// const api_root = "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app";
+const api_root = "http://127.0.0.1:8080";
 
 document.addEventListener("DOMContentLoaded", () => {
     btn_show_friends.addEventListener("click", showFriends);
