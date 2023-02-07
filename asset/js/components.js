@@ -4,16 +4,13 @@
 
 // 頁首 Header (置頂導覽列)
 class Header extends HTMLElement {
-  constructor() {
-    super();
-  }
 
-  connectedCallback() {
-    this.innerHTML = `<nav
+  header_html = `
+    <nav
     class="navbar has-shadow"
     role="navigation"
     aria-label="main navigation"
-  >
+    >
     <!-- Logo -->
     <div class="navbar-brand">
       <a class="navbar-item" href="https://bulma.io">
@@ -72,41 +69,52 @@ class Header extends HTMLElement {
             </a>
             <a class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="index_not_in.html" class="navbar-item"> 登出 </a>
+            <a href="../../index_not_in.html" class="navbar-item"> 登出 </a>
           </div>
         </div>
       </div>
     </div>
-  </nav>`;
-  }
-}
+    </nav>`;
 
-// 頁尾 Footer
-class Footer extends HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.innerHTML = `<footer class="footer">
-    <div class="columns">
-      <div class="column">
-        <div class="content">
-          <h4>關於</h4>
-          <p>
-            <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
-            TGA105 梯第三組所製作之結訓專題。
-          </p>
+    this.innerHTML = this.header_html;
+  }
+}
+
+// 頁尾 Footer
+class Footer extends HTMLElement {
+
+  footer_html = `
+    <footer class="footer">
+      <div class="columns">
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
         </div>
       </div>
-      <div class="column">
-        <div class="content">
-          <h4>合作廠商</h4>
-          <a href="#">後台登入</a>
-        </div>
-      </div>
-    </div>
-  </footer>`;
+    </footer>`;
+
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.innerHTML = this.footer_html;
   }
 }
 
