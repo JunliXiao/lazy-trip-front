@@ -7,8 +7,18 @@
     <title>Sign up</title>
     <!-- Bulma 自訂 -->
     <link rel="stylesheet" href="../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- reuse -->
+    <script src="../asset/js/components.js"></script>
   </head>
   <body>
+    <header-component></header-component>
     <div class="columns">
       <div class="column"></div>
       <div class="column is-half">
@@ -135,6 +145,7 @@
       </div>
       <div class="column"></div>
     </div>
+    <footer-component></footer-component>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("btn-back").addEventListener("click", () => {
