@@ -14,6 +14,16 @@
       src="https://kit.fontawesome.com/0548105e54.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../../asset/js/components.js"
+      type="text/javascript"
+    ></script>
+
+    <!-- 初始化 Bulma -->
+    <script defer src="../../asset/js/bulma-init.js"></script>
     <style>
       #search_fd {
         cursor: pointer;
@@ -44,6 +54,7 @@
         padding-top: 5px;
         padding-left: 5px;
         padding-right: 5px;
+        font-size: 10px;
       }
       .fs_alert_show {
         max-width: 450px;
@@ -127,78 +138,18 @@
         display: none;
         cursor: pointer;
       }
+      span.member_content_name {
+        font-weight: bold;
+      }
+      div.group_member_list_title {
+        font-size: 15px;
+      }
     </style>
   </head>
   <body>
+    <!--預計加入:滑到內容若為登入者的留言要顯示刪除按鈕在右上角-->
     <!-- 導覽列 -->
-    <nav
-      class="navbar has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <!-- Logo -->
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <!-- <img
-             src="https://bulma.io/images/bulma-logo.png"
-             width="112"
-             height="28"
-           /> -->
-          <strong>LazyTrip.io</strong>
-        </a>
-
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div id="navbarBasicExample" class="navbar-menu">
-        <!-- 靠左 -->
-        <div class="navbar-start"></div>
-
-        <!-- 靠右 -->
-        <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon"><i class="fas fa-plus"></i></span>
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 新的行程 </a>
-              <a class="navbar-item"> 新的揪團 </a>
-            </div>
-          </div>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a href="../group/group_all.html" class="navbar-item"> 揪團 </a>
-          </div>
-
-          <a href="#" class="navbar-item"> 行程 </a>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon-text"
-                ><span class="icon"><i class="fas fa-user"></i></span
-                ><span>周杰倫</span></span
-              >
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 我的頁面 </a>
-              <a class="navbar-item"> 我的訂單 </a>
-              <a class="navbar-item"> 我的好友 </a>
-              <a class="navbar-item"> 我的文章 </a>
-              <hr class="navbar-divider" />
-              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <header-component></header-component>
     <!--彈窗-->
     <div id="fs_alert">
       <div class="fs_alert_bg"></div>
@@ -264,7 +215,10 @@
           <article class="message is-primary">
             <div class="columns group_message message-body">
               <img src="./test.png" class="column is-1 img_content" />
-              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-9">
+                <span class="member_content_name">會員名稱</span><br />
+                <span>內容內容</span>
+              </div>
               <div class="column is-2 content_time">
                 <span class="time">2023-1-26</span>
                 <p></p>
@@ -275,7 +229,12 @@
           <article class="message is-primary">
             <div class="columns group_message message-body">
               <img src="./test.png" class="column is-1 img_content" />
-              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-9">
+                <span class="member_content_name">會員名稱</span><br />
+                <span
+                  >內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容</span
+                >
+              </div>
               <div class="column is-2 content_time">
                 <span class="time">2023-1-26</span>
                 <p></p>
@@ -286,7 +245,10 @@
           <article class="message is-primary">
             <div class="columns group_message message-body">
               <img src="./test.png" class="column is-1 img_content" />
-              <div class="column is-9"><span>內容內容</span></div>
+              <div class="column is-9">
+                <span class="member_content_name">會員名稱</span><br />
+                <span>內容內容</span>
+              </div>
               <div class="column is-2 content_time">
                 <span class="time">2023-1-26</span>
                 <p></p>
@@ -300,30 +262,30 @@
         <div class="columns" style="height: 300px">
           <div class="column group_member_list">
             <div
-              class="field"
+              class="field group_member_list_title"
               style="border-bottom: 1.5px solid rgba(0, 0, 0, 0.283)"
             >
               <label>成員列表</label>
             </div>
-            <div class="field">
+            <div class="member_list_content">
               <label
                 ><img
                   class="img_member_list"
                   src="./test.png"
-                />asdsaasa1</label
+                />中文中文中文中文</label
               >
             </div>
-            <div class="field">
+            <div class="member_list_content">
               <label
                 ><img class="img_member_list" src="./test.png" />asdsaa1</label
               >
             </div>
-            <div class="field">
+            <div class="member_list_content">
               <label
                 ><img class="img_member_list" src="./test.png" />asdsaa1</label
               >
             </div>
-            <div class="field">
+            <div class="member_list_content">
               <label
                 ><img class="img_member_list" src="./test.png" />asdsaa1</label
               >
@@ -341,25 +303,8 @@
         </div>
       </div>
     </div>
-    <footer class="footer">
-      <div class="columns">
-        <div class="column">
-          <div class="content">
-            <h4>關於</h4>
-            <p>
-              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
-              TGA105 梯第三組所製作之結訓專題。
-            </p>
-          </div>
-        </div>
-        <div class="column">
-          <div class="content">
-            <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <!-- 頁尾 -->
+    <footer-component></footer-component>
     <script>
       window.addEventListener("load", function () {
         let setting_el = document.getElementsByClassName("icon_setting");

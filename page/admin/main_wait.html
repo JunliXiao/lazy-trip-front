@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin main</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- reuse -->
+    <script src="../../asset/js/components.js"></script>
+    <style>
+      div.column {
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <header-component></header-component>
+    <div class="table-container">
+      <table class="table table is-bordered is-fullwidth">
+        <!-- Your table content -->
+        <thead>
+          <tr>
+            <th>編號</th>
+            <th>會員帳號</th>
+            <th>會員密碼</th>
+            <th>會員姓名</th>
+            <th>會員性別</th>
+            <th>會員暱稱</th>
+            <th>會員電話</th>
+            <th>會員生日</th>
+            <th>註冊日期</th>
+            <!-- <th>會員地址</th>
+            <th>會員簡介</th>
+            <th>會員圖片</th>
+            <th>橫幅圖片</th> -->
+            <th>權限編號</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer-component></footer-component>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("btn-signup").addEventListener("click", () => {
+          window.location.href = "signup.html";
+        });
+      });
+    </script>
+  </body>
+</html>
