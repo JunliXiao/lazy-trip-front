@@ -33,21 +33,56 @@
     <div class="columns">
       <div class="column">
         <div class="section">
-          <div class="block"><h1>Web Components 測試</h1></div>
-
           <div class="block">
             <example-component foo="Frank">XX</example-component>
           </div>
+          <!-- 好友列表 -->
           <div class="block">
             <div class="buttons">
               <button
                 id="btn-show-friends"
                 class="button is-success is-outlined"
               >
-                Show friends
+                所有好友
               </button>
             </div>
-            <div class="content"><ul id="list-users"></ul></div>
+          </div>
+
+          <!-- 發出好友申請列表 -->
+          <div class="block">
+            <div class="buttons">
+              <button
+                id="btn-show-sent-requests"
+                class="button is-success is-outlined"
+              >
+                所有發出申請
+              </button>
+            </div>
+          </div>
+
+          <!-- 收到好友申請列表 -->
+          <div class="block">
+            <div class="buttons">
+              <button
+                id="btn-show-received-requests"
+                class="button is-success is-outlined"
+              >
+                所有收到申請
+              </button>
+            </div>
+          </div>
+
+          <!-- 新增好友申請 -->
+          <div class="block">
+            <div class="buttons">
+              <button
+                id="btn-add-request"
+                class="js-modal-trigger button is-success is-outlined"
+                data-target="modal-js-example"
+              >
+                新增申請
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -81,6 +116,40 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div id="modal-js-example" class="modal">
+      <div class="modal-background"></div>
+
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">申請好友</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <!-- Content ... -->
+          <div class="field">
+            <label class="label">對方會員編號</label>
+            <div class="control">
+              <input
+                class="input is-info"
+                type="text"
+                placeholder="Info input"
+                id="ipt-addressee-id"
+              />
+            </div>
+          </div>
+          <p>請跟我當好友好嗎</p>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success" id="btn-submit-request">
+            申請
+          </button>
+          <button class="button">取消</button>
+        </footer>
+      </div>
+
+      <button class="modal-close is-large" aria-label="close"></button>
     </div>
 
     <!-- 頁尾 -->
