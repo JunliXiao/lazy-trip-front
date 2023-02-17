@@ -13,7 +13,7 @@ const btn_submit_request = document.getElementById("btn-submit-request");
 
 const friends_summary = document.getElementById("friends_summary");
 // const api_root = "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app";
-const api_root = "http://127.0.0.1:8080/lazy-trip-back";
+const api_root = "http://127.0.0.1:8080";
 
 document.addEventListener("DOMContentLoaded", () => {
     btn_show_friends.addEventListener("click", showFriends);
