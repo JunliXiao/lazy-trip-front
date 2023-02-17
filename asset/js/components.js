@@ -47,11 +47,11 @@ class Header extends HTMLElement {
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item"> 新的行程 </a>
-            <a class="navbar-item"> 新的揪團 </a>
+            <a href="/page/group/group_new_group.html" class="navbar-item"> 新的揪團 </a>
           </div>
         </div>
 
-        <a href="#" class="navbar-item"> 揪團 </a>
+        <a href="/page/group/group_all.html" class="navbar-item"> 揪團 </a>
 
         <a href="#" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable">

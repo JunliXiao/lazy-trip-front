@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- reuse -->
+    <script src="../../asset/js/components.js"></script>
+    <style>
+      div.mem_img > img {
+        border-radius: 100%;
+        width: 100px;
+        height: 100px;
+      }
+      span.mem_acc {
+        text-align: start;
+      }
+      span.gear {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <header-component></header-component>
+
+    <section class="section mt-6">
+      <div class="container mb-3 is-max-widescreen">
+        <div class="tile is-ancestor">
+          <div class="tile is-parent box is-12">
+            <div class="tile is-child is-5">
+              <div class="mem_img">
+                <img src="../../asset/img/dog.jpg" />
+                <span class="mem_acc"> EHN EHEHEHEHEH</span>
+              </div>
+
+              <div class="tabs is-medium mt-4">
+                <ul>
+                  <li class="is-active"><a>Pictures</a></li>
+                  <li><a>Music</a></li>
+                  <li><a>Videos</a></li>
+                  <li><a>Documents</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="tile is-child"></div>
+            <div class="tile is-child is-2">
+              <button class="button">
+                <span class="icon">
+                  <i class="fa-solid fa-gear"></i>
+                </span>
+                <span>編輯個人資料</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-one-quarter">
+          <div class="card mb-3">
+            <div class="card-content">
+              <div class="content">
+                <div class="">簡介</div>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-content">
+              <!-- <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img
+                      src="https://bulma.io/images/placeholders/96x96.png"
+                      alt="Placeholder image"
+                    />
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <p class="title is-4">John Smith</p>
+                  <p class="subtitle is-6">@johnsmith</p>
+                </div>
+              </div> -->
+
+              <div class="content ml-4">
+                <button class="button">
+                  <span class="icon">
+                    <i class="fa-solid fa-gear"></i>
+                  </span>
+                  <span>分享圖片</span>
+                </button>
+              </div>
+              <div class="content ml-4">
+                <button class="button">
+                  <span class="icon">
+                    <i class="fa-solid fa-gear"></i>
+                  </span>
+                  <span>撰寫評論</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-9">
+          <div class="box">
+            m dolor sit amet, consectetur adipiscing elit. Etiam semper diam at
+            erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus
+            diam, consequat gravida libero rhoncus ut. Morbi maximus, leo sit
+            amet vehicu
+          </div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+          <div class="box">PPPPPP</div>
+        </div>
+      </div>
+    </section>
+
+    <footer-component></footer-component>
+    <script></script>
+  </body>
+</html>
