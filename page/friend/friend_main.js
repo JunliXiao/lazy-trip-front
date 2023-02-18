@@ -17,8 +17,8 @@ const api_root = "http://127.0.0.1:8080/lazy-trip-back";
 
 document.addEventListener("DOMContentLoaded", () => {
     btn_show_friends.addEventListener("click", showFriends);
-    btn_show_sent_requests.addEventListener("click", showSentRequests);
-    btn_show_received_requests.addEventListener("click", showReceivedRequests);
+    btn_show_sent_requests.addEventListener("click", () => {showRequests("sent");});
+    btn_show_received_requests.addEventListener("click", () => {showRequests("received");});
     btn_add_request.addEventListener("click", addRequest);
     btn_submit_request.addEventListener("click", submitRequest);
 
@@ -34,23 +34,24 @@ function showFriends() {
         .then((res) => res.json())
         .then((friends) => friends.forEach(fr => {
             let newItem = document.createElement("friend-component");
-            newItem.setAttribute("fullname", fr["member_name"]);
-            newItem.setAttribute("username", fr["member_account"]); 
+            newItem.setAttribute("member-name", fr["member_name"]);
+            newItem.setAttribute("member-account", fr["member_account"]); 
             friends_summary.appendChild(newItem);
         }))
         .catch((err) => console.log(err));
 }
 
-function showSentRequests() {
+function showRequests(direction) {
     friends_summary.innerHTML = '';
 
-    
-    fetch(api_root + `/requests?member_id=${specifier_id}`)
+    fetch(api_root + `/friend-requests?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
         .then((friends) => friends.forEach(fr => {
-            let newItem = document.createElement("friend-component");
-            newItem.setAttribute("fullname", fr["member_name"]);
-            newItem.setAttribute("username", fr["member_account"]);
+            let newItem = direction == "sent" 
+                ? document.createElement("sent-request-component") 
+                : document.createElement("received-request-component");
+            newItem.setAttribute("member-name", fr["member_name"]);
+            newItem.setAttribute("member-account", fr["member_account"]);
             friends_summary.appendChild(newItem);
         }))
         .catch((err) => console.log(err));
@@ -73,7 +74,7 @@ function submitRequest() {
         redirect: 'follow'
       };
       
-      fetch(`http://localhost:8080/lazy-trip-back/friends/request?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
+      fetch(`http://localhost:8080/lazy-trip-back/friend-requests?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
         .then(response => response.json())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));

@@ -25,8 +25,8 @@ class Friend extends HTMLElement {
             </figure>
           </div>
           <div class="media-content">
-            <p class="title is-4">${this.getAttribute("fullname")}</p>
-            <p class="subtitle is-6">@${this.getAttribute("username")}</p>
+            <p class="title is-4">${this.getAttribute("member-name")}</p>
+            <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
           </div>
           <div class="media-right">
             <span class="icon is-large is-clickable">
@@ -54,4 +54,96 @@ class Friend extends HTMLElement {
 
 }
 
+// 發出申請 SentRequest
+class SentRequest extends HTMLElement {
+
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.innerHTML = `
+    <style>
+      .icon .fas:hover{
+        font-size: 1.4em;
+        transition: 0.2s ease-out-elastic;
+      } 
+    </style>
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <img
+                src="https://bulma.io/images/placeholders/96x96.png"
+                alt="Placeholder image"
+              />
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4">${this.getAttribute("member-name")}</p>
+            <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
+          </div>
+          <div class="media-right">
+            <button class="_cancel button is-warning is-large">Cancel</button>         
+          </div>
+      </div>
+
+
+      </div>
+    </div>
+  `;
+
+    this.querySelector("button._cancel").addEventListener("click", () => console.log("CANCEL clicked"));
+  }
+
+}
+
+// 收到申請 ReceivedRequest
+class ReceivedRequest extends HTMLElement {
+
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this.innerHTML = `
+    <style>
+      .icon .fas:hover{
+        font-size: 1.4em;
+        transition: 0.2s ease-out-elastic;
+      } 
+    </style>
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <img
+                src="https://bulma.io/images/placeholders/96x96.png"
+                alt="Placeholder image"
+              />
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4">${this.getAttribute("member-name")}</p>
+            <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
+          </div>
+          <div class="media-right">
+            <button class="_cancel button is-danger is-large">Decline</button>         
+          </div>
+      </div>
+
+
+      </div>
+    </div>
+  `;
+
+    this.querySelector("button._cancel").addEventListener("click", () => console.log("DECLINE clicked"));
+  }
+
+}
+
 customElements.define('friend-component', Friend);
+customElements.define('sent-request-component', SentRequest);
+customElements.define('received-request-component', ReceivedRequest);
