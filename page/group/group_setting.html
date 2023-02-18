@@ -29,35 +29,8 @@
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
 
-    <style>
-      div.div_line {
-        border-bottom: 1px solid;
-        border-color: #cfcff8;
-        height: 1px;
-        padding-top: 1px;
-      }
-      div#gp_basic_info {
-        height: 400px;
-        margin-top: 50px;
-        text-align: center;
-        position: relative;
-      }
-
-      button#gp_delete {
-        background-color: rgba(255, 0, 0, 0.358);
-      }
-      div#mem_to_del {
-        padding: 1px;
-        margin: 1px;
-        border: rgb(220, 220, 220) 2px solid;
-        border-radius: 10px;
-        height: 250px;
-      }
-      img.img_member_list {
-        width: 15px;
-        height: 15px;
-      }
-    </style>
+    <!--GroupCss-->
+    <link rel="stylesheet" href="./css/group.css" />
   </head>
   <body>
     <!-- 導覽列 -->
@@ -108,17 +81,23 @@
             <div class="field">
               <label class="label" for="gp_name">移除成員</label>
             </div>
-            <div id="mem_to_del">
+            <div id="group_setting_mem_to_del">
               <div class="field">
                 <label>
                   <input type="checkbox" name="to_add_mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <img
+                    class="group_setting_img_member_list"
+                    src="./test.png"
+                  />asdsadsa1
                 </label>
               </div>
               <div class="field">
                 <label>
                   <input type="checkbox" name="to_add_mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <img
+                    class="group_setting_img_member_list"
+                    src="./test.png"
+                  />asdsadsa1
                 </label>
               </div>
             </div>

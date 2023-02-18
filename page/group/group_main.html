@@ -24,137 +24,19 @@
 
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
-    <style>
-      #search_fd {
-        cursor: pointer;
-      }
-      #fs_alert {
-        width: 100vw;
-        height: 100vh;
-        position: absolute;
-        top: 0;
-        /* display: block; */
-        display: none;
-        z-index: 999;
-      }
-      .fs_alert_bg {
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.671);
-        position: fixed;
-        top: 0;
-      }
-      div.group_member_list {
-        height: 320px;
-        text-align: center;
-        margin-left: 15px;
-        margin-top: 15px;
-        border-radius: 10px;
-        border: rgba(0, 0, 0, 0.283) solid;
-        padding-top: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
-        font-size: 10px;
-      }
-      .fs_alert_show {
-        max-width: 450px;
-        min-width: 400px;
 
-        background-color: white;
-        position: absolute;
-        top: 120px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        z-index: 2;
-        border-radius: 8px;
-        text-align: center;
-      }
-
-      .fs_alert_title {
-        font-size: 26px;
-        text-align: center;
-        margin: 20px;
-        font-weight: bold;
-      }
-      .fs_alert_title_suc {
-        color: var(--main_c);
-      }
-      .fs_alert_txt {
-        width: 80%;
-        word-wrap: break-word;
-        font-size: 16px;
-        padding: 0 20px;
-        text-align: center;
-        margin: 0px auto 15px auto;
-      }
-      #alert_ok {
-        margin: 20px auto 45px auto;
-      }
-      .btn_s {
-        width: 100px;
-        border-radius: 8px;
-        font-size: var(--main_font);
-        text-align: center;
-        padding: 10px;
-        cursor: pointer;
-        margin: 10px;
-      }
-      .icon_setting {
-        cursor: pointer;
-      }
-      div.trip_info {
-        text-align: right;
-        position: relative;
-        font-size: 16px;
-      }
-      div.group_message {
-        padding: 10px;
-      }
-      div.group_member {
-        margin-left: 2px;
-        border-radius: 10px;
-        padding: 1px;
-      }
-      div.content_area {
-        border-radius: 10px;
-        padding: 1px;
-        overflow: auto;
-        overflow-x: hidden;
-        box-shadow: 2px 5px 5px 0px #88888842;
-      }
-      span.time {
-        font-size: 14px;
-      }
-      img.img_content {
-        width: 100px;
-        height: 80px;
-      }
-      img.img_member_list {
-        width: 15px;
-        height: 15px;
-      }
-      div#search_rs {
-        display: none;
-        cursor: pointer;
-      }
-      span.member_content_name {
-        font-weight: bold;
-      }
-      div.group_member_list_title {
-        font-size: 15px;
-      }
-    </style>
+    <!--GroupCss-->
+    <link rel="stylesheet" href="./css/group.css" />
   </head>
   <body>
     <!--預計加入:滑到內容若為登入者的留言要顯示刪除按鈕在右上角-->
     <!-- 導覽列 -->
     <header-component></header-component>
     <!--彈窗-->
-    <div id="fs_alert">
-      <div class="fs_alert_bg"></div>
-      <div class="fs_alert_show">
-        <div class="fs_alert_title">請輸入想找的朋友ID</div>
+    <div id="group_main_fs_alert">
+      <div class="group_main_fs_alert_bg"></div>
+      <div class="group_main_fs_alert_show">
+        <div class="group_main_fs_alert_title">請輸入想找的朋友ID</div>
         <input
           class="input fs_alert_txt"
           id="fd_id"
@@ -171,7 +53,9 @@
 
     <!--揪團名-->
     <div class="column">
-      <div class="content has-text-centered"><h1>揪團名揪團名</h1></div>
+      <div class="content has-text-centered">
+        <h1 class="gp_main_gpname">揪團名揪團名</h1>
+      </div>
     </div>
 
     <!--資訊欄-->
@@ -214,45 +98,57 @@
           <!--單一留言-->
           <article class="message is-primary">
             <div class="columns group_message message-body">
-              <img src="./test.png" class="column is-1 img_content" />
+              <img
+                src="./test.png"
+                class="column is-1 group_main_img_content"
+              />
               <div class="column is-9">
-                <span class="member_content_name">會員名稱</span><br />
+                <span class="group_main_member_content_name">會員名稱</span
+                ><br />
                 <span>內容內容</span>
               </div>
               <div class="column is-2 content_time">
-                <span class="time">2023-1-26</span>
+                <span class="group_main_msg_time">2023-1-26</span>
                 <p></p>
-                <span class="time">16:08:08</span>
+                <span class="group_main_msg_time">16:08:08</span>
               </div>
             </div>
           </article>
           <article class="message is-primary">
             <div class="columns group_message message-body">
-              <img src="./test.png" class="column is-1 img_content" />
+              <img
+                src="./test.png"
+                class="column is-1 group_main_img_content"
+              />
               <div class="column is-9">
-                <span class="member_content_name">會員名稱</span><br />
+                <span class="group_main_member_content_name">會員名稱</span
+                ><br />
                 <span
                   >內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容</span
                 >
               </div>
               <div class="column is-2 content_time">
-                <span class="time">2023-1-26</span>
+                <span class="group_main_msg_time">2023-1-26</span>
                 <p></p>
-                <span class="time">16:08:08</span>
+                <span class="group_main_msg_time">16:08:08</span>
               </div>
             </div>
           </article>
           <article class="message is-primary">
             <div class="columns group_message message-body">
-              <img src="./test.png" class="column is-1 img_content" />
+              <img
+                src="./test.png"
+                class="column is-1 group_main_img_content"
+              />
               <div class="column is-9">
-                <span class="member_content_name">會員名稱</span><br />
+                <span class="group_main_member_content_name">會員名稱</span
+                ><br />
                 <span>內容內容</span>
               </div>
               <div class="column is-2 content_time">
-                <span class="time">2023-1-26</span>
+                <span class="group_main_msg_time">2023-1-26</span>
                 <p></p>
-                <span class="time">16:08:08</span>
+                <span class="group_main_msg_time">16:08:08</span>
               </div>
             </div>
           </article>
@@ -261,33 +157,39 @@
       <div class="column is-1 group_member">
         <div class="columns" style="height: 300px">
           <div class="column group_member_list">
-            <div
-              class="field group_member_list_title"
-              style="border-bottom: 1.5px solid rgba(0, 0, 0, 0.283)"
-            >
+            <div class="field group_main_member_list_title">
               <label>成員列表</label>
             </div>
             <div class="member_list_content">
               <label
                 ><img
-                  class="img_member_list"
+                  class="group_main_img_member_list"
                   src="./test.png"
                 />中文中文中文中文</label
               >
             </div>
             <div class="member_list_content">
               <label
-                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+                ><img
+                  class="group_main_img_member_list"
+                  src="./test.png"
+                />asdsaa1</label
               >
             </div>
             <div class="member_list_content">
               <label
-                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+                ><img
+                  class="group_main_img_member_list"
+                  src="./test.png"
+                />asdsaa1</label
               >
             </div>
             <div class="member_list_content">
               <label
-                ><img class="img_member_list" src="./test.png" />asdsaa1</label
+                ><img
+                  class="group_main_img_member_list"
+                  src="./test.png"
+                />asdsaa1</label
               >
             </div>
           </div>
@@ -313,7 +215,7 @@
         };
         let invite_fd_el = document.getElementById("invite_fd");
         invite_fd_el.onclick = () => {
-          let show_alert = document.getElementById("fs_alert");
+          let show_alert = document.getElementById("group_main_fs_alert");
           show_alert.style.display = "block";
           let close_alert = document.getElementById("alert_ok");
           function close() {
@@ -333,6 +235,38 @@
         search_rs.onclick = () => {
           alert("已發送邀請");
         };
+
+        //fetch:
+
+        let getUrlString = location.href;
+        var url = new URL(getUrlString);
+        let gpid = url.searchParams.get("groupid"); // 回傳 groupid
+        // console.log(gpid);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+        myHeaders.append(
+          "Cookie",
+          "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
+        );
+
+        // var urlencoded = new URLSearchParams();
+        // urlencoded.append("groupid", gpid);
+
+        // var requestOptions = {
+        // method: 'GET',
+        //   headers: myHeaders,
+        //   body: urlencoded,
+        //   redirect: 'follow'
+        // };
+        let url1 = "http://localhost:8080/lazy-trip-back/GroupGetOne?groupid=";
+        // console.log(url1 + gpid);
+        fetch(url1 + gpid)
+          .then((response) => response.json())
+          .then((data) => {
+            $("#gp_main_gpname").html(data.groupname);
+          })
+          .catch((error) => console.log("error", error));
       });
     </script>
   </body>
