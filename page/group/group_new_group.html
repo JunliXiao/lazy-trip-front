@@ -28,19 +28,9 @@
 
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
-    <style>
-      div.div_line {
-        border-bottom: 1px solid;
-        border-color: #cfcff8;
-        height: 1px;
-        padding-top: 1px;
-      }
-      div#gp_basic_info {
-        height: 400px;
-        margin-top: 50px;
-        text-align: center;
-      }
-    </style>
+
+    <!--GroupCss-->
+    <link rel="stylesheet" href="./css/group.css" />
   </head>
   <body>
     <!-- 導覽列 -->
@@ -53,11 +43,16 @@
           <!-- 標題 -->
           <div class="content has-text-centered"><h1>建立揪團</h1></div>
           <!-- 表單 -->
-          <form class="box" action="#" method="post" id="form_gp_setting">
+          <form class="box" action="Group" method="post" id="form_gp_setting">
             <div class="field">
               <label class="label" for="gp_name">揪團名稱</label>
               <div class="control">
-                <input class="input" type="text" name="gp_name" id="gp_name" />
+                <input
+                  class="input"
+                  type="text"
+                  name="groupname"
+                  id="gp_name"
+                />
               </div>
             </div>
 
@@ -67,17 +62,30 @@
                 <input
                   class="input"
                   type="number"
-                  name="number"
+                  name="groupmembercount"
                   id="gp_mem_num"
+                />
+                <input
+                  class="input"
+                  type="hidden"
+                  name="memberid"
+                  id="memberidtest"
+                  value="1"
                 />
               </div>
             </div>
 
             <div class="field">
               <label>加入方式: </label>
-              <input type="radio" name="how_2_join" id="check_join" checked />
+              <input
+                type="radio"
+                name="how_2_join"
+                id="check_join"
+                checked
+                value="1"
+              />
               <label for="check_join">審核加入</label>
-              <input type="radio" name="how_2_join" id="any_join" />
+              <input type="radio" name="how_2_join" id="any_join" value="2" />
               <label for="any_join">直接加入</label>
             </div>
 
@@ -105,9 +113,53 @@
         let gp_create_el = document.getElementById("gp_create");
         let gp_name_el = document.getElementById("gp_name");
         let gp_mem_num_el = document.getElementById("gp_mem_num");
+
         gp_create_el.onclick = (e) => {
-          if (gp_mem_num_el.value != "" && gp_name_el.value != "") {
-            alert("創建成功!");
+          if (gp_mem_num_el.value != "" && gp_name_el.value.trim() != "") {
+            e.preventDefault();
+
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            myHeaders.append(
+              "Cookie",
+              "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
+            );
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("groupname", gp_name_el.value);
+            urlencoded.append("groupmembercount", gp_mem_num_el.value);
+            urlencoded.append("memberid", "1");
+            urlencoded.append(
+              "how_2_join",
+              $("input[name=how_2_join]:checked").val()
+            );
+
+            var requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: "follow",
+            };
+            fetch(
+              "http://localhost:8080/lazy-trip-back/GroupAdd",
+              requestOptions
+            )
+              .then((response) => response.json())
+              .then(function (data) {
+                // console.log("成功取得資料");
+                //console.log(data);
+                //console.log(data.groupid);
+                alert("創建成功");
+
+                let a =
+                  "http://localhost:8080/lazy-trip-back/group/group_main.html?groupid=";
+                location.href = a + data.groupid;
+              })
+              .catch((error) => console.log("error", error));
+
             //預計放入直接前往該揪團主頁
           } else {
             alert("請填寫完成!");

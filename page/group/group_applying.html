@@ -29,42 +29,8 @@
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
 
-    <style>
-      div.div_line {
-        border-bottom: 1px solid;
-        border-color: #cfcff8;
-        height: 1px;
-        padding-top: 1px;
-      }
-      div#gp_basic_info {
-        height: 400px;
-        margin-top: 50px;
-        text-align: center;
-        position: relative;
-      }
-      label.info {
-        font-size: 16px;
-      }
-      label.spe_need {
-        font-size: 16px;
-      }
-      div#mem_to_add {
-        padding: 1px;
-        margin: 1px;
-        border: rgb(220, 220, 220) 2px solid;
-        border-radius: 10px;
-        height: 250px;
-      }
-      img.img_member_list {
-        width: 15px;
-        height: 15px;
-      }
-      div.is_applying {
-        border-bottom: 0.8px dashed rgb(243, 216, 127);
-        padding-bottom: 5px;
-        margin-bottom: 7px;
-      }
-    </style>
+    <!--GroupCss-->
+    <link rel="stylesheet" href="./css/group.css" />
   </head>
   <body>
     <!-- 導覽列 -->
@@ -84,7 +50,7 @@
             <div class="field">
               <label class="label" for="gp_name">申請中成員</label>
             </div>
-            <div id="mem_to_add" style="overflow-y: auto; font-size: 22px">
+            <div id="mem_to_add">
               <div class="field is_applying">
                 <label>
                   <input type="checkbox" name="to_add_mems" class="mems" />

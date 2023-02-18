@@ -24,39 +24,8 @@
 
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
-    <style>
-      .is-parent {
-        cursor: pointer;
-      }
-      .is-child {
-        border-radius: 10px;
-      }
-      .group_hr {
-        border-color: #cfcff8;
-        size: 0.8px;
-      }
-
-      ul.group_list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap; /*預設nowrap 改成wrap不夠的會往下掉  */
-      }
-      ul.group_list > li a div.one_gp {
-        /* border: 1px solid black; */
-        /* font-size:  */
-        height: 100px;
-        width: 500px;
-        background-color: #3e8ed0;
-        margin: 10px 10px;
-        border-radius: 10px;
-        padding: 10px;
-      }
-      ul.group_list > li p {
-        color: white;
-      }
-    </style>
+    <!--GroupCss-->
+    <link rel="stylesheet" href="./css/group.css" />
   </head>
   <body>
     <!-- 導覽列 -->
@@ -67,7 +36,7 @@
     </div>
     <hr class="group_hr" />
 
-    <section class="section" id="gps">
+    <section class="section" id="gps" style="padding-left: 50px">
       <form>
         <ul class="group_list">
           <li>
@@ -115,6 +84,10 @@
     </section>
     <!-- 頁尾 -->
     <footer-component></footer-component>
-    <script></script>
+    <script>
+      $(function () {
+        // console.log("!!");
+      });
+    </script>
   </body>
 </html>

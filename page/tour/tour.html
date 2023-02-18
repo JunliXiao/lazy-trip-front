@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
+      integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="title">行程</h1>
+    </header>
+    <main>
+      <div class="search_btn">
+        <input class="input" type="text" placeholder="搜尋行程" />
+      </div>
+      <div class="nav_tab">
+        <div class="tabs">
+          <ul>
+            <li>
+              <a href="#" data-target="tab1" class="tab -on">我的行程</a>
+            </li>
+            <li><a href="#" data-target="tab2" class="tab">共同編輯</a></li>
+          </ul>
+        </div>
+        <div class="tab_contents">
+          <div class="tab tab1 -on">
+            <div class="columns">
+              <div class="column is-1"></div>
+              <div
+                class="column wrapper"
+                style="display: flex; flex-wrap: wrap"
+              >
+                <!-- 第一個card -->
+                <div class="column item">
+                  <div class="card">
+                    <div class="card-image">
+                      <div
+                        class="icon_total"
+                        style="right: 0; position: absolute; z-index: 10"
+                      >
+                        <div class="icon">
+                          <a href="#" class="trip_tag">
+                            <span class="icon">
+                              <i class="fas fa-tag"></i>
+                            </span>
+                          </a>
+                        </div>
+                        <div class="icon">
+                          <a href="#" class="trip_coedit">
+                            <span class="icon"
+                              ><i class="fas fa-users"></i
+                            ></span>
+                          </a>
+                        </div>
+                        <div class="icon">
+                          <a href="#" class="trip_edit">
+                            <span class="icon"
+                              ><i class="fas fa-edit"></i
+                            ></span>
+                          </a>
+                        </div>
+                        <div class="icon">
+                          <a href="#" class="trip_delete">
+                            <span class="icon"
+                              ><i class="fas fa-trash"></i
+                            ></span>
+                          </a>
+                        </div>
+                      </div>
+                      <figure class="image is-2by1" style="overflow: hidden">
+                        <img class="trip_item_img" src="./img/01.jpg" alt="" />
+                      </figure>
+                    </div>
+                    <div class="card-content" style="padding: 10px">
+                      <div class="trip_item_block">
+                        <h2 class="title is-4" style="margin: 0px">
+                          台北七日遊
+                        </h2>
+                        <time>2023-1-1 ~ 2023-1-7</time>
+                        <div class="trip_tag_place">
+                          <ul style="display: flex"></ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 第一個card -->
+              </div>
+              <div class="column is-1">
+                <button
+                  type="sumbit"
+                  class="button btn_create_trip"
+                  style="position: fixed; right: 60px; bottom: 60px"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="tab tab2">
+            <div class="columns">
+              <div class="column is-1"></div>
+              <div class="column">
+                <div class="columns .is-variable"></div>
+              </div>
+              <div class="column is-1">
+                <button
+                  type="sumbit"
+                  class="button btn_create_trip"
+                  style="position: fixed; right: 60px; bottom: 60px"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 創建行程的彈跳視窗 -->
+      <div class="lightbox trip_create_lightbox none">
+        <div
+          class="message is-primary contents"
+          style="background-color: #ebf9ff"
+        >
+          <div class="message-header" style="background-color: #04b5fb">
+            創建行程
+          </div>
+          <div class="message-body contents">
+            <label for="trip_img">行程封面照片：</label>
+            <input type="file" name="trip_img" id="trip_img" />
+            <!-- <div class="trip_pic_box">
+              <div id="show_el">
+                <img src="../pic/01.jpg" alt="" />
+              </div>
+              <div class="all_img">
+                <img src="../pic/01.jpg" alt="" />
+                <img src="../pic/02.jpg" alt="" />
+                <img src="../pic/03.jpg" alt="" />
+                <img src="../pic/04.jpg" alt="" />
+                <img src="../pic/05.jpg" alt="" />
+              </div>
+            </div> -->
+            <label for="trip_name">行程名稱：</label>
+            <input type="text" name="trip_name" id="trip_name" />
+            <br />
+            <label for="trip_start_date">出發日期：</label>
+            <input type="date" name="trip_start_date" id="trip_start_date" />
+            <br />
+            <label for="trip_end_date">結束日期：</label>
+            <input type="date" name="trip_end_date" id="trip_end_date" />
+            <br />
+            <form action="" method="get">
+              <label for="trip_tag">標籤：</label>
+              <select name="trip_tag" id="trip_tag">
+                <option value="in_progress">進行中</option>
+                <option value="want_to_go">想去</option>
+              </select>
+              <br />
+              <button type="submit" class="button trip_create_btn">完成</button>
+              <button class="button trip_close_btn">取消</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行程刪除的彈跳視窗 -->
+      <div class="lightbox trip_delete_lightbox none">
+        <div
+          class="message is-primary contents"
+          style="background-color: #ebf9ff"
+        >
+          <div class="message-header" style="background-color: #04b5fb">
+            提示
+          </div>
+          <div class="message-body contents">
+            <p>是否刪除此行程？</p>
+            <br />
+            <button class="button trip_delete_btn">確認</button>
+            <button class="button trip_close_btn">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 邀請朋友共同編輯的彈跳視窗 -->
+      <div class="lightbox trip_coedit_lightbox none">
+        <div
+          class="message is-primary contents"
+          style="background-color: #ebf9ff"
+        >
+          <div class="message-header" style="background-color: #04b5fb">
+            <p>邀請朋友</p>
+          </div>
+          <div class="message-body contents">
+            <span>複製連結碼：</span>
+            <input type="text" name="trip_invite" id="trip_invite" />
+            <br />
+            <span>傳送連結邀請朋友共同編輯行程</span>
+            <br />
+            <button class="button trip_copy_btn">複製</button>
+            <button class="button trip_close_btn">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 標籤的彈跳視窗 -->
+
+      <div class="lightbox trip_tag_lightbox none">
+        <div
+          class="message is-primary contents"
+          style="background-color: #ebf9ff"
+        >
+          <div class="message-header" style="background-color: #04b5fb">
+            <p>標籤</p>
+          </div>
+          <div class="message-body contents">
+            <input
+              class="input"
+              type="search"
+              name="trip_tag_search"
+              id="trip_tag_search"
+              placeholder="搜尋標籤"
+            />
+            <p>標籤</p>
+            <ul class="trip_tag_detail">
+              <li class="trip_tag_el">
+                <input
+                  type="checkbox"
+                  name="trip_tag_el_checkbox"
+                  id="trip_tag_el_checkbox"
+                />
+                <span>進行中</span>
+                <button class="button delete"></button>
+              </li>
+              <li class="trip_tag_el">
+                <input
+                  type="checkbox"
+                  name="trip_tag_el_checkbox"
+                  id="trip_tag_el_checkbox"
+                />
+                <span>想去</span>
+                <button class="button delete"></button>
+              </li>
+            </ul>
+            <input
+              type="text"
+              name="trip_tag_input"
+              id="trip_tag_input"
+              class="input trip_tag_input"
+              placeholder="輸入標籤"
+            />
+            <button class="button trip_tag_create">創建新標籤</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="../../asset/vendor/jquery/jquery-3.6.3.min.js"></script>
+    <script src="./js/tour.js"></script>
+  </body>
+</html>
