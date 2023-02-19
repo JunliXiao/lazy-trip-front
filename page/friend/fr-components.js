@@ -1,3 +1,20 @@
+// 你可能感興趣 Suggestion
+class Suggestion extends HTMLElement {
+
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      <div class="box">
+        陌生會員
+      </div>
+    `
+  }
+
+}
+
 // 好友 Friend
 class Friend extends HTMLElement {
 
@@ -54,7 +71,7 @@ class Friend extends HTMLElement {
 
 }
 
-// 發出申請 SentRequest
+// 送出邀請 SentRequest
 class SentRequest extends HTMLElement {
 
   constructor() {
@@ -85,7 +102,7 @@ class SentRequest extends HTMLElement {
             <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
           </div>
           <div class="media-right">
-            <button class="_cancel button is-warning is-large">Cancel</button>         
+            <button class="_cancel button is-warning is-medium">取消</button>         
           </div>
       </div>
 
@@ -99,7 +116,7 @@ class SentRequest extends HTMLElement {
 
 }
 
-// 收到申請 ReceivedRequest
+// 收到邀請 ReceivedRequest
 class ReceivedRequest extends HTMLElement {
 
   constructor() {
@@ -130,7 +147,7 @@ class ReceivedRequest extends HTMLElement {
             <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
           </div>
           <div class="media-right">
-            <button class="_cancel button is-danger is-large">Decline</button>         
+            <button class="_cancel button is-danger is-medium">婉拒</button>         
           </div>
       </div>
 

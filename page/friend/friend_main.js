@@ -5,29 +5,49 @@
 //     .catch((err) => console.log(err));
 
 const specifier_id = 4;
-const btn_show_friends = document.getElementById("btn-show-friends");
-const btn_show_sent_requests = document.getElementById("btn-show-sent-requests");
-const btn_show_received_requests = document.getElementById("btn-show-received-requests");
-const btn_add_request = document.getElementById("btn-add-request");
-const btn_submit_request = document.getElementById("btn-submit-request");
+const node_show_suggestions = document.getElementById("li-suggestions");
+const node_show_friends = document.getElementById("li-friends");
+const node_show_sent_requests = document.getElementById("li-sent-requests");
+const node_show_received_requests = document.getElementById("li-received-requests");
+const node_add_request = document.getElementById("btn-add-request");
+const node_submit_request = document.getElementById("btn-submit-request");
+const node_results = document.getElementById("div-results");
 
-const friends_summary = document.getElementById("friends_summary");
 // const api_root = "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app";
 const api_root = "http://127.0.0.1:8080/lazy-trip-back";
 
 document.addEventListener("DOMContentLoaded", () => {
-    btn_show_friends.addEventListener("click", showFriends);
-    btn_show_sent_requests.addEventListener("click", () => {showRequests("sent");});
-    btn_show_received_requests.addEventListener("click", () => {showRequests("received");});
-    btn_add_request.addEventListener("click", addRequest);
-    btn_submit_request.addEventListener("click", submitRequest);
+    node_show_suggestions.addEventListener("click", (event) => {
+        toggleActiveMenuListItem(event);
+        node_results.innerHTML = '';
+        console.log("SUGGESTIONS clicked")
+    });
+    node_show_friends.addEventListener("click",(event) => {
+        toggleActiveMenuListItem(event);
+        showFriends();
+    });
+    node_show_sent_requests.addEventListener("click", (event) => {
+        toggleActiveMenuListItem(event);
+        showRequests("sent");
+    });
+    node_show_received_requests.addEventListener("click", (event) => {
+        toggleActiveMenuListItem(event);
+        showRequests("received");
+    });
+    node_add_request.addEventListener("click", addRequest);
+    node_submit_request.addEventListener("click", submitRequest);
 
     setBulmaModal();
 
 });
 
+function toggleActiveMenuListItem(event) {
+    document.querySelector("ul.menu-list li a.is-active").classList.remove("is-active");
+    event.target.classList.add("is-active");
+}
+
 function showFriends() {
-    friends_summary.innerHTML = '';
+    node_results.innerHTML = '';
 
     
     fetch(api_root + `/friends?member_id=${specifier_id}`)
@@ -36,13 +56,13 @@ function showFriends() {
             let newItem = document.createElement("friend-component");
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]); 
-            friends_summary.appendChild(newItem);
+            node_results.appendChild(newItem);
         }))
         .catch((err) => console.log(err));
 }
 
 function showRequests(direction) {
-    friends_summary.innerHTML = '';
+    node_results.innerHTML = '';
 
     fetch(api_root + `/friend-requests?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
@@ -52,7 +72,7 @@ function showRequests(direction) {
                 : document.createElement("received-request-component");
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]);
-            friends_summary.appendChild(newItem);
+            node_results.appendChild(newItem);
         }))
         .catch((err) => console.log(err));
 }

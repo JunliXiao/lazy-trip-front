@@ -29,75 +29,65 @@
     <!-- 導覽列 -->
     <header-component></header-component>
 
-    <!-- 內容 -->
-    <div class="columns">
-      <div class="column">
+    <!-- 主體 -->
+    <div class="columns mb-0 pb-0" style="min-height: 800px">
+      <!-- 左側欄 -->
+      <div class="column mb-0 pb-0">
         <div class="section">
-          <div class="block">
-            <example-component foo="Frank">XX</example-component>
-          </div>
-          <!-- 好友列表 -->
-          <div class="block">
-            <div class="buttons">
-              <button
-                id="btn-show-friends"
-                class="button is-success is-outlined"
-              >
-                所有好友
-              </button>
-            </div>
-          </div>
-
-          <!-- 發出好友申請列表 -->
-          <div class="block">
-            <div class="buttons">
-              <button
-                id="btn-show-sent-requests"
-                class="button is-success is-outlined"
-              >
-                所有發出申請
-              </button>
-            </div>
-          </div>
-
-          <!-- 收到好友申請列表 -->
-          <div class="block">
-            <div class="buttons">
-              <button
-                id="btn-show-received-requests"
-                class="button is-success is-outlined"
-              >
-                所有收到申請
-              </button>
-            </div>
-          </div>
-
-          <!-- 新增好友申請 -->
-          <div class="block">
-            <div class="buttons">
-              <button
-                id="btn-add-request"
-                class="js-modal-trigger button is-success is-outlined"
-                data-target="modal-js-example"
-              >
-                新增申請
-              </button>
-            </div>
-          </div>
+          <aside class="menu" style="width: 100%">
+            <ul class="menu-list has-text-centered has-text-weight-semibold">
+              <li id="li-suggestions">
+                <a class="is-size-4 py-5">你可能感興趣</a>
+              </li>
+              <li id="li-friends">
+                <a class="is-active is-size-4 py-5">我的好友</a>
+              </li>
+              <li id="li-sent-requests">
+                <a class="is-size-4 py-5">送出邀請</a>
+              </li>
+              <li id="li-received-requests">
+                <a class="is-size-4 py-5">收到邀請</a>
+              </li>
+            </ul>
+          </aside>
         </div>
       </div>
-      <div class="column is-three-quarters">
+      <!-- 右側內容 -->
+      <div class="column is-three-quarters mb-0 pb-0">
         <div class="section">
+          <!-- 新增好友邀請 -->
+          <div class="content">
+            <button
+              id="btn-add-request"
+              class="js-modal-trigger button is-success is-medium"
+              data-target="modal-js-example"
+            >
+              新的邀請
+            </button>
+          </div>
+
           <nav class="level">
             <div class="level-left">
               <div class="level-item">
-                <div class="content">
-                  <h1>我的好友</h1>
+                <!-- 搜尋框 -->
+                <div class="field has-addons">
+                  <p class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="搜尋會員帳號"
+                    />
+                  </p>
+                  <p class="control">
+                    <button class="button">搜尋</button>
+                  </p>
                 </div>
               </div>
             </div>
+
             <div class="level-right">
               <div class="level-item">
+                <!-- 結果篩選控制 -->
                 <div class="buttons has-addons is-right">
                   <button class="button">AA</button>
                   <button class="button">BB</button>
@@ -109,15 +99,15 @@
           </nav>
 
           <hr />
-          <div id="friends_summary" class="block"></div>
-
-          <div class="content" style="display: none">
-            <h3>Oops！找不到任何好友！</h3>
+          <div class="content" style="display: block">
+            <h3>Oops！沒有 XXX 的相關結果</h3>
           </div>
+          <div id="div-results" class="block"></div>
         </div>
       </div>
     </div>
 
+    <!-- 新增申請 Modal -->
     <div id="modal-js-example" class="modal">
       <div class="modal-background"></div>
 
