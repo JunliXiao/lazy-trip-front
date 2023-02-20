@@ -19,8 +19,7 @@ const api_root = "http://127.0.0.1:8080/lazy-trip-back";
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
         toggleActiveMenuListItem(event);
-        node_results.innerHTML = '';
-        console.log("SUGGESTIONS clicked")
+        showSuggestions();
     });
     node_show_friends.addEventListener("click",(event) => {
         toggleActiveMenuListItem(event);
@@ -34,10 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleActiveMenuListItem(event);
         showRequests("received");
     });
-    node_add_request.addEventListener("click", addRequest);
     node_submit_request.addEventListener("click", submitRequest);
 
     setBulmaModal();
+    showSuggestions();
 
 });
 
@@ -46,14 +45,29 @@ function toggleActiveMenuListItem(event) {
     event.target.classList.add("is-active");
 }
 
+function showSuggestions() {
+    node_results.innerHTML = '';
+
+    fetch(api_root + `/api/friend-suggestions?member_id=${specifier_id}`)
+        .then((res) => res.json())
+        .then((friends) => friends.forEach(fr => {
+            let newItem = document.createElement("suggestion-component");
+            newItem.setAttribute("member-id", fr["id"]);
+            newItem.setAttribute("member-name", fr["name"]);
+            newItem.setAttribute("member-account", fr["account"]); 
+            node_results.appendChild(newItem);
+        }))
+        .catch((err) => console.log(err));
+}
+
 function showFriends() {
     node_results.innerHTML = '';
 
-    
-    fetch(api_root + `/friends?member_id=${specifier_id}`)
+    fetch(api_root + `/api/friends?member_id=${specifier_id}`)
         .then((res) => res.json())
         .then((friends) => friends.forEach(fr => {
             let newItem = document.createElement("friend-component");
+            newItem.setAttribute("member-id", fr["member_id"]);
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]); 
             node_results.appendChild(newItem);
@@ -64,12 +78,13 @@ function showFriends() {
 function showRequests(direction) {
     node_results.innerHTML = '';
 
-    fetch(api_root + `/friend-requests?member_id=${specifier_id}&direction=${direction}`)
+    fetch(api_root + `/api/friend-requests?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
         .then((friends) => friends.forEach(fr => {
             let newItem = direction == "sent" 
                 ? document.createElement("sent-request-component") 
                 : document.createElement("received-request-component");
+            newItem.setAttribute("member-id", fr["member_id"]);    
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]);
             node_results.appendChild(newItem);
@@ -94,7 +109,7 @@ function submitRequest() {
         redirect: 'follow'
       };
       
-      fetch(`http://localhost:8080/lazy-trip-back/friend-requests?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
+      fetch(`http://localhost:8080/lazy-trip-back/api/friend-requests?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
         .then(response => response.json())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));

@@ -1,5 +1,6 @@
 // 你可能感興趣 Suggestion
 class Suggestion extends HTMLElement {
+  
 
   constructor() {
     super();
@@ -7,10 +8,42 @@ class Suggestion extends HTMLElement {
 
   connectedCallback() {
     this.innerHTML = `
-      <div class="box">
-        陌生會員
+    <style>
+      .icon .fas:hover{
+        font-size: 1.4em;
+        transition: 0.2s ease-out-elastic;
+      } 
+    </style>
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <img
+                src="https://bulma.io/images/placeholders/96x96.png"
+                alt="Placeholder image"
+              />
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4">${this.getAttribute("member-name")}</p>
+            <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
+          </div>
+          <div class="media-right">
+            <button class="_add_friend js-modal-trigger button is-success is-medium" data-target="modal-js-example">
+              加好友
+            </button>         
+          </div>
       </div>
-    `
+
+
+      </div>
+    </div>
+  `;
+
+    setBulmaModal();
+    this.querySelector("button._add_friend").addEventListener("click", () => console.log("加好友 clicked"));
   }
 
 }
@@ -147,20 +180,24 @@ class ReceivedRequest extends HTMLElement {
             <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
           </div>
           <div class="media-right">
-            <button class="_cancel button is-danger is-medium">婉拒</button>         
-          </div>
+            <div class="buttons">
+              <button class="_accept button is-info is-medium">接受</button>
+              <button class="_cancel button is-danger is-medium">婉拒</button>         
+            </div>
+          </div>  
       </div>
 
 
       </div>
     </div>
   `;
-
+    this.querySelector("button._accept").addEventListener("click", () => console.log("ACCEPT clicked"));  
     this.querySelector("button._cancel").addEventListener("click", () => console.log("DECLINE clicked"));
   }
 
 }
 
+customElements.define('suggestion-component', Suggestion);
 customElements.define('friend-component', Friend);
 customElements.define('sent-request-component', SentRequest);
 customElements.define('received-request-component', ReceivedRequest);
