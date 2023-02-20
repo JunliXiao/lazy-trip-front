@@ -44,6 +44,7 @@ class Suggestion extends HTMLElement {
     // setBulmaModal();
     this.querySelector("button._add_friend").addEventListener("click", (event) => {
       let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
+      if(!confirm("確認邀請？")) return;
       addRequest(specifier_id, other_id);
     });
   }

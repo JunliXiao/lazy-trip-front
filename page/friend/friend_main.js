@@ -5,6 +5,7 @@ const node_show_sent_requests = document.getElementById("li-sent-requests");
 const node_show_received_requests = document.getElementById("li-received-requests");
 const node_add_request = document.getElementById("btn-add-request");
 const node_submit_request = document.getElementById("btn-submit-request");
+const node_summary = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
 
 // Requester, Addressee / Specifier, Other
@@ -50,39 +51,66 @@ function toggleActiveMenuListItem(event) {
 function showSuggestions() {
     node_results.innerHTML = '';
 
-    fetch(api_root + `/api/friend-suggestions?member_id=${specifier_id}`)
+    fetch(api_root + api_friend_suggestions + `?member_id=${specifier_id}`)
         .then((res) => res.json())
-        .then((friends) => friends.forEach(fr => {
+        .then((friends) => {
+          if(friends.length == 0) {
+            node_summary.style.display = "block";
+            return;
+          } else {
+            node_summary.style.display = "none";
+          }
+
+          friends.forEach(fr => {
             let newItem = document.createElement("suggestion-component");
             newItem.setAttribute("member-id", fr["id"]);
             newItem.setAttribute("member-name", fr["name"]);
             newItem.setAttribute("member-account", fr["account"]); 
             node_results.appendChild(newItem);
-        }))
+        }); 
+      })
         .catch((err) => console.log(err));
 }
+
 
 function showFriends() {
     node_results.innerHTML = '';
 
-    fetch(api_root + `/api/friends?member_id=${specifier_id}`)
+    fetch(api_root + api_friends + `?member_id=${specifier_id}`)
         .then((res) => res.json())
-        .then((friends) => friends.forEach(fr => {
+        .then((friends) => {
+          if(friends.length == 0) {
+            node_summary.style.display = "block";
+            return;
+          } else {
+            node_summary.style.display = "none";
+          }
+          
+          friends.forEach(fr => {
             let newItem = document.createElement("friend-component");
             newItem.setAttribute("member-id", fr["member_id"]);
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]); 
             node_results.appendChild(newItem);
-        }))
+        });
+      })
         .catch((err) => console.log(err));
 }
 
 function showRequests(direction) {
     node_results.innerHTML = '';
 
-    fetch(api_root + `/api/friend-requests?member_id=${specifier_id}&direction=${direction}`)
+    fetch(api_root + api_friend_requests + `?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
-        .then((friends) => friends.forEach(fr => {
+        .then((friends) => {
+          if(friends.length == 0) {
+            node_summary.style.display = "block";
+            return;
+          } else {
+            node_summary.style.display = "none";
+          }
+          
+          friends.forEach(fr => {
             let newItem = direction == "sent" 
                 ? document.createElement("sent-request-component") 
                 : document.createElement("received-request-component");
@@ -90,12 +118,9 @@ function showRequests(direction) {
             newItem.setAttribute("member-name", fr["member_name"]);
             newItem.setAttribute("member-account", fr["member_account"]);
             node_results.appendChild(newItem);
-        }))
+        });
+      })
         .catch((err) => console.log(err));
-}
-
-function showReceivedRequests() {
-    console.log("show received requests");
 }
 
 function addRequest(requesterId, addresseeId) {
