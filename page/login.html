@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In</title>
+    <title>Log In</title>
     <!-- Bulma 自訂 -->
     <link rel="stylesheet" href="../asset/css/my-bulma.css" />
     <!-- 自定義 CSS -->
@@ -26,7 +26,7 @@
           <!-- 標題 -->
           <div class="content has-text-centered"><h1>登入</h1></div>
           <!-- 表單 -->
-          <form class="box" action="#" method="post" id="form-login">
+          <form class="box" action="" method="post" id="form-login">
             <div class="field">
               <label class="label" for="input-username">帳號</label>
               <div class="control">
@@ -58,7 +58,7 @@
               <div class="control">
                 <button
                   class="button is-primary has-text-centered"
-                  type="submit"
+                  type="button"
                   id="btn-login"
                 >
                   登入
@@ -81,11 +81,35 @@
     </div>
 
     <footer-component></footer-component>
+    <script src="../asset/vendor/jquery/jquery-3.6.3.min.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("btn-signup").addEventListener("click", () => {
-          window.location.href = "signup.html";
-        });
+      const account = $("input#input-username");
+      const password = $("input#input-password");
+
+      $("button#btn-login").on("click", function () {
+        fetch("login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            account: account.val(),
+            password: password.val(),
+          }),
+        })
+          .then((resp) => {
+            if (resp.redirected) {
+              location.href = resp.url;
+              alert("success");
+            } else {
+              resp.json().then((body) => {
+                alert(`errorMsg: ${body.errorMessage}`);
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
     </script>
   </body>
