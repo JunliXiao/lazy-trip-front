@@ -1,10 +1,4 @@
-// const users = fetch(
-//     "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app/api/v1/users"
-//   )
-//     .then((res) => res.json())
-//     .catch((err) => console.log(err));
-
-const specifier_id = 4;
+// 事件觸發 UI 常數
 const node_show_suggestions = document.getElementById("li-suggestions");
 const node_show_friends = document.getElementById("li-friends");
 const node_show_sent_requests = document.getElementById("li-sent-requests");
@@ -13,9 +7,16 @@ const node_add_request = document.getElementById("btn-add-request");
 const node_submit_request = document.getElementById("btn-submit-request");
 const node_results = document.getElementById("div-results");
 
-// const api_root = "https://spring-boot-rest-1-kbf6hmc46a-de.a.run.app";
-const api_root = "http://127.0.0.1:8080/lazy-trip-back";
+// Requester, Addressee / Specifier, Other
+const specifier_id = 4;
 
+// API 路徑
+const api_root = "http://127.0.0.1:8080/lazy-trip-back";
+const api_friends = "/api/friends";
+const api_friend_requests = "/api/friend-requests";
+const api_friend_suggestions = "/api/friend-suggestions";
+
+// 頁面初始化
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
         toggleActiveMenuListItem(event);
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+// 使用之函數
 function toggleActiveMenuListItem(event) {
     document.querySelector("ul.menu-list li a.is-active").classList.remove("is-active");
     event.target.classList.add("is-active");
@@ -96,8 +98,58 @@ function showReceivedRequests() {
     console.log("show received requests");
 }
 
-function addRequest() {
-    console.log("Add Request clicked");
+function addRequest(requesterId, addresseeId) {
+    var requestOptions = {
+      method: 'POST',
+      redirect: 'follow'
+    };
+    
+    fetch(api_root + api_friend_requests + `?requester_id=${requesterId}&addressee_id=${addresseeId}`, requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+}
+
+function acceptRequest(requesterId, addresseeId) {
+    var requestOptions = {
+      method: 'PUT',
+      redirect: 'follow'
+    };
+
+    fetch(api_root + 
+          api_friend_requests + 
+          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=accept`, requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));  
+}
+
+function cancelRequest(requesterId, addresseeId) {
+    var requestOptions = {
+      method: 'PUT',
+      redirect: 'follow'
+    };
+  
+    fetch(api_root + 
+          api_friend_requests + 
+          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=cancel`, requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));  
+}
+
+function declineRequest(requesterId, addresseeId) {
+    var requestOptions = {
+      method: 'PUT',
+      redirect: 'follow'
+    };
+
+    fetch(api_root + 
+          api_friend_requests + 
+          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=decline`, requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));  
 }
 
 function submitRequest() {
@@ -109,7 +161,7 @@ function submitRequest() {
         redirect: 'follow'
       };
       
-      fetch(`http://localhost:8080/lazy-trip-back/api/friend-requests?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
+      fetch(api_root + api_friend_requests + `?requester_id=${specifier_id}&addressee_id=${addressee_id}`, requestOptions)
         .then(response => response.json())
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
