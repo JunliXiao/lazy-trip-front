@@ -7,15 +7,11 @@
   border: 1px black solid;
   background-color: green;
 } */
-button {
-  cursor: pointer;
-}
-div.nav_tab div.tab_contents div.tab {
-  padding: 10px;
+.-none{
   display: none;
 }
-div.nav_tab div.tab_contents div.tab.-on {
-  display: block;
+button {
+  cursor: pointer;
 }
 .card:hover {
   box-shadow: 5px 5px 10px 3px rgb(0 0 0 / 20%);
@@ -151,6 +147,24 @@ input.trip_tag_text{
   
 }
 
+div.icon_total {
+  right: 0; 
+  position: absolute; 
+  z-index: 10
+}
+
+div.card-content {
+  padding: 10px;
+}
+
+div.trip_item_block > h2.title {
+  margin: 0px;
+}
+
+div.wrapper {
+  display: flex; 
+  flex-wrap: wrap;
+}
 
 
 /* 行程圖放大與縮小 */

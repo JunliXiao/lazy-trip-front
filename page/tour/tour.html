@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Hello Bulma!</title>
-    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link rel="stylesheet" href="css/my-bulma.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
@@ -12,7 +12,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <header>
@@ -35,66 +35,7 @@
           <div class="tab tab1 -on">
             <div class="columns">
               <div class="column is-1"></div>
-              <div
-                class="column wrapper"
-                style="display: flex; flex-wrap: wrap"
-              >
-                <!-- 第一個card -->
-                <div class="column item">
-                  <div class="card">
-                    <div class="card-image">
-                      <div
-                        class="icon_total"
-                        style="right: 0; position: absolute; z-index: 10"
-                      >
-                        <div class="icon">
-                          <a href="#" class="trip_tag">
-                            <span class="icon">
-                              <i class="fas fa-tag"></i>
-                            </span>
-                          </a>
-                        </div>
-                        <div class="icon">
-                          <a href="#" class="trip_coedit">
-                            <span class="icon"
-                              ><i class="fas fa-users"></i
-                            ></span>
-                          </a>
-                        </div>
-                        <div class="icon">
-                          <a href="#" class="trip_edit">
-                            <span class="icon"
-                              ><i class="fas fa-edit"></i
-                            ></span>
-                          </a>
-                        </div>
-                        <div class="icon">
-                          <a href="#" class="trip_delete">
-                            <span class="icon"
-                              ><i class="fas fa-trash"></i
-                            ></span>
-                          </a>
-                        </div>
-                      </div>
-                      <figure class="image is-2by1" style="overflow: hidden">
-                        <img class="trip_item_img" src="./img/01.jpg" alt="" />
-                      </figure>
-                    </div>
-                    <div class="card-content" style="padding: 10px">
-                      <div class="trip_item_block">
-                        <h2 class="title is-4" style="margin: 0px">
-                          台北七日遊
-                        </h2>
-                        <time>2023-1-1 ~ 2023-1-7</time>
-                        <div class="trip_tag_place">
-                          <ul style="display: flex"></ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 第一個card -->
-              </div>
+              <div class="column wrapper"></div>
               <div class="column is-1">
                 <button
                   type="sumbit"
@@ -136,39 +77,26 @@
             創建行程
           </div>
           <div class="message-body contents">
-            <label for="trip_img">行程封面照片：</label>
-            <input type="file" name="trip_img" id="trip_img" />
-            <!-- <div class="trip_pic_box">
-              <div id="show_el">
-                <img src="../pic/01.jpg" alt="" />
-              </div>
-              <div class="all_img">
-                <img src="../pic/01.jpg" alt="" />
-                <img src="../pic/02.jpg" alt="" />
-                <img src="../pic/03.jpg" alt="" />
-                <img src="../pic/04.jpg" alt="" />
-                <img src="../pic/05.jpg" alt="" />
-              </div>
-            </div> -->
-            <label for="trip_name">行程名稱：</label>
-            <input type="text" name="trip_name" id="trip_name" />
+            <label for="tourTitle">行程名稱：</label>
+            <input type="text" name="tourTitle" id="tourTitle" />
             <br />
-            <label for="trip_start_date">出發日期：</label>
-            <input type="date" name="trip_start_date" id="trip_start_date" />
+            <label for="startDate">出發日期：</label>
+            <input type="date" name="startDate" id="startDate" />
             <br />
-            <label for="trip_end_date">結束日期：</label>
-            <input type="date" name="trip_end_date" id="trip_end_date" />
+            <label for="endDate">結束日期：</label>
+            <input type="date" name="endDate" id="endDate" />
             <br />
-            <form action="" method="get">
-              <label for="trip_tag">標籤：</label>
-              <select name="trip_tag" id="trip_tag">
-                <option value="in_progress">進行中</option>
-                <option value="want_to_go">想去</option>
-              </select>
-              <br />
-              <button type="submit" class="button trip_create_btn">完成</button>
-              <button class="button trip_close_btn">取消</button>
-            </form>
+            <label for="tourImg">行程封面照片：</label>
+            <input type="file" name="tourImg" id="tourImg" />
+            <br />
+            <label for="trip_tag">標籤：</label>
+            <select name="trip_tag" id="trip_tag">
+              <option value="in_progress">進行中</option>
+              <option value="want_to_go">想去</option>
+            </select>
+            <br />
+            <button type="button" class="button trip_create_btn">完成</button>
+            <button class="button trip_close_btn">取消</button>
           </div>
         </div>
       </div>
@@ -190,30 +118,7 @@
           </div>
         </div>
       </div>
-
-      <!-- 邀請朋友共同編輯的彈跳視窗 -->
-      <div class="lightbox trip_coedit_lightbox none">
-        <div
-          class="message is-primary contents"
-          style="background-color: #ebf9ff"
-        >
-          <div class="message-header" style="background-color: #04b5fb">
-            <p>邀請朋友</p>
-          </div>
-          <div class="message-body contents">
-            <span>複製連結碼：</span>
-            <input type="text" name="trip_invite" id="trip_invite" />
-            <br />
-            <span>傳送連結邀請朋友共同編輯行程</span>
-            <br />
-            <button class="button trip_copy_btn">複製</button>
-            <button class="button trip_close_btn">取消</button>
-          </div>
-        </div>
-      </div>
-
       <!-- 標籤的彈跳視窗 -->
-
       <div class="lightbox trip_tag_lightbox none">
         <div
           class="message is-primary contents"
@@ -263,7 +168,7 @@
         </div>
       </div>
     </main>
-    <script src="../../asset/vendor/jquery/jquery-3.6.3.min.js"></script>
-    <script src="./js/tour.js"></script>
+    <script src="js/jquery-3.6.3.min.js"></script>
+    <script src="js/tour.js"></script>
   </body>
 </html>
