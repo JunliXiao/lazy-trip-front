@@ -7,17 +7,17 @@ $(function () {
   }
   //   ---------------
   let username = getCookie("memUsername");
-
+  let location = window.location.origin;
   if (username != null) {
     $("span.username").text(username);
   } else {
     let html = `
     <div class="navbar-item">
     <div class="buttons">
-      <a class="button is-primary" href="page/signup.html">
+      <a class="button is-primary" href="${location}/lazy-trip-back/page/signup.html">
         <strong> 註冊 </strong>
       </a>
-      <a class="button is-light" href="page/login.html"> 登入 </a>
+      <a class="button is-light" href="${location}/lazy-trip-back/page/login.html"> 登入 </a>
     </div>
   </div>`;
     $("div.member").empty();
