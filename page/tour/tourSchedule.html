@@ -64,7 +64,7 @@
       }
       /* 每日行程資訊欄 內部排版 */
       /* section.dayTripBlock > ul, section.dayTripBlock li:not(:first-child) */
-      section.dayTripBlock > ul {
+      div.dayTripBlock_all > ul {
         display: flex;
         align-items: center;
         box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
@@ -73,10 +73,10 @@
         padding: 8px;
         overflow: hidden;
       }
-      section.dayTripBlock > ul:hover {
+      div.dayTripBlock_all > ul:hover {
         box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
       }
-      section.dayTripBlock li:not(:first-child) {
+      div.dayTripBlock_all li:not(:first-child) {
         margin: 0px 8px;
       }
       section li.dayTripBlock_locationInfoImg > img {
@@ -94,7 +94,7 @@
         flex-direction: column;
         text-align: left;
       }
-      section.dayTripBlock ul.dayTripBlock_locationInfoBlockDetail li {
+      div.dayTripBlock_all ul.dayTripBlock_locationInfoBlockDetail li {
         margin: 0;
       }
       li.dayTripBlock_locationInfoBlockDetail_time {
@@ -114,15 +114,15 @@
         color: #fff;
         font-weight: bold;
       }
-      section.dayTripBlock div.dayTripBlock_carRouteTime {
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime {
         display: flex;
         margin: 10px;
       }
-      section.dayTripBlock div.dayTripBlock_carRouteTime > span.icon {
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime > span.icon {
         font-size: 1.5rem;
         margin-left: 20px;
       }
-      section.dayTripBlock div.dayTripBlock_carRouteTime > p {
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime > p {
         margin-left: 10px;
       }
 
@@ -285,7 +285,7 @@
       div.schedule.lodge {
         overflow-y: auto;
         max-height: calc(100vh - 191px);
-        padding: 0 10px;
+        /* padding: 0 10px; */
       }
       /* scroll捲軸功能css */
       /* 隱藏捲軸，只有當滑鼠移到捲軸區域時才顯示 */

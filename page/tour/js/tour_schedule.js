@@ -2,6 +2,14 @@
 let url = new URL(window.location.href);
 let params = new URLSearchParams(url.search);
 let tourId = params.get("tourId");
+
+// +想去哪裡玩的DOM元素，以及抓取其data-date
+let btnAddTrip;
+let currentDate;
+let tourSchedule_arr = [];
+let attraction_arr = [];
+let date_change;
+
 function init() {
   $.ajax({
     url: `http://localhost:8080/lazy-trip-back/tourQueryOne?tourId=${tourId}`,
@@ -52,7 +60,7 @@ function initRenderTourData(data) {
   let tour_date = "";
   let tourSchedule_title = "";
   for (let i = 0; i <= diffDays; i++) {
-    let date_change = new Date(
+    date_change = new Date(
       new Date(data.startDate).getTime() + i * 24 * 3600 * 1000
     ).toLocaleDateString();
     tour_date += `
@@ -64,13 +72,13 @@ function initRenderTourData(data) {
     $("ul.date_detail").html(tour_date);
 
     tourSchedule_title += `
-      <div data-date=${date_change}>
+      <div class="dayTrip" data-date=${date_change}>
         <header>
           <h2 class="dayTripBlock_label">
             <span>第${i + 1}天 - ${date_change}</span>
           </h2>
         </header>
-        <section class="dayTripBlock"></section>
+        <section class="dayTripBlock" data-date=${date_change}></section>
         <div class="add_trip_box" data-date=${date_change}>
           <button class="button add_trip">+ 想去哪裡玩</button>
         </div>
@@ -81,16 +89,14 @@ function initRenderTourData(data) {
   $("div.schedule.lodge").html(tourSchedule_title);
 }
 
-function renderTourScheData() {}
-
 // 點擊"想去哪裡玩"button，開啟右方資訊輸入欄
-let btnAddTripDate;
+
 $(document).on("click", "div.add_trip_box > button.add_trip", function () {
   $("div.add_info").addClass("show");
   $("div.add_info > .create_plan_trip > ul > li.text").text("新增景點");
   $("button.button.add_attraction").text("加入景點");
-
-  btnAddTripDate = $(this).closest("div.add_trip_box").attr("data-date");
+  btnAddTrip = $(this).closest("div.add_trip_box");
+  currentDate = btnAddTrip.attr("data-date");
 });
 
 // 點擊右方資訊輸入欄的"返回"，將欄位隱藏
@@ -187,6 +193,10 @@ function initMap() {
       autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
 
+        // const origin = current_position
+        //   ? new google.maps.LatLng(current_position.lat, current_position.lng)
+        //   : selected_attraction.location;
+
         selected_attraction = {
           location: place.geometry.location,
           place_id: place.place_id,
@@ -252,7 +262,7 @@ function initMap() {
   }
 }
 //=====================將google map查詢的景點資訊，渲染到attraction_detail_show===========================//
-let attraction_arr = [];
+let attraction_Map = {};
 function addAttractionIntoDB(selected_attraction) {
   // addData
   $.ajax({
@@ -268,7 +278,10 @@ function addAttractionIntoDB(selected_attraction) {
     dataType: "json",
     contentType: "application/json",
     success: function (data) {
-      attraction_arr.push({
+      if (!attraction_Map[currentDate]) {
+        attraction_Map[currentDate] = [];
+      }
+      attraction_Map[currentDate].push({
         attractionTitle: data.attractionTitle,
         location: data.location,
         latitude: data.latitude,
@@ -278,6 +291,16 @@ function addAttractionIntoDB(selected_attraction) {
         attractionId: data.attractionId,
         memberId: 2,
       });
+
+      attraction_arr.push({
+        attractionTitle: data.attractionTitle,
+        location: data.location,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        attractionImg: data.attractionImg,
+        carRouteTime: carRoute_time,
+        attractionId: data.attractionId,
+      });
       $("div.attraction_detail_show").html("");
       renderAttractionToShowBox(attraction_arr);
     },
@@ -286,7 +309,7 @@ function addAttractionIntoDB(selected_attraction) {
     },
   });
 }
-
+// 將景點資訊渲染到show box內
 function renderAttractionToShowBox(attraction_arr) {
   let new_attraction = "";
   for (let i = 0; i < attraction_arr.length; i++) {
@@ -299,25 +322,27 @@ function renderAttractionToShowBox(attraction_arr) {
   $("div.attraction_detail_show").html(new_attraction);
 }
 
-let tourSchedule_arr = [];
 $("button.button.add_attraction").on("click", function addTourScheduleBox() {
   let stay_time = document.getElementById("stay_time").value;
   let start_time = document.getElementById("start_time").value;
   // 當執行加入景點時，將景點放入tourSchedule_arr內
   tourSchedule_arr.push({
-    tourSchedule_date: btnAddTripDate,
-    start_time: start_time,
-    stay_time: stay_time,
+    date: currentDate,
+    startTime: start_time,
+    stayTime: stay_time,
     tourId: tourId,
     memberId: 2,
-
     attraction_info: attraction_arr,
   });
 
-  // 將景點渲染到div.schedule.lodge
+  // 將景點資訊渲染到div.schedule.lodge
   let new_dayTripInfo = "";
+
   for (let i = 0; i < tourSchedule_arr.length; i++) {
     new_dayTripInfo = `
+    <div class="dayTripBlock_all" data-attrId=${
+      tourSchedule_arr[i].attraction_info[i].attractionId
+    }>
       <ul class="dayTripBlock_locationInfo">
         <li class="dayTripBlock_locationInfoImg">
           <img src=${tourSchedule_arr[i].attraction_info[i].attractionImg}/>
@@ -325,8 +350,11 @@ $("button.button.add_attraction").on("click", function addTourScheduleBox() {
         <li class="dayTripBlock_locationInfoBlock">
           <ul class="dayTripBlock_locationInfoBlockDetail">
             <li class="dayTripBlock_locationInfoBlockDetail_time">
-              <span>${tourSchedule_arr[i].stay_time}分</span>
-              <span>${tourSchedule_arr[i].start_time} - ${"12:00"}</span>
+              <span>${tourSchedule_arr[i].stayTime}分</span>
+              <span>${tourSchedule_arr[i].startTime} - ${endTimeCalculate(
+      start_time,
+      stay_time
+    )}</span>
             </li>
             <li class="attraction_title">
               ${tourSchedule_arr[i].attraction_info[i].attractionTitle}
@@ -342,28 +370,59 @@ $("button.button.add_attraction").on("click", function addTourScheduleBox() {
         <li class="dayTripBlock_featureEdit">
           <i class="fas fa-edit"></i>
         </li>
-        <li class="dayTripBlock_featureDelete delete"></li>
+        <li class="dayTripBlock_featureDelete delete" data-date=${currentDate}></li>
       </ul>
       <div class="dayTripBlock_carRouteTime">
         <span class="icon"><i class="fas fa-car"></i></span>
         <p>約 ${tourSchedule_arr[i].attraction_info[i].carRouteTime}</p>
       </div>
+    </div>
       `;
   }
-  // if (String(btnAddTripDate) === String($("section.dayTripBlock").attr("data-card"))) {
-  $("section.dayTripBlock").append(new_dayTripInfo);
-  // }
-  // console.log(String($("section.dayTripBlock").attr("data-date")));
-  // console.log("btnAddTripDate:" + String(btnAddTripDate));
+  let targetDayTripBlock = btnAddTrip
+    .closest("div.dayTrip")
+    .find("section.dayTripBlock");
+  $(targetDayTripBlock).append(new_dayTripInfo);
+  // 清空查詢input#search_input和TourScheduleBox的景點資訊
+  $("#search_input").val("");
+  $("div.attraction_detail_show").html("");
 });
 
+function editTourScheduleData() {
+  // 點擊到修改頁面
+}
+
+$(document).on(
+  "click",
+  ".dayTripBlock_featureDelete.delete",
+  function deleteTourScheduleData() {
+    // 找尋DOM元素，刪除景點用途
+    let targetAttraction = $(this).closest("div.dayTripBlock_all");
+    let findDate = $(this).closest("section.dayTripBlock");
+    let targetAttractionId = targetAttraction.attr("data-attrId");
+    let targetAttractionDate = findDate.attr("data-date");
+    targetAttraction.remove();
+
+    // 更新tourSchedule_arr，將景點移除
+    for (let i = 0; i < tourSchedule_arr.length; i++) {
+      if (
+        String(tourSchedule_arr[i].tourSchedule_date) ===
+          String(targetAttractionDate) &&
+        String(tourSchedule_arr[i].attraction_info[i].attractionId) ===
+          String(targetAttractionId)
+      ) {
+        console.log(111);
+        tourSchedule_arr[i].attraction_info[i].splice(i, 1);
+      }
+    }
+  }
+);
+
 function endTimeCalculate(start_time, stay_time) {
-  let start_date = new Date(start_time);
-  console.log(start_date);
+  let start_date = new Date(currentDate + " " + start_time);
   let endTime = new Date(
     parseInt(start_date.getTime()) + parseInt(stay_time) * 60000
   );
-  console.log(endTime);
   return endTime.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
