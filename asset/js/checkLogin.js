@@ -20,6 +20,7 @@ $(function () {
       <a class="button is-light" href="page/login.html"> 登入 </a>
     </div>
   </div>`;
+    $("div.member").empty();
     $("div.member").append(html);
   }
 });
