@@ -9,13 +9,12 @@ const node_summary = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
 
 // Requester, Addressee / Specifier, Other
-const specifier_id = 4;
+const specifier_id = 9;
 
 // API 路徑
 const api_root = "http://127.0.0.1:8080/lazy-trip-back";
-const api_friends = "/api/friends";
-const api_friend_requests = "/api/friend-requests";
-const api_friend_suggestions = "/api/friend-suggestions";
+const api_friend = "/api/friend";
+const api_friend_request = "/api/friend/request";
 
 // 頁面初始化
 document.addEventListener("DOMContentLoaded", () => {
@@ -51,7 +50,7 @@ function toggleActiveMenuListItem(event) {
 function showSuggestions() {
     node_results.innerHTML = '';
 
-    fetch(api_root + api_friend_suggestions + `?member_id=${specifier_id}`)
+    fetch(api_root + api_friend + `?member_id=${specifier_id}&query_type=suggestion`)
         .then((res) => res.json())
         .then((friends) => {
           if(friends.length == 0) {
@@ -72,11 +71,10 @@ function showSuggestions() {
         .catch((err) => console.log(err));
 }
 
-
 function showFriends() {
     node_results.innerHTML = '';
 
-    fetch(api_root + api_friends + `?member_id=${specifier_id}`)
+    fetch(api_root + api_friend + `?member_id=${specifier_id}&query_type=friend`)
         .then((res) => res.json())
         .then((friends) => {
           if(friends.length == 0) {
@@ -88,9 +86,9 @@ function showFriends() {
           
           friends.forEach(fr => {
             let newItem = document.createElement("friend-component");
-            newItem.setAttribute("member-id", fr["member_id"]);
-            newItem.setAttribute("member-name", fr["member_name"]);
-            newItem.setAttribute("member-account", fr["member_account"]); 
+            newItem.setAttribute("member-id", fr["id"]);
+            newItem.setAttribute("member-name", fr["name"]);
+            newItem.setAttribute("member-account", fr["account"]); 
             node_results.appendChild(newItem);
         });
       })
@@ -100,7 +98,7 @@ function showFriends() {
 function showRequests(direction) {
     node_results.innerHTML = '';
 
-    fetch(api_root + api_friend_requests + `?member_id=${specifier_id}&direction=${direction}`)
+    fetch(api_root + api_friend_request + `?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
         .then((friends) => {
           if(friends.length == 0) {
@@ -114,9 +112,9 @@ function showRequests(direction) {
             let newItem = direction == "sent" 
                 ? document.createElement("sent-request-component") 
                 : document.createElement("received-request-component");
-            newItem.setAttribute("member-id", fr["member_id"]);    
-            newItem.setAttribute("member-name", fr["member_name"]);
-            newItem.setAttribute("member-account", fr["member_account"]);
+            newItem.setAttribute("member-id", fr["id"]);    
+            newItem.setAttribute("member-name", fr["name"]);
+            newItem.setAttribute("member-account", fr["account"]);
             node_results.appendChild(newItem);
         });
       })
@@ -129,49 +127,49 @@ function addRequest(requesterId, addresseeId) {
       redirect: 'follow'
     };
     
-    fetch(api_root + api_friend_requests + `?requester_id=${requesterId}&addressee_id=${addresseeId}`, requestOptions)
+    fetch(api_root + api_friend_request + `?requester_id=${requesterId}&addressee_id=${addresseeId}`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
 }
 
-function acceptRequest(requesterId, addresseeId) {
+function acceptRequest(other_id) {
     var requestOptions = {
       method: 'PUT',
       redirect: 'follow'
     };
 
     fetch(api_root + 
-          api_friend_requests + 
-          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=accept`, requestOptions)
+          api_friend_request + 
+          `?requester_id=${other_id}&addressee_id=${specifier_id}&action=accept`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  
 }
 
-function cancelRequest(requesterId, addresseeId) {
+function cancelRequest(other_id) {
     var requestOptions = {
-      method: 'PUT',
+      method: 'DELETE',
       redirect: 'follow'
     };
   
     fetch(api_root + 
-          api_friend_requests + 
-          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=cancel`, requestOptions)
+          api_friend_request + 
+          `?requester_id=${specifier_id}&addressee_id=${other_id}`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  
 }
 
-function declineRequest(requesterId, addresseeId) {
+function declineRequest(other_id) {
     var requestOptions = {
-      method: 'PUT',
+      method: 'DELETE',
       redirect: 'follow'
     };
 
     fetch(api_root + 
-          api_friend_requests + 
-          `?requester_id=${requesterId}&addressee_id=${addresseeId}&update_status=decline`, requestOptions)
+          api_friend_request + 
+          `?requester_id=${other_id}&addressee_id=${specifier_id}`, requestOptions)
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  

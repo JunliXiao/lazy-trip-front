@@ -1,3 +1,49 @@
+// 結果卡片元件 ResultCard
+class ResultCard extends HTMLElement {
+
+  card_html;
+
+  constructor() {
+
+  }
+
+  buildCard(button_part) {
+    this.card_html = `
+    <style>
+      .icon .fas:hover{
+        font-size: 1.4em;
+        transition: 0.2s ease-out-elastic;
+      } 
+    </style>
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <img
+                src="https://bulma.io/images/placeholders/96x96.png"
+                alt="Placeholder image"
+              />
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4">${this.getAttribute("member-name")}</p>
+            <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
+          </div>
+          <div class="media-right">
+            ${button_part}      
+          </div>
+      </div>
+
+
+      </div>
+    </div>
+  `;
+  }
+
+}
+
 // 你可能感興趣 Suggestion
 class Suggestion extends HTMLElement {
   
@@ -150,7 +196,7 @@ class SentRequest extends HTMLElement {
     this.querySelector("button._cancel").addEventListener("click", (event) => {
       let other_id = event.target.closest("sent-request-component").getAttribute("member-id");
       if(!confirm("確認取消？")) return;
-      cancelRequest(specifier_id, other_id);
+      cancelRequest(other_id);
     });
   }
 
@@ -201,13 +247,13 @@ class ReceivedRequest extends HTMLElement {
     this.querySelector("button._accept").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認接受？")) return;
-      acceptRequest(other_id, specifier_id);
+      acceptRequest(other_id);
     });
 
     this.querySelector("button._decline").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認婉拒？")) return;
-      declineRequest(other_id, specifier_id);
+      declineRequest(other_id);
     });
   }
 
