@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>每日行程編輯</title>
-    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link rel="stylesheet" href="css/my-bulma.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css"
@@ -24,7 +24,6 @@
         border: 1px black solid;
       } */
       .top {
-        background-image: url(./img/01.jpg);
         background-size: cover;
       }
 
@@ -62,31 +61,29 @@
       /* dayTripBlock */
       section.dayTripBlock {
         background: #fff;
-        padding: 8px;
-        overflow: hidden;
+      }
+      /* 每日行程資訊欄 內部排版 */
+      /* section.dayTripBlock > ul, section.dayTripBlock li:not(:first-child) */
+      div.dayTripBlock_all > ul {
+        display: flex;
+        align-items: center;
         box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
         position: relative;
         transition: all ease-in 0.3s;
+        padding: 8px;
+        overflow: hidden;
       }
-      section.dayTripBlock:hover {
+      div.dayTripBlock_all > ul:hover {
         box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
       }
-
-      /* 每日行程資訊欄 內部排版 */
-      /* section.dayTripBlock > ul, section.dayTripBlock li:not(:first-child) */
-      section.dayTripBlock > ul {
-        display: flex;
-        align-items: center;
-      }
-      section.dayTripBlock li:not(:first-child) {
+      div.dayTripBlock_all li:not(:first-child) {
         margin: 0px 8px;
       }
-      section li.dayTripBlock_locationInfoImg {
+      section li.dayTripBlock_locationInfoImg > img {
         width: 70px;
         height: 70px;
         border-radius: 4px;
         background-size: cover;
-        background-image: url("https://i0.wp.com/4.bp.blogspot.com/-c1e9M5mc7Cg/XSRXoiEyf5I/AAAAAAAAvjI/q2zcxVjKn98Gc4dGWt6QL1-prvDavDo1wCKgBGAs/s1600/huashan1914.jpg?w=960&ssl=1");
       }
 
       li.dayTripBlock_locationInfoBlock {
@@ -97,7 +94,7 @@
         flex-direction: column;
         text-align: left;
       }
-      section.dayTripBlock ul.dayTripBlock_locationInfoBlockDetail li {
+      div.dayTripBlock_all ul.dayTripBlock_locationInfoBlockDetail li {
         margin: 0;
       }
       li.dayTripBlock_locationInfoBlockDetail_time {
@@ -116,6 +113,17 @@
       .dayTripBlock_label span {
         color: #fff;
         font-weight: bold;
+      }
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime {
+        display: flex;
+        margin: 10px;
+      }
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime > span.icon {
+        font-size: 1.5rem;
+        margin-left: 20px;
+      }
+      div.dayTripBlock_all div.dayTripBlock_carRouteTime > p {
+        margin-left: 10px;
       }
 
       /* 每日行程的景點資訊欄 */
@@ -264,15 +272,46 @@
       .reset_attraction {
         width: 100%;
       }
-
-      /* scroll樣式 */
-      /* ::-webkit-scrollbar-thumb {
-        background: #3bc0e8;
+      /* tour的標題與日期樣式 */
+      div.title_date > ul > .title,
+      div.title_date > ul > .date {
+        color: white;
+      }
+      /* button.button.add_trip */
+      button.button.add_trip {
+        width: 100%;
+      }
+      /* div.schedule.lodge */
+      div.schedule.lodge {
+        overflow-y: auto;
+        max-height: calc(100vh - 191px);
+        /* padding: 0 10px; */
+      }
+      /* scroll捲軸功能css */
+      /* 隱藏捲軸，只有當滑鼠移到捲軸區域時才顯示 */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+        cursor: pointer;
+      }
+      /* 捲軸軌道（背景） */
+      ::-webkit-scrollbar-track {
+        background: white;
         border-radius: 10px;
       }
+      /* 捲軸滑塊 */
+      ::-webkit-scrollbar-thumb {
+        background: #dd5b0b;
+        border-radius: 10px;
+      }
+      /* 拖曳捲軸時的樣式 */
       ::-webkit-scrollbar-thumb:hover {
-        background: #ebf9ff;
-      } */
+        background: #7a3306;
+      }
+      /* 捲軸滑塊在滑鼠移過捲軸區域時顯示的樣式 */
+      ::-webkit-scrollbar-thumb:active {
+        background: #7a3306;
+      }
     </style>
   </head>
   <body>
@@ -280,99 +319,11 @@
       <div class="plan_trip">
         <div>
           <div class="left" style="display: flex">
-            <div>
-              <div class="top">
-                <div>
-                  <div class="return">
-                    <a href="#" class="return">
-                      <span class="icon return_tripList">
-                        <i class="fas fa-arrow-left"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-                <div class="top_text">
-                  <div class="title_date">
-                    <ul>
-                      <li class="title" style="color: white">台北七日遊</li>
-                      <li class="date" style="color: white">
-                        2023-1-1 ~ 2023-1-7
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+            <div class="tour_info">
+              <div class="top"></div>
               <div class="bottom">
-                <ul class="date_detail">
-                  <li class="day">
-                    <p>1/1</p>
-                    <p>第1天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/2</p>
-                    <p>第2天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/3</p>
-                    <p>第3天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/4</p>
-                    <p>第4天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/5</p>
-                    <p>第5天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/6</p>
-                    <p>第6天</p>
-                  </li>
-                  <li class="day">
-                    <p>1/7</p>
-                    <p>第7天</p>
-                  </li>
-                </ul>
-                <div class="schedule lodge">
-                  <!-- 第一天行程細節 -->
-                  <header>
-                    <h2 class="dayTripBlock_label">
-                      <span>第一天 - 1/1</span>
-                    </h2>
-                  </header>
-                  <section class="dayTripBlock" id="D_0">
-                    <ul class="dayTripBlock_locationInfo">
-                      <li class="dayTripBlock_locationInfoImg"></li>
-                      <li class="dayTripBlock_locationInfoBlock">
-                        <ul class="dayTripBlock_locationInfoBlockDetail">
-                          <li class="dayTripBlock_locationInfoBlockDetail_time">
-                            <span>30分</span>
-                            <span>12:00 - 12:30</span>
-                          </li>
-                          <li class="attraction_title">
-                            華山1914文化創意產業園區
-                          </li>
-                          <li class="address">100台北市中正區八德路一段1號</li>
-                        </ul>
-                      </li>
-                      <li class="dayTripBlock_featureNote">
-                        <i class="fas fa-book-open"></i>
-                      </li>
-                      <li class="dayTripBlock_featureEdit">
-                        <i class="fas fa-edit"></i>
-                      </li>
-                      <li class="dayTripBlock_featureDelete delete"></li>
-                    </ul>
-                    <div class="remark"></div>
-                  </section>
-                  <br />
-                  <div class="add_trip_box">
-                    <button class="button add_trip" style="width: 100%">
-                      + 想去哪裡玩
-                    </button>
-                  </div>
-                  <!-- 第二天行程細節 -->
-                </div>
+                <ul class="date_detail"></ul>
+                <div class="schedule lodge"></div>
               </div>
             </div>
           </div>
@@ -410,9 +361,7 @@
                   <li>
                     <!--放置toggleClass轉換current，當點擊此li時-->
                     <div>
-                      <div class="attraction_detail_show">
-                        (放置查詢後的景點資訊)
-                      </div>
+                      <div class="attraction_detail_show"></div>
                     </div>
                   </li>
                 </ul>
@@ -421,33 +370,13 @@
             <div class="time_select">
               <ul>
                 <li class="attraction_start_time">
-                  <label for="attraction_start_time">出發時間：</label>
-                  <input
-                    type="time"
-                    name="attraction_start_time"
-                    id="attraction_start_time"
-                  />
+                  <label for="start_time">出發時間：</label>
+                  <input type="time" name="start_time" id="start_time" />
                 </li>
                 <li class="attraction_stay_time">
-                  <label for="attraction_stay_time">停留時間：</label>
-                  <input
-                    type="number"
-                    name="attraction_stay_hour"
-                    id="attraction_stay_hour"
-                    min="0"
-                    max="23"
-                    step="1"
-                  />
-                  <span>小時</span>
-                  <input
-                    type="number"
-                    name="attraction_stay_min"
-                    id="attraction_stay_min"
-                    min="0"
-                    max="59"
-                    step="1"
-                  />
-                  <span>分</span>
+                  <label for="stay_time">停留時間：</label>
+                  <input type="number" name="stay_time" id="stay_time" />
+                  <span>分鐘</span>
                 </li>
               </ul>
             </div>
@@ -485,11 +414,11 @@
       </div>
     </main>
 
-    <script src="../../asset/vendor/jquery/jquery-3.6.3.min.js"></script>
-    <script src="./js/index3.js"></script>
+    <script src="js/jquery-3.6.3.min.js"></script>
+    <script src="js/tour_schedule.js"></script>
     <script
       async
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaBElB7GcHXjA8aVPtpPj5dMm8CjNn_8c&libraries=places&callback=initMap&region=TW&language=zh-TW"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8reGXdiotVEyHvvinlAPDgcIEQNe7kAE&libraries=places&callback=initMap&region=TW&language=zh-TW"
     ></script>
   </body>
 </html>

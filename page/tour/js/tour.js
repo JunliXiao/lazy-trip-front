@@ -1,50 +1,173 @@
-// ================nav and tabs====================
-//第二步：函式
-function tab_active() {
-  let target_tab;
-  switch (location.hash) {
-    case "#tab1":
-      target_tab = "tab1";
-      break;
-    case "#tab2":
-      target_tab = "tab2";
-      break;
-    default:
-      target_tab = "tab1";
-  }
-
-  $("a.tab").removeClass("-on");
-  $("a.tab[data-target=" + target_tab + "]").addClass("-on");
-
-  $("div.tab").removeClass("-on");
-  $("div.tab." + target_tab).addClass("-on");
+const tourTitle = document.getElementById("tourTitle");
+const startDate = document.getElementById("startDate");
+const endDate = document.getElementById("endDate");
+const tourImg = document.getElementById("tourImg");
+const memberId = document.getElementById("memberId");
+let tour_arr = [];
+let base64;
+tourImg.addEventListener("change", function () {
+  let reader = new FileReader();
+  reader.readAsDataURL(this.files[0]);
+  reader.addEventListener("load", function () {
+    base64 = reader.result.replace(/^data:.*?;base64,/, "");
+  });
+});
+function init() {
+  $.ajax({
+    url: "http://localhost:8080/lazy-trip-back/tourQueryAll",
+    type: "GET",
+    // data: JSON.stringify({
+    //   memberId: 1,
+    // }), // 將物件資料(不用雙引號) 傳送到指定的 url
+    dataType: "json",
+    contentType: "application/json",
+    success: function (data) {
+      for (let i = 0; i < data.length; i++) {
+        tour_arr.push({
+          tourId: data[i].tourId,
+          tourTitle: data[i].tourTitle,
+          startDate: data[i].startDate,
+          endDate: data[i].endDate,
+          tourImg: data[i].tourImg,
+          memberId: data[i].memberId,
+        });
+      }
+      renderTourData(data);
+    },
+    error: function (xhr) {
+      console.log("error");
+    },
+  });
 }
 
 $(function () {
-  // console.log(location);
-  // console.log(location.hash);
-  tab_active();
-  // 第三步;
+  init();
+});
 
-  $("a.tab").on("click", function (e) {
-    e.preventDefault();
+// addData
+document
+  .querySelector("button.button.trip_create_btn")
+  .addEventListener("click", function addTourData() {
+    $.ajax({
+      url: "http://localhost:8080/lazy-trip-back/tourCreate",
+      type: "POST",
+      data: JSON.stringify({
+        tourTitle: tourTitle.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        tourImg: base64,
+        memberId: 2,
+      }),
+      dataType: "json",
+      contentType: "application/json",
+      success: function (data) {
+        tour_arr.push({
+          tourId: data.tourId,
+          tourTitle: data.tourTitle,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          tourImg: base64,
+          memberId: 2,
+        });
+        document.querySelector("div.wrapper").innerHTML = "";
+        renderTourData(tour_arr);
+      },
+      error: function (xhr) {
+        console.log("error");
+      },
+    });
+  });
 
-    /* 將頁籤列表移除所有 -on，再將指定的加上 -on */
-    $(this).closest("ul").find("a.tab").removeClass("-on");
-    $(this).addClass("-on");
+// 將資料渲染到主視窗
+function renderTourData(tour_arr) {
+  let new_card = "";
+  for (let i = 0; i < tour_arr.length; i++) {
+    new_card += `<div data-card=${tour_arr[i].tourId} class="column item">
+                  <div class="card">
+                    <div class="card-image">
+                      <div class="icon_total">
+                      <a href="#" class="trip_pen">
+                          <span class="icon"><i class="fas fa-pen"></i></span>
+                      </a>
+                        <a href="#" class="trip_tag">
+                          <span class="icon"><i class="fas fa-tag"></i></span>
+                        </a>
+                        <a href="#" class="trip_edit">
+                          <span class="icon"><i class="fas fa-edit"></i></span>
+                        </a>
+                        <a href="#" class="trip_delete">
+                          <span class="icon"><i class="fas fa-trash"></i></span>
+                        </a>
+                      </div>
+                      <figure class="image is-2by1" style="overflow: hidden">
+                        <img class="trip_item_img" src="data:image/*;base64,${tour_arr[i].tourImg}" alt="" />
+                      </figure>
+                    </div>
+                    <div class="card-content">
+                      <div class="trip_item_block">
+                        <h2 class="title is-4">${tour_arr[i].tourTitle}</h2>
+                        <input type="text" class="tour_name_update -none" placeholder="更新行程名稱…" value=${tour_arr[i].tourTitle}>
+                        <time class="startDate">${tour_arr[i].startDate}</time> ~ 
+                        <time class="endDate">${tour_arr[i].endDate}</time>
+                        <input type="date" class="tour_startDate_update -none" placeholder="更新起始日期…" value=${tour_arr[i].startDate}>
+                        <input type="date" class="tour_endDate_update -none" placeholder="更新結束日期…" value=${tour_arr[i].endDate}>
+                        <div class="trip_tag_place">
+                          <ul style="display: flex"></ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+  }
+  $("div.wrapper").html(new_card);
+}
 
-    /* 找到對應的頁籤內容，加上 -on 來顯示 */
-    $("div.tab").removeClass("-on");
-    $("div.tab." + $(this).attr("data-target")).addClass("-on");
+// ====================刪除行程的提示視窗=========================
 
-    // 第一步
-    history.pushState(null, null, "#" + $(this).attr("data-target"));
+$(document).on("click", "a.trip_delete", function (e) {
+  e.stopPropagation();
+  let targetDataCard_id;
+  let targetCard;
+  $(".trip_delete_lightbox").removeClass("none");
+  targetCard = $(this).closest("div.column.item");
+  targetDataCard_id = targetCard.attr("data-card");
+
+  // 點擊確認刪除後執行
+  $("div.trip_delete_lightbox button.trip_delete_btn").on("click", function () {
+    $.ajax({
+      url: `http://localhost:8080/lazy-trip-back/tourDelete?tourId=${targetDataCard_id}`,
+      type: "DELETE",
+      success: function (data) {
+        targetCard.fadeOut(1000, function () {
+          $(this).remove();
+        });
+        for (let i = 0; i < tour_arr.length; i++) {
+          if (parseInt(targetDataCard_id) === tour_arr[i].tourId) {
+            tour_arr.splice(i, 1);
+          }
+        }
+        console.log(tour_arr);
+      },
+      error: function (xhr) {
+        console.log("error");
+      },
+    });
   });
 });
 
-// 第二步 popstate事件觸發，執行tab_active()
-window.addEventListener("popstate", function () {
-  tab_active();
+// 取消按鈕
+$("div.trip_delete_lightbox button.trip_close_btn").on("click", function () {
+  $(".trip_delete_lightbox").addClass("none");
+});
+
+// 點擊半透明區塊，執行取消關閉作用
+$(".trip_delete_lightbox").on("click", function () {
+  $(".trip_delete_lightbox").addClass("none");
+});
+
+// 點擊contents區塊，不會關閉
+$(".trip_delete_lightbox > .contents").on("click", function (e) {
+  e.stopPropagation();
 });
 
 // ====================創建行程之浮動視窗========================
@@ -69,139 +192,100 @@ $(".trip_create_lightbox > .contents").on("click", function (e) {
   e.stopPropagation();
 });
 
-// 日期轉換方法，轉換成ISO表示
-function toLocaleDate(date, day) {
-  let raw_date = new Date(date);
-  let date_ts = raw_date.getTime();
-  raw_date.setTime(date_ts + day * 1000 * 60 * 60 * 24);
-  return raw_date.toLocaleDateString();
-}
+// ======================行程標題與日期修改====================== //
+$(document).on("click", "a.trip_pen", function () {
+  let update_tour_name;
+  let tour_startDate_update;
+  let tour_endDate_update;
+  let targetCard;
+  let targetDataCard_id;
+  targetCard = $(this).closest("div.column.item");
+  targetDataCard_id = targetCard.attr("data-card");
+  if ($(this).attr("data-edit") == undefined) {
+    $(this).attr("data-edit", true);
+    $(this).closest("div.card").find("h2").toggleClass("-none");
+    $(this).closest("div.card").find("time").toggleClass("-none");
+    $(this)
+      .closest("div.card")
+      .find("input.tour_name_update")
+      .toggleClass("-none");
+    $(this)
+      .closest("div.card")
+      .find("input.tour_startDate_update")
+      .toggleClass("-none");
+    $(this)
+      .closest("div.card")
+      .find("input.tour_endDate_update")
+      .toggleClass("-none");
+  } else {
+    update_tour_name = $(this)
+      .closest("div.card")
+      .find("input.tour_name_update")
+      .val()
+      .trim();
+    tour_startDate_update = $(this)
+      .closest("div.card")
+      .find("input.tour_startDate_update")
+      .val()
+      .trim();
+    tour_endDate_update = $(this)
+      .closest("div.card")
+      .find("input.tour_endDate_update")
+      .val()
+      .trim();
+    if (update_tour_name == "") {
+      alert("請輸入行程名稱");
+    } else {
+      let closest_card = $(this).closest("div.card");
+      let that = this;
+      $.ajax({
+        url: "http://localhost:8080/lazy-trip-back/tourUpdate",
+        type: "POST",
+        data: JSON.stringify({
+          tourTitle: update_tour_name,
+          startDate: tour_startDate_update,
+          endDate: tour_endDate_update,
+          tourImg: closest_card
+            .find("img.trip_item_img")
+            .attr("src")
+            .replace(/^data:.*?;base64,/, ""),
+          memberId: 2,
+          tourId: targetDataCard_id,
+        }),
+        dataType: "json",
+        success: function (data) {
+          closest_card.find("h2").html(update_tour_name).toggleClass("-none");
+          closest_card
+            .find("time.startDate")
+            .html(tour_startDate_update)
+            .toggleClass("-none");
+          closest_card
+            .find("time.endDate")
+            .html(tour_endDate_update)
+            .toggleClass("-none");
+          closest_card
+            .find("input.tour_name_update")
+            .val(update_tour_name)
+            .toggleClass("-none");
+          closest_card.find("input.tour_startDate_update").toggleClass("-none");
+          closest_card.find("input.tour_endDate_update").toggleClass("-none");
+          $(that).removeAttr("data-edit");
 
-// 行程圖片選取與展示
-// $(".all_img > img").on("click", function (e) {
-//   let change_src = e.target.getAttribute("src");
-//   $("#show_el > img").attr("src", change_src);
-// });
-
-const trip_name = $("#trip_name");
-const trip_start_date = $("#trip_start_date");
-const trip_end_date = $("#trip_end_date");
-// const trip_tag = $("#trip_tag");
-const trip_img = document.getElementById("trip_img");
-
-let tour_arr = [];
-var member_id = 1;
-let base64;
-trip_img.addEventListener("change", function () {
-  let reader = new FileReader();
-  reader.readAsDataURL(this.files[0]);
-  reader.addEventListener("load", function () {
-    base64 = reader.result;
-  });
-});
-
-// addData
-document
-  .querySelector("button.button.trip_create_btn")
-  .addEventListener("click", function addTourData() {
-    $.ajax({
-      url: "http://localhost:8080/lazy-trip-back/tourCreate",
-      type: "POST",
-      data: JSON.stringify({
-        trip_name: trip_name.val(),
-        trip_start_date: trip_start_date.val(),
-        trip_end_date: trip_end_date.val(),
-        trip_img: base64,
-        member_id: member_id,
-      }),
-      dataType: "json",
-      contentType: "application/json",
-      success: function (data) {
-        console.log(data);
-        renderTourData(data);
-        tour_arr.push({
-          // trip_id:
-          trip_name: trip_name.val(),
-          trip_start_date: trip_start_date.val(),
-          trip_end_date: trip_end_date.val(),
-          trip_img: base64,
-          member_id: member_id,
-        });
-        console.log(tour_arr);
-      },
-      error: function (xhr) {
-        console.log("error");
-      },
-    });
-  });
-
-// 將資料渲染到主視窗
-function renderTourData() {
-  let new_card;
-  for (let i = 0; i < data.length; i++) {
-    new_card = $(
-      "<div data-card=" +
-        i +
-        " class='column item'><div class='card'><div class='card-image'><div class='icon_total' style='right: 0; position: absolute; z-index: 10;'><div class='icon'><a href='#' class='trip_tag'><span class='icon'><i class='fas fa-tag'></i></span></a></div><div class='icon'><a href='#' class='trip_coedit'><i class='fas fa-users'></i></a></div><div class='icon'><a href='#' class='trip_edit'><i class='fas fa-edit'></i></a></div><div class='icon'><a href='#' class='trip_delete'><i class='fas fa-trash'></i></a></div></div><figure class='image is-2by1' style='overflow: hidden'><img class='trip_item_img' src='" +
-        data[i].trip_img +
-        "' alt='' /></figure></div><div class='card-content' style='padding: 10px'><div class='trip_item_block'><h2 class='title is-4' style='margin: 0px'>" +
-        data[i].trip_name +
-        "</h2><time>" +
-        data[i].trip_start_date +
-        " ~ " +
-        data[i].trip_end_date +
-        "</time><div class='trip_tag_place'><ul style='display: flex'></ul></div></div></div></div></div>"
-    );
+          // 更新 tour_arr
+          for (let i = 0; i < tour_arr.length; i++) {
+            if (parseInt(targetDataCard_id) === tour_arr[i].tourId) {
+              tour_arr[i].tourTitle = update_tour_name;
+              tour_arr[i].startDate = tour_startDate_update;
+              tour_arr[i].endDate = tour_endDate_update;
+            }
+          }
+        },
+        error: function (xhr) {
+          console.log("error");
+        },
+      });
+    }
   }
-  $(new_card).appendTo("div.column.wrapper");
-}
-
-// ====================刪除行程的提示視窗=========================
-$(document).on("click", "a.trip_delete", function (e) {
-  $(".trip_delete_lightbox").removeClass("none");
-  //my_el = this...li
-  e.stopPropagation();
-});
-
-// 取消按鈕
-$("div.trip_delete_lightbox button.trip_close_btn").on("click", function () {
-  $(".trip_delete_lightbox").addClass("none");
-});
-
-// 確認按鈕
-$("div.trip_delete_lightbox button.trip_delete_btn").on("click", function () {
-  console.log($(this));
-});
-
-// 點擊半透明區塊，執行取消關閉作用
-$(".trip_delete_lightbox").on("click", function () {
-  $(".trip_delete_lightbox").addClass("none");
-});
-
-// 點擊contents區塊，不會關閉
-$(".trip_delete_lightbox > .contents").on("click", function (e) {
-  e.stopPropagation();
-});
-
-// ==================邀請朋友連結碼的浮動視窗======================
-$(document).on("click", "a.trip_coedit", function (e) {
-  $(".trip_coedit_lightbox").removeClass("none");
-  e.stopPropagation();
-});
-
-// 取消按鈕
-$("div.trip_coedit_lightbox button.trip_close_btn").on("click", function () {
-  $(".trip_coedit_lightbox").addClass("none");
-});
-
-// 點擊半透明區塊，執行取消關閉作用
-$(".trip_coedit_lightbox").on("click", function () {
-  $(".trip_coedit_lightbox").addClass("none");
-});
-
-// 點擊contents區塊，不會關閉
-$(".trip_coedit_lightbox > .contents").on("click", function (e) {
-  e.stopPropagation();
 });
 
 // ======================標籤的浮動視窗==========================
@@ -281,17 +365,16 @@ $("ul.trip_tag_detail").on("click", "button.button.delete", function () {
   $(this).closest("li").remove();
 });
 
-//查詢標籤
-
-// 隨機產生顏色(X)
-function randomRbgColor() {
-  let r = Math.floor(Math.random() * 256);
-  let g = Math.floor(Math.random() * 256);
-  let b = Math.floor(Math.random() * 256);
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
 // ================edit編輯觸發跳轉下個視窗=======================
-$("a.trip_edit").on("click", function () {
-  location = "../3.html";
+$(document).on("click", "a.trip_edit", function (e) {
+  let targetDataCard_id;
+  let targetCard;
+  let targetStartDate;
+  let targetEndDate;
+  targetCard = $(this).closest("div.column.item");
+  targetDataCard_id = targetCard.attr("data-card");
+  targetStartDate = targetCard.find("time.startDate").text();
+  targetEndDate = targetCard.find("time.endDate").text();
+  location = `http://localhost:8080/lazy-trip-back/tour/tourSchedule.html?tourId=${targetDataCard_id}&memberId=${2}&startDate=${targetStartDate}&endDate=${targetEndDate}`;
+  e.preventdefault();
 });

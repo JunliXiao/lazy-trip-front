@@ -1,7 +1,6 @@
 // 你可能感興趣 Suggestion
 class Suggestion extends HTMLElement {
   
-
   constructor() {
     super();
   }
@@ -31,7 +30,7 @@ class Suggestion extends HTMLElement {
             <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
           </div>
           <div class="media-right">
-            <button class="_add_friend js-modal-trigger button is-success is-medium" data-target="modal-js-example">
+            <button class="_add_friend js-modal-trigger button is-primary is-medium" data-target="modal-js-example">
               加好友
             </button>         
           </div>
@@ -42,8 +41,12 @@ class Suggestion extends HTMLElement {
     </div>
   `;
 
-    setBulmaModal();
-    this.querySelector("button._add_friend").addEventListener("click", () => console.log("加好友 clicked"));
+    // setBulmaModal();
+    this.querySelector("button._add_friend").addEventListener("click", (event) => {
+      let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
+      if(!confirm("確認邀請？")) return;
+      addRequest(specifier_id, other_id);
+    });
   }
 
 }
@@ -144,7 +147,11 @@ class SentRequest extends HTMLElement {
     </div>
   `;
 
-    this.querySelector("button._cancel").addEventListener("click", () => console.log("CANCEL clicked"));
+    this.querySelector("button._cancel").addEventListener("click", (event) => {
+      let other_id = event.target.closest("sent-request-component").getAttribute("member-id");
+      if(!confirm("確認取消？")) return;
+      cancelRequest(specifier_id, other_id);
+    });
   }
 
 }
@@ -181,8 +188,8 @@ class ReceivedRequest extends HTMLElement {
           </div>
           <div class="media-right">
             <div class="buttons">
-              <button class="_accept button is-info is-medium">接受</button>
-              <button class="_cancel button is-danger is-medium">婉拒</button>         
+              <button class="_accept button is-success is-medium">接受</button>
+              <button class="_decline button is-danger is-medium">婉拒</button>         
             </div>
           </div>  
       </div>
@@ -191,8 +198,17 @@ class ReceivedRequest extends HTMLElement {
       </div>
     </div>
   `;
-    this.querySelector("button._accept").addEventListener("click", () => console.log("ACCEPT clicked"));  
-    this.querySelector("button._cancel").addEventListener("click", () => console.log("DECLINE clicked"));
+    this.querySelector("button._accept").addEventListener("click", (event) => {
+      let other_id = event.target.closest("received-request-component").getAttribute("member-id");
+      if(!confirm("確認接受？")) return;
+      acceptRequest(other_id, specifier_id);
+    });
+
+    this.querySelector("button._decline").addEventListener("click", (event) => {
+      let other_id = event.target.closest("received-request-component").getAttribute("member-id");
+      if(!confirm("確認婉拒？")) return;
+      declineRequest(other_id, specifier_id);
+    });
   }
 
 }
