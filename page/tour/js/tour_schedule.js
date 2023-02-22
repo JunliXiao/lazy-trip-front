@@ -1,10 +1,102 @@
-const attraction_arr = [{}];
+// 將主行程的標題、起訖日期、封面圖渲染在頁面上
+let url = new URL(window.location.href);
+let params = new URLSearchParams(url.search);
+let tourId = params.get("tourId");
+
+// +想去哪裡玩的DOM元素，以及抓取其data-date
+let btnAddTrip;
+let currentDate;
+let tourSchedule_arr = [];
+let attraction_arr = [];
+let date_change;
+
+function init() {
+  $.ajax({
+    url: `http://localhost:8080/lazy-trip-back/tourQueryOne?tourId=${tourId}`,
+    type: "GET",
+    success: function (data) {
+      initRenderTourData(data);
+    },
+    error: function (xhr) {
+      console.log("error");
+    },
+  });
+}
+
+$(function () {
+  init();
+});
+
+function initRenderTourData(data) {
+  let tour_info = "";
+  tour_info = `
+  <div class="top" style= background-image:url(data:image/*;base64,${data.tourImg})>
+    <div>
+      <div class="return">
+        <a href="#" class="return">
+          <span class="icon return_tripList">
+            <i class="fas fa-arrow-left"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+    <div class="top_text">
+      <div class="title_date">
+        <ul>
+          <li class="title">${data.tourTitle}</li>
+          <li class="date">${data.startDate} ~ ${data.endDate}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  `;
+  $("div.top").html(tour_info);
+  // 求得起訖天數差
+  let startDateCal = new Date(data.startDate);
+  let endDateCal = new Date(data.endDate);
+  let diffTime = Math.abs(endDateCal - startDateCal);
+  let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  let tour_date = "";
+  let tourSchedule_title = "";
+  for (let i = 0; i <= diffDays; i++) {
+    date_change = new Date(
+      new Date(data.startDate).getTime() + i * 24 * 3600 * 1000
+    ).toLocaleDateString();
+    tour_date += `
+      <li class="day">
+        <p>${date_change}</p>
+        <p>第${i + 1}天</p>
+      </li>
+      `;
+    $("ul.date_detail").html(tour_date);
+
+    tourSchedule_title += `
+      <div class="dayTrip" data-date=${date_change}>
+        <header>
+          <h2 class="dayTripBlock_label">
+            <span>第${i + 1}天 - ${date_change}</span>
+          </h2>
+        </header>
+        <section class="dayTripBlock" data-date=${date_change}></section>
+        <div class="add_trip_box" data-date=${date_change}>
+          <button class="button add_trip">+ 想去哪裡玩</button>
+        </div>
+      </div>
+      <br />
+      `;
+  }
+  $("div.schedule.lodge").html(tourSchedule_title);
+}
 
 // 點擊"想去哪裡玩"button，開啟右方資訊輸入欄
-$("div.add_trip_box > button.add_trip").on("click", function () {
+
+$(document).on("click", "div.add_trip_box > button.add_trip", function () {
   $("div.add_info").addClass("show");
   $("div.add_info > .create_plan_trip > ul > li.text").text("新增景點");
   $("button.button.add_attraction").text("加入景點");
+  btnAddTrip = $(this).closest("div.add_trip_box");
+  currentDate = btnAddTrip.attr("data-date");
 });
 
 // 點擊右方資訊輸入欄的"返回"，將欄位隱藏
@@ -52,8 +144,8 @@ $(document).on(
 );
 
 // ===================回到行程總表頁面======================== //
-$(".return_tripList").on("click", function () {
-  location = "../LazyTrip-Yifan/2.html";
+$(document).on("click", ".return_tripList", function () {
+  location = "http://localhost:8080/lazy-trip-back/tour/tour.html";
 });
 
 // =========================崁入google地圖============================== //
@@ -64,6 +156,7 @@ let marker;
 let directions_service;
 let directions_renderer;
 let info_window;
+let carRoute_time;
 
 function initMap() {
   const center = {
@@ -100,6 +193,10 @@ function initMap() {
       autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
 
+        // const origin = current_position
+        //   ? new google.maps.LatLng(current_position.lat, current_position.lng)
+        //   : selected_attraction.location;
+
         selected_attraction = {
           location: place.geometry.location,
           place_id: place.place_id,
@@ -107,6 +204,8 @@ function initMap() {
           address: place.formatted_address,
           photo: place.photos[0],
           rating: place.rating,
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng(),
         };
         // 將搜尋到的結果渲染畫面，且給予marker
         map.setCenter(selected_attraction.location);
@@ -133,30 +232,200 @@ function initMap() {
               current_position.lng
             ),
             destination: {
-              place_id: selected_attraction.place_id,
+              placeId: selected_attraction.place_id,
             },
-            travelMode: "DRIVING",
+            travelMode: "DRIVING", // 交通模式 DRIVING, WALKING
           },
           function (response, status) {
             if (status === "OK") {
               directions_renderer.setDirections(response);
               if (!info_window) {
-                info_window = new google.maps.infoWindow();
+                info_window = new google.maps.InfoWindow();
               }
               info_window.setContent(
                 `
-              <h3>${selected_attraction.name}</h3>
-              <div>地址：${selected_attraction.address}</div>
-              <div>評分：${selected_attraction.rating}</div>
-              <div>照片：${selected_attraction.photo}</div>
-              <div>步行時間：${response.routes[0].legs[0].duration.text}</div>
-              `
+                <div><img src="${selected_attraction.photo.getUrl()}" style="max-width: 100px; max-height: 100px;"></div>
+                <h3>${selected_attraction.name}</h3>
+                <div>地址：${selected_attraction.address}</div>
+                <div>評分：${selected_attraction.rating}</div>
+                <div>汽車時間：${response.routes[0].legs[0].duration.text}</div>
+                `
               );
               info_window.open(map, marker);
+              carRoute_time = response.routes[0].legs[0].duration.text;
+              addAttractionIntoDB(selected_attraction);
             }
           }
         );
       });
     });
   }
+}
+//=====================將google map查詢的景點資訊，渲染到attraction_detail_show===========================//
+let attraction_Map = {};
+function addAttractionIntoDB(selected_attraction) {
+  // addData
+  $.ajax({
+    url: "http://localhost:8080/lazy-trip-back/attractionCreate",
+    type: "POST",
+    data: JSON.stringify({
+      attractionTitle: selected_attraction.name,
+      location: selected_attraction.address,
+      latitude: selected_attraction.latitude,
+      longitude: selected_attraction.longitude,
+      attractionImg: selected_attraction.photo.getUrl(),
+    }),
+    dataType: "json",
+    contentType: "application/json",
+    success: function (data) {
+      if (!attraction_Map[currentDate]) {
+        attraction_Map[currentDate] = [];
+      }
+      attraction_Map[currentDate].push({
+        attractionTitle: data.attractionTitle,
+        location: data.location,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        attractionImg: data.attractionImg,
+        carRouteTime: carRoute_time,
+        attractionId: data.attractionId,
+        memberId: 2,
+      });
+
+      attraction_arr.push({
+        attractionTitle: data.attractionTitle,
+        location: data.location,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        attractionImg: data.attractionImg,
+        carRouteTime: carRoute_time,
+        attractionId: data.attractionId,
+      });
+      $("div.attraction_detail_show").html("");
+      renderAttractionToShowBox(attraction_arr);
+    },
+    error: function (xhr) {
+      console.log("error");
+    },
+  });
+}
+// 將景點資訊渲染到show box內
+function renderAttractionToShowBox(attraction_arr) {
+  let new_attraction = "";
+  for (let i = 0; i < attraction_arr.length; i++) {
+    new_attraction = `<div data-attaction=${attraction_arr[i].attractionId}>
+                    <div><img src="${attraction_arr[i].attractionImg}" style="max-width: 100px; max-height: 100px;"></div>
+                    <h3>${attraction_arr[i].attractionTitle}</h3>
+                    <p>${attraction_arr[i].location}</p>
+                </div>`;
+  }
+  $("div.attraction_detail_show").html(new_attraction);
+}
+
+$("button.button.add_attraction").on("click", function addTourScheduleBox() {
+  let stay_time = document.getElementById("stay_time").value;
+  let start_time = document.getElementById("start_time").value;
+  // 當執行加入景點時，將景點放入tourSchedule_arr內
+  tourSchedule_arr.push({
+    date: currentDate,
+    startTime: start_time,
+    stayTime: stay_time,
+    tourId: tourId,
+    memberId: 2,
+    attraction_info: attraction_arr,
+  });
+
+  // 將景點資訊渲染到div.schedule.lodge
+  let new_dayTripInfo = "";
+
+  for (let i = 0; i < tourSchedule_arr.length; i++) {
+    new_dayTripInfo = `
+    <div class="dayTripBlock_all" data-attrId=${
+      tourSchedule_arr[i].attraction_info[i].attractionId
+    }>
+      <ul class="dayTripBlock_locationInfo">
+        <li class="dayTripBlock_locationInfoImg">
+          <img src=${tourSchedule_arr[i].attraction_info[i].attractionImg}/>
+        </li>
+        <li class="dayTripBlock_locationInfoBlock">
+          <ul class="dayTripBlock_locationInfoBlockDetail">
+            <li class="dayTripBlock_locationInfoBlockDetail_time">
+              <span>${tourSchedule_arr[i].stayTime}分</span>
+              <span>${tourSchedule_arr[i].startTime} - ${endTimeCalculate(
+      start_time,
+      stay_time
+    )}</span>
+            </li>
+            <li class="attraction_title">
+              ${tourSchedule_arr[i].attraction_info[i].attractionTitle}
+            </li>
+            <li class="address">${
+              tourSchedule_arr[i].attraction_info[i].location
+            }</li>
+          </ul>
+        </li>
+        <li class="dayTripBlock_featureNote">
+          <i class="fas fa-book-open"></i>
+        </li>
+        <li class="dayTripBlock_featureEdit">
+          <i class="fas fa-edit"></i>
+        </li>
+        <li class="dayTripBlock_featureDelete delete" data-date=${currentDate}></li>
+      </ul>
+      <div class="dayTripBlock_carRouteTime">
+        <span class="icon"><i class="fas fa-car"></i></span>
+        <p>約 ${tourSchedule_arr[i].attraction_info[i].carRouteTime}</p>
+      </div>
+    </div>
+      `;
+  }
+  let targetDayTripBlock = btnAddTrip
+    .closest("div.dayTrip")
+    .find("section.dayTripBlock");
+  $(targetDayTripBlock).append(new_dayTripInfo);
+  // 清空查詢input#search_input和TourScheduleBox的景點資訊
+  $("#search_input").val("");
+  $("div.attraction_detail_show").html("");
+});
+
+function editTourScheduleData() {
+  // 點擊到修改頁面
+}
+
+$(document).on(
+  "click",
+  ".dayTripBlock_featureDelete.delete",
+  function deleteTourScheduleData() {
+    // 找尋DOM元素，刪除景點用途
+    let targetAttraction = $(this).closest("div.dayTripBlock_all");
+    let findDate = $(this).closest("section.dayTripBlock");
+    let targetAttractionId = targetAttraction.attr("data-attrId");
+    let targetAttractionDate = findDate.attr("data-date");
+    targetAttraction.remove();
+
+    // 更新tourSchedule_arr，將景點移除
+    for (let i = 0; i < tourSchedule_arr.length; i++) {
+      if (
+        String(tourSchedule_arr[i].tourSchedule_date) ===
+          String(targetAttractionDate) &&
+        String(tourSchedule_arr[i].attraction_info[i].attractionId) ===
+          String(targetAttractionId)
+      ) {
+        console.log(111);
+        tourSchedule_arr[i].attraction_info[i].splice(i, 1);
+      }
+    }
+  }
+);
+
+function endTimeCalculate(start_time, stay_time) {
+  let start_date = new Date(currentDate + " " + start_time);
+  let endTime = new Date(
+    parseInt(start_date.getTime()) + parseInt(stay_time) * 60000
+  );
+  return endTime.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 }
