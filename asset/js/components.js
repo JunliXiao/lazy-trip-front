@@ -4,7 +4,6 @@
 
 // 頁首 Header (置頂導覽列)
 class Header extends HTMLElement {
-
   header_html = `
     <nav
     class="navbar has-shadow"
@@ -13,7 +12,7 @@ class Header extends HTMLElement {
     >
     <!-- Logo -->
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/index.html">
         <!-- <img
           src="https://bulma.io/images/bulma-logo.png"
           width="112"
@@ -54,12 +53,14 @@ class Header extends HTMLElement {
         <a href="/page/group/group_all.html" class="navbar-item"> 揪團 </a>
 
         <a href="#" class="navbar-item"> 行程 </a>
-        <div class="navbar-item has-dropdown is-hoverable">
+        <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item">
-            <span class="icon-text"
-              ><span class="icon"><i class="fas fa-user"></i></span
-              ><span>周杰倫</span></span
-            >
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-user"></i>
+              </span>
+              <span class="username">周杰倫</span>
+            </span>
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item"> 我的頁面 </a>
@@ -87,7 +88,6 @@ class Header extends HTMLElement {
 
 // 頁尾 Footer
 class Footer extends HTMLElement {
-
   footer_html = `
     <footer class="footer">
       <div class="columns">
@@ -120,10 +120,11 @@ class Footer extends HTMLElement {
 
 // 測試用
 class Example extends HTMLElement {
-
   constructor() {
     super();
-    this.addEventListener("click", () => {console.log(`Hello ${this.getAttribute('foo')}`)});
+    this.addEventListener("click", () => {
+      console.log(`Hello ${this.getAttribute("foo")}`);
+    });
   }
 
   connectedCallback() {
@@ -131,6 +132,6 @@ class Example extends HTMLElement {
   }
 }
 
-customElements.define('header-component', Header);
-customElements.define('footer-component', Footer);
-customElements.define('example-component', Example);
+customElements.define("header-component", Header);
+customElements.define("footer-component", Footer);
+customElements.define("example-component", Example);
