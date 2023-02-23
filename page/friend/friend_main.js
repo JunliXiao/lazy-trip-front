@@ -3,6 +3,7 @@ const node_show_suggestions = document.getElementById("li-suggestions");
 const node_show_friends = document.getElementById("li-friends");
 const node_show_sent_requests = document.getElementById("li-sent-requests");
 const node_show_received_requests = document.getElementById("li-received-requests");
+const node_show_chatrooms = document.getElementById("li-chatrooms");
 const node_add_request = document.getElementById("btn-add-request");
 const node_submit_request = document.getElementById("btn-submit-request");
 const node_summary = document.getElementById("div-no-result");
@@ -34,6 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
         toggleActiveMenuListItem(event);
         showRequests("received");
     });
+    node_show_chatrooms.addEventListener("click", (event) => {
+        toggleActiveMenuListItem(event);
+        showChatrooms();
+  });
     node_submit_request.addEventListener("click", submitRequest);
 
     setBulmaModal();
@@ -119,6 +124,18 @@ function showRequests(direction) {
         });
       })
         .catch((err) => console.log(err));
+}
+
+function showChatrooms() {
+  node_results.innerHTML = '';
+  console.log("show chatrooms");
+
+  for (let i = 0; i < 3; i++) {
+    let newItem = document.createElement("chatroom-component");
+    newItem.setAttribute("chatroom-id", 1);
+    node_results.appendChild(newItem);
+  }
+
 }
 
 function addRequest(requesterId, addresseeId) {
