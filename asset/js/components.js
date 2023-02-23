@@ -70,7 +70,7 @@ class Header extends HTMLElement {
             </a>
             <a class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="../../index_not_in.html" class="navbar-item"> 登出 </a>
+            <a href="http://localhost:8080/lazy-trip-back/page/logout.html" class="navbar-item"> 登出 </a>
           </div>
         </div>
       </div>

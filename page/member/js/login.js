@@ -3,6 +3,7 @@ $(function () {
   const password = $("input#input-password");
 
   $("button#btn-login").on("click", function () {
+    $("p.msg").text();
     fetch("login", {
       method: "POST",
       headers: {
@@ -16,10 +17,12 @@ $(function () {
       .then((resp) => {
         if (resp.redirected) {
           location.href = resp.url;
-          alert("success");
+          alert("登入成功");
         } else {
           resp.json().then((body) => {
-            alert(`errorMsg: ${body.errorMessage}`);
+            $("p.msg").text(body.errorMessage);
+            $("p.msg").css("color", "red");
+            // alert(`errorMsg: ${body.errorMessage}`);
           });
         }
       })
