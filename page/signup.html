@@ -14,8 +14,16 @@
       src="https://kit.fontawesome.com/0548105e54.js"
       crossorigin="anonymous"
     ></script>
-    <!-- reuse -->
-    <script src="../asset/js/components.js"></script>
+    <!-- jquery -->
+    <script src="../asset/js/jquery-3.6.3.min.js"></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../asset/js/components.js?ver=2"
+      type="text/javascript"
+    ></script>
+    <!-- 初始化 Bulma -->
+    <script defer src="../asset/js/bulma-init.js"></script>
   </head>
   <body>
     <header-component></header-component>
@@ -27,21 +35,21 @@
           <div class="content has-text-centered"><h1>註冊</h1></div>
           <!-- 表單 -->
           <form class="box" action="#" method="post" id="form-signup">
-            <div class="content"><p>請填寫以下欄位</p></div>
-            <div class="field">
-              <label class="label" for="input-username">帳號</label>
+            <div class="content msg"><p>請填寫以下欄位</p></div>
+            <div class="field account">
+              <label class="label" for="input-account">帳號</label>
               <div class="control">
                 <input
                   class="input"
-                  type="text"
-                  name="username"
-                  placeholder="e.g. alexyang"
-                  id="input-username"
+                  type="email"
+                  name="account"
+                  placeholder="alexyang@email.com"
+                  id="input-account"
                 />
               </div>
             </div>
 
-            <div class="field">
+            <div class="field password">
               <label class="label" for="input-password">密碼</label>
               <div class="control">
                 <input
@@ -54,67 +62,39 @@
               </div>
             </div>
 
-            <div class="field">
-              <label class="label" for="input-last-name">姓氏</label>
+            <div class="field username">
+              <label class="label" for="input-username">暱稱</label>
               <div class="control">
                 <input
                   class="input"
                   type="text"
-                  name="lastName"
-                  placeholder="楊"
-                  id="input-last-name"
+                  name="username"
+                  placeholder="暱稱"
+                  id="input-username"
                 />
               </div>
             </div>
 
-            <div class="field">
-              <label class="label" for="input-first-name">名字</label>
+            <div class="field gender">
+              <label class="label" for="input-gender">性別</label>
               <div class="control">
-                <input
-                  class="input"
-                  type="text"
-                  name="firstName"
-                  placeholder="艾力克斯"
-                  id="input-first-name"
-                />
+                <label><input type="radio" name="gender" value="男" />男</label>
+                <label><input type="radio" name="gender" value="女" />女</label>
+                <label
+                  ><input type="radio" name="gender" value="其他" />其他</label
+                >
               </div>
             </div>
 
-            <div class="field">
-              <label class="label" for="input-email">Email</label>
+            <div class="field birthday">
+              <label class="label" for="input-birthday">生日</label>
               <div class="control">
                 <input
                   class="input"
-                  type="email"
-                  name="email"
-                  placeholder="alexyang@email.com"
-                  id="input-email"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label" for="input-job">工作</label>
-              <div class="control">
-                <input
-                  class="input"
-                  type="text"
-                  name="job"
-                  placeholder="卡車司機"
-                  id="input-job"
-                />
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label" for="input-area">地區</label>
-              <div class="control">
-                <input
-                  class="input"
-                  type="text"
-                  name="area"
-                  placeholder="桃園市"
-                  id="input-area"
+                  type="date"
+                  name="birthday"
+                  id="input-birthday"
+                  min="1900-01-01"
                 />
               </div>
             </div>
@@ -124,7 +104,7 @@
               <div class="control">
                 <button
                   class="button is-primary has-text-centered"
-                  type="submit"
+                  type="button"
                   id="btn-signup"
                 >
                   註冊
@@ -146,10 +126,56 @@
       <div class="column"></div>
     </div>
     <footer-component></footer-component>
+    <script src="../asset/js/checkLogin.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("btn-back").addEventListener("click", () => {
-          window.location.href = "../index_not_in.html";
+      $(function () {
+        const account = $("input#input-account");
+        const password = $("input#input-password");
+        const username = $("input#input-username");
+        const birth = document.querySelector("#input-birthday");
+
+        birth.max = new Date(
+          new Date().getTime() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0];
+        birth.value = new Date(
+          new Date().getTime() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0];
+        $("button#btn-signup").on("click", function () {
+          var gender = $("input[type=radio][name=gender]:checked");
+          console.log(gender);
+          // console.log(birth);
+          fetch("register", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              account: account.val(),
+              password: password.val(),
+              username: username.val(),
+              gender: gender.val(),
+              birthday: birth.value,
+            }),
+          }).then((resp) => {
+            resp.json().then((body) => {
+              if (body.successful == false) {
+                let msg = body.message;
+                $("div.msg").text(msg);
+                $("div.msg").css("color", "red");
+                $("html,body").animate({ scrollTop: 0 }, "fast");
+              } else {
+                alert(
+                  `successful: ${body.successful} message: ${body.message}`
+                );
+
+                location.href = location.origin + "/lazy-trip-back/index.html";
+              }
+            });
+          });
         });
       });
     </script>

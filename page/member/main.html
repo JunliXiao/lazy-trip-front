@@ -14,8 +14,16 @@
       src="https://kit.fontawesome.com/0548105e54.js"
       crossorigin="anonymous"
     ></script>
-    <!-- reuse -->
-    <script src="../../asset/js/components.js"></script>
+    <!-- jquery -->
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../../asset/js/components.js?ver=3"
+      type="text/javascript"
+    ></script>
+    <!-- 初始化 Bulma -->
+    <script defer src="../../asset/js/bulma-init.js?ver=2"></script>
     <style>
       div.mem_img > img {
         border-radius: 100%;
@@ -39,22 +47,24 @@
           <div class="tile is-parent box is-12">
             <div class="tile is-child is-5">
               <div class="mem_img">
-                <img src="../../asset/img/dog.jpg" />
-                <span class="mem_acc"> EHN EHEHEHEHEH</span>
+                <span class="mem_username"></span>
               </div>
 
               <div class="tabs is-medium mt-4">
                 <ul>
-                  <li class="is-active"><a>Pictures</a></li>
-                  <li><a>Music</a></li>
-                  <li><a>Videos</a></li>
-                  <li><a>Documents</a></li>
+                  <li class="is-active"><a class="tabs">動態消息</a></li>
+                  <li><a class="tabs">評論</a></li>
+                  <li><a class="tabs">相片</a></li>
+                  <li><a class="tabs">旅程</a></li>
                 </ul>
               </div>
             </div>
             <div class="tile is-child"></div>
             <div class="tile is-child is-2">
-              <button class="button">
+              <button
+                class="button btn_edit js-modal-trigger"
+                data-target="modal-js-example"
+              >
                 <span class="icon">
                   <i class="fa-solid fa-gear"></i>
                 </span>
@@ -69,9 +79,15 @@
         <div class="column is-one-quarter">
           <div class="card mb-3">
             <div class="card-content">
-              <div class="content">
+              <div class="content intro">
                 <div class="">簡介</div>
               </div>
+              <button class="button">
+                <span class="icon">
+                  <i class="fa-solid fa-gear"></i>
+                </span>
+                <span>編輯簡介</span>
+              </button>
             </div>
           </div>
           <div class="card mb-3">
@@ -94,7 +110,7 @@
               <div class="content ml-4">
                 <button class="button">
                   <span class="icon">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-image"></i>
                   </span>
                   <span>分享圖片</span>
                 </button>
@@ -102,7 +118,7 @@
               <div class="content ml-4">
                 <button class="button">
                   <span class="icon">
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-pen-to-square"></i>
                   </span>
                   <span>撰寫評論</span>
                 </button>
@@ -129,8 +145,183 @@
       </div>
     </section>
 
+    <div id="modal-js-example" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Modal title</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="field">
+            <label class="label" for="input-name">姓名</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="name"
+                placeholder=""
+                id="input-name"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="input-phone">電話</label>
+            <div class="control">
+              <input
+                class="input"
+                type="number"
+                name="phone"
+                placeholder="0912345678"
+                id="input-phone"
+              />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="input-address">住址</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="address"
+                placeholder="OO市XX區YY路N巷M號"
+                id="input-address"
+              />
+            </div>
+          </div>
+
+          <div class="field username">
+            <label class="label" for="input-username">暱稱</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                name="username"
+                placeholder="暱稱"
+                id="input-username"
+              />
+            </div>
+          </div>
+
+          <div class="field gender">
+            <label class="label" for="input-gender">性別</label>
+            <div class="control">
+              <label><input type="radio" name="gender" value="男" />男</label>
+              <label><input type="radio" name="gender" value="女" />女</label>
+              <label
+                ><input type="radio" name="gender" value="其他" />其他</label
+              >
+            </div>
+          </div>
+
+          <div class="field birthday">
+            <label class="label" for="input-birthday">生日</label>
+            <div class="control">
+              <input
+                class="input"
+                type="date"
+                name="birthday"
+                id="input-birthday"
+                min="1900-01-01"
+              />
+            </div>
+          </div>
+
+          <!-- Content ... -->
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success">保存</button>
+          <button class="button">取消</button>
+        </footer>
+      </div>
+    </div>
+
     <footer-component></footer-component>
-    <script src="../../asset/vendor/jquery/jquery-3.6.3.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="../../asset/js/checkLogin.js"></script>
+    <!-- <script src="js/main.js"></script> -->
+    <script>
+      $(function () {
+        const mem_username = $("span.mem_username");
+        const img = $("div.mem_img");
+
+        const name = $("input#input-name");
+        const phone = $("input#input-phone");
+        const address = $("input#input-address");
+        const username = $("input#input-username");
+        const birth = document.getElementById("input-birthday");
+
+        birth.max = new Date(
+          new Date().getTime() - new Date().getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0];
+        // ------------------------------
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+        // ---------------------------------
+
+        $(document).on("click", "a.tabs", function () {
+          $(this).closest("ul").find("li").removeClass("is-active");
+          $(this).closest("li").addClass("is-active");
+        });
+
+        $("button.is-success").on("click", function () {
+          let gender = $("input[type=radio][name=gender]:checked");
+
+          fetch("save", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: parseInt(getCookie("memId")),
+              name: name.val(),
+              phone: phone.val(),
+              address: address.val(),
+              username: username.val(),
+              gender: gender.val(),
+              birthday: birth.value,
+            }),
+          })
+            .then((resp) => resp.json())
+            .then((body) => {
+              alert(`successful: ${body.successful} message: ${body.message}`);
+              if (body.successful == true) {
+                location.assign("main.html");
+              }
+            });
+        });
+
+        fetch(`find?id=${getCookie("memId")}`)
+          .then((resp) => resp.json())
+          .then((member) => {
+            let mem_img;
+            if (member.hasOwnProperty("imgBase64Str")) {
+              mem_img = `<img src="data:image/*;base64,${member.imgBase64Str}" >`;
+            } else {
+              mem_img = `<img src="../../asset/img/default.png" >`;
+            }
+
+            img.prepend(mem_img);
+            mem_username.text(member.username);
+
+            $("input[name=gender][value=" + member.gender + "]").prop(
+              "checked",
+              true
+            );
+            name.val(member.name);
+            phone.val(member.phone);
+            address.val(member.address);
+            username.val(member.username);
+            birth.value = `${member.birthday}`;
+          });
+      });
+    </script>
   </body>
 </html>

@@ -63,14 +63,14 @@ class Header extends HTMLElement {
             </span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item"> 我的頁面 </a>
+            <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/page/member/main.html"> 我的頁面 </a>
             <a class="navbar-item"> 我的訂單 </a>
             <a href="page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
             <a class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="../../index_not_in.html" class="navbar-item"> 登出 </a>
+            <a href="http://localhost:8080/lazy-trip-back/page/logout.html" class="navbar-item"> 登出 </a>
           </div>
         </div>
       </div>
@@ -135,3 +135,7 @@ class Example extends HTMLElement {
 customElements.define("header-component", Header);
 customElements.define("footer-component", Footer);
 customElements.define("example-component", Example);
+
+$("span.username").on("click", function () {
+  location.href = "http://localhost:8080/lazy-trip-back/page/member/main.html";
+});
