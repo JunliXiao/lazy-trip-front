@@ -60,7 +60,7 @@ class Suggestion extends ResultCard {
   connectedCallback() {
     this.buildCard(
       `
-        <button class="_add_friend js-modal-trigger button is-primary is-light is-medium has-text-weight-bold" data-target="modal-js-example">
+        <button class="_add_friend button is-primary is-light is-medium has-text-weight-bold">
         加好友
         </button> 
       `
