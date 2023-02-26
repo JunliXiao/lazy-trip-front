@@ -37,56 +37,64 @@
     <hr class="group_hr" />
 
     <section class="section" id="gps" style="padding-left: 50px">
-      <form>
-        <ul class="group_list">
-          <li>
-            <a href="/page/group/group_main.html">
+      <ul class="group_list" style="padding-left: 100px">
+        <!-- <li>
+            <a href="#">
               <div class="one_gp">
                 <p class="title">揪團名-只能點這個</p>
                 <p class="subtitle">6人</p>
               </div>
-            </a>
-          </li>
-          <li>
-            <a href="/page/group/group_main.html">
-              <div class="one_gp">
-                <p class="title">揪團名-只能點這個</p>
-                <p class="subtitle">6人</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/page/group/group_main.html">
-              <div class="one_gp">
-                <p class="title">揪團名-只能點這個</p>
-                <p class="subtitle">6人</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/page/group/group_main.html">
-              <div class="one_gp">
-                <p class="title">揪團名-只能點這個</p>
-                <p class="subtitle">6人</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="/page/group/group_main.html">
-              <div class="one_gp">
-                <p class="title">揪團名-只能點這個</p>
-                <p class="subtitle">6人</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </form>
+            </a> -->
+        <!-- </li> -->
+      </ul>
     </section>
     <!-- 頁尾 -->
     <footer-component></footer-component>
     <script>
       $(function () {
-        // console.log("!!");
+        // console.log($(".group_list").html);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+        var urlencoded1 = new URLSearchParams();
+
+        //預計之後更改為得到登入的memberid
+        urlencoded1.append("memberid", "1");
+        urlencoded1.append("action", "getAllGroups");
+        var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: urlencoded1,
+          redirect: "follow",
+        };
+
+        fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(result);
+            let list_html = "";
+
+            $.each(result, function (index, item) {
+              let a =
+                "http://localhost:8080/lazy-trip-back/group/group_main.html?groupid=";
+
+              list_html += '<li><a href="';
+              list_html += a + item.groupid;
+              list_html += '">';
+              list_html += '<div class="one_gp">';
+              list_html += '<p class="title">';
+              list_html += item.groupname;
+              list_html += "</p>";
+              list_html += '<p class="subtitle">';
+              list_html += "群組人數:";
+              list_html += item.groupmembercount;
+              list_html += "人";
+              list_html += "</p></div></a></li>";
+            });
+            $(".group_list").html(list_html);
+          })
+          .catch((error) => console.log("error", error));
       });
     </script>
   </body>

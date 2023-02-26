@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LazyTrip.io | 揪團 | 揪團設定</title>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LazyTrip.io | 揪團</title>
     <!-- Bulma 自訂 -->
     <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
@@ -28,7 +24,6 @@
 
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
-
     <!--GroupCss-->
     <link rel="stylesheet" href="./css/group.css" />
   </head>
@@ -65,9 +60,10 @@
 
             <div class="field">
               <label>加入方式: </label>
-              <input type="radio" name="how_2_join" id="check_join" checked />
+              <input type="radio" name="how_2_join" id="check_join" value="1" />
               <label for="check_join">審核加入</label>
-              <input type="radio" name="how_2_join" id="any_join" />
+              <input type="radio" name="how_2_join" id="any_join" value="2" />
+
               <label for="any_join">直接加入</label>
               <button
                 class="button is-primary has-text-centered is-small"
@@ -112,13 +108,18 @@
                   修改
                 </button>
               </div>
+
               <div class="control">
                 <button
                   class="button is-info is-light has-text-centered"
                   type="button"
-                  id="btn_gp_delete"
+                  id="btn_gp_delete_group"
+                  style="
+                    background-color: rgb(246, 109, 129);
+                    color: whitesmoke;
+                  "
                 >
-                  刪除
+                  刪除群組
                 </button>
               </div>
             </div>
@@ -137,32 +138,85 @@
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
         let btn_amend = document.getElementById("btn_uncheckmem");
+
+        $("#btn_gp_delete_group").on("click", function (e) {
+          var r = confirm("確定要刪除此揪團嗎");
+          if (r == true) {
+            fet;
+            alert("刪除成功!");
+          } else {
+            e.preventDefault();
+          }
+        });
+
+        //加載時的fetch
+        let getUrlString = location.href;
+        var url = new URL(getUrlString);
+        let gpid = url.searchParams.get("groupid"); // 回傳 groupid
+        //console.log(gpid);
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+        myHeaders.append(
+          "Cookie",
+          "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
+        );
+        let url1 = "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
+        // console.log(url1 + gpid);
+        let group_manager_id;
+        fetch(url1 + gpid)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            //$("#gp_main_gpname").html(data.groupname);
+            group_manager_id = data.memberid;
+            $("#gp_name").val(data.groupname);
+            $("#gp_mem_num").val(data.groupmembercount);
+            // console.log(data.ifjoingroupdirectly);
+            if (data.ifjoingroupdirectly == "1") {
+              $("#check_join").attr("checked", true);
+            } else if (data.ifjoingroupdirectly == "2") {
+              $("#any_join").attr("checked", true);
+            }
+          })
+          .catch((error) => console.log("error", error));
         gp_amend_el.onclick = (e) => {
-          if (gp_mem_num_el.value != "" && gp_name_el.value != "") {
-            alert("修改成功!");
+          if (
+            gp_mem_num_el.value != "" &&
+            gp_mem_num_el.value > 0 &&
+            gp_name_el.value != ""
+          ) {
+            e.preventDefault();
+            var requestOptions = {
+              method: "PUT",
+              redirect: "follow",
+            };
+            var url_set = "";
+            url_set += "http://localhost:8080/lazy-trip-back/group?action=groupSetting&groupid=";
+            url_set += gpid;
+            url_set += "&groupmembercount=";
+            url_set += $("#gp_mem_num").val();
+            url_set += "&groupname=";
+            url_set += $("#gp_name").val();
+            url_set += "&ifjoingroupdirectly=";
+            url_set += $("input[name='how_2_join']:checked").val();
+
+            fetch(url_set, requestOptions)
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data.groupid);
+                alert("修改成功!");
+                let a =
+                  "http://localhost:8080/lazy-trip-back/group/group_main.html?groupid=";
+                location.href = a + data.groupid;
+              })
+              .catch((error) => console.log("error", error));
             //預計放入直接前往該揪團主頁
           } else {
             alert("請確認修改資訊!");
             e.preventDefault();
           }
         };
-        //審核申請有勾選才會出現:
-        // $("#check_join").on("change", function () {
-        //   btn_amend.style.display = "inline-block";
-        //   console.log("??");
-        // });
-        // $("#any_join").on("change", function () {
-        //   // btn_amend.style.display = "none";
-        //   console.log("??");
-        // });
-        $("#btn_gp_delete").on("click", function (e) {
-          var r = confirm("確定要刪除此揪團嗎");
-          if (r == true) {
-            alert("刪除成功!");
-          } else {
-            e.preventDefault();
-          }
-        });
       };
     </script>
   </body>

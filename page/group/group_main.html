@@ -24,7 +24,6 @@
 
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js"></script>
-
     <!--GroupCss-->
     <link rel="stylesheet" href="./css/group.css" />
   </head>
@@ -54,7 +53,7 @@
     <!--揪團名-->
     <div class="column">
       <div class="content has-text-centered">
-        <h1 class="gp_main_gpname">揪團名揪團名</h1>
+        <h1 id="gp_main_gpname"></h1>
       </div>
     </div>
 
@@ -66,13 +65,16 @@
       <div class="column is-8"></div>
       <div class="column is-3 trip_info">
         <span>當前行程:</span>
-        <span class="trip_name">台北->台中</span>
+        <span class="trip_name">暫無行程</span>
         <p></p>
         <span> 日期:</span>
-        <span class="trip_date">01/25->01/28</span>
+        <span class="trip_date" id="group_start_date"></span>
+        <span class="trip_date" id="group_end_date"></span>
       </div>
       <div class="column is-1">
-        <span class="icon_setting"><i class="fa-solid fa-gear"></i></span>
+        <span class="icon_setting" id="group_setting"
+          ><i class="fa-solid fa-gear"></i
+        ></span>
       </div>
     </div>
 
@@ -94,10 +96,22 @@
     <div class="columns" style="height: 350px">
       <div class="column is-1"></div>
       <div class="column is-9 content_area content">
-        <section class="section" style="border-radius: 10px; padding: 20px">
+        <section
+          class="section content_section"
+          style="border-radius: 10px; padding: 20px"
+        >
           <!--單一留言-->
-          <article class="message is-primary">
-            <div class="columns group_message message-body">
+          <!-- <article class="message is-primary">
+            <div
+              class="columns group_message message-body"
+              style="position: relative"
+            >
+              <button
+                class="delete_content_btn"
+                style="position: absolute; top: 5px; right: 15px"
+              >
+                x
+              </button>
               <img
                 src="./test.png"
                 class="column is-1 group_main_img_content"
@@ -113,45 +127,7 @@
                 <span class="group_main_msg_time">16:08:08</span>
               </div>
             </div>
-          </article>
-          <article class="message is-primary">
-            <div class="columns group_message message-body">
-              <img
-                src="./test.png"
-                class="column is-1 group_main_img_content"
-              />
-              <div class="column is-9">
-                <span class="group_main_member_content_name">會員名稱</span
-                ><br />
-                <span
-                  >內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容</span
-                >
-              </div>
-              <div class="column is-2 content_time">
-                <span class="group_main_msg_time">2023-1-26</span>
-                <p></p>
-                <span class="group_main_msg_time">16:08:08</span>
-              </div>
-            </div>
-          </article>
-          <article class="message is-primary">
-            <div class="columns group_message message-body">
-              <img
-                src="./test.png"
-                class="column is-1 group_main_img_content"
-              />
-              <div class="column is-9">
-                <span class="group_main_member_content_name">會員名稱</span
-                ><br />
-                <span>內容內容</span>
-              </div>
-              <div class="column is-2 content_time">
-                <span class="group_main_msg_time">2023-1-26</span>
-                <p></p>
-                <span class="group_main_msg_time">16:08:08</span>
-              </div>
-            </div>
-          </article>
+          </article> -->
         </section>
       </div>
       <div class="column is-1 group_member">
@@ -159,38 +135,6 @@
           <div class="column group_member_list">
             <div class="field group_main_member_list_title">
               <label>成員列表</label>
-            </div>
-            <div class="member_list_content">
-              <label
-                ><img
-                  class="group_main_img_member_list"
-                  src="./test.png"
-                />中文中文中文中文</label
-              >
-            </div>
-            <div class="member_list_content">
-              <label
-                ><img
-                  class="group_main_img_member_list"
-                  src="./test.png"
-                />asdsaa1</label
-              >
-            </div>
-            <div class="member_list_content">
-              <label
-                ><img
-                  class="group_main_img_member_list"
-                  src="./test.png"
-                />asdsaa1</label
-              >
-            </div>
-            <div class="member_list_content">
-              <label
-                ><img
-                  class="group_main_img_member_list"
-                  src="./test.png"
-                />asdsaa1</label
-              >
             </div>
           </div>
         </div>
@@ -201,18 +145,21 @@
       <div class="field column is-9">
         <label class="label">留言</label>
         <div class="control">
-          <input class="input" type="text" placeholder="請輸入想說的話" />
+          <input
+            class="input"
+            id="new_content_input"
+            type="text"
+            placeholder="請輸入想說的話"
+          />
         </div>
+        <button name="" id="new_content_btn">提交</button>
       </div>
     </div>
+
     <!-- 頁尾 -->
     <footer-component></footer-component>
     <script>
       window.addEventListener("load", function () {
-        let setting_el = document.getElementsByClassName("icon_setting");
-        setting_el[0].onclick = () => {
-          console.log("sayhi");
-        };
         let invite_fd_el = document.getElementById("invite_fd");
         invite_fd_el.onclick = () => {
           let show_alert = document.getElementById("group_main_fs_alert");
@@ -236,8 +183,27 @@
           alert("已發送邀請");
         };
 
-        //fetch:
+        //綁定enter提交
+        $("#new_content_btn").click(function () {
+          var value = $("#new_content_input").val();
+          value = $.trim(value);
+          if (value == "") {
+            alert("請輸入內容");
+          } else {
+            // alert($("#new_content_input").val());
+          }
+        });
+        $("#new_content_input").keyup(function (event) {
+          if (event.which === 13) {
+            $("#new_content_btn").click();
+          }
+        });
 
+        $("#new_content_btn").click(function () {
+          // alert("clicked!");
+        });
+
+        //fetch獲取群組資訊
         let getUrlString = location.href;
         var url = new URL(getUrlString);
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
@@ -250,21 +216,166 @@
           "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
         );
 
-        // var urlencoded = new URLSearchParams();
-        // urlencoded.append("groupid", gpid);
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("groupid", gpid);
 
         // var requestOptions = {
-        // method: 'GET',
+        //   method: "GET",
         //   headers: myHeaders,
         //   body: urlencoded,
-        //   redirect: 'follow'
+        //   redirect: "follow",
         // };
-        let url1 = "http://localhost:8080/lazy-trip-back/GroupGetOne?groupid=";
+        let url1 =
+          "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
         // console.log(url1 + gpid);
+        let group_manager_id;
         fetch(url1 + gpid)
           .then((response) => response.json())
           .then((data) => {
+            console.log(data);
             $("#gp_main_gpname").html(data.groupname);
+            group_manager_id = data.memberid;
+            if (data.tourid != 0) {
+              var requestOptions = {
+                method: "GET",
+                redirect: "follow",
+              };
+
+              fetch(
+                "http://localhost:8080/lazy-trip-back/group?action=getTourInfo&tourid=" +
+                  data.tourid,
+                requestOptions
+              )
+                .then((response) => response.json())
+                .then((result) => {
+                  console.log(result);
+                  $(".trip_name").html(result.tourTitle);
+                  $("#group_start_date").html(result.startDate + " ->");
+                  $("#group_end_date").html(result.endDate);
+                })
+                .catch((error) => console.log("error", error));
+            }
+          })
+          .catch((error) => console.log("error", error));
+
+        //點擊設定:
+        $("#group_setting").click(function () {
+          // console.log(group_manager_id);
+          //串上member後使用者的memberid若等於group_manager_id才可以觸發
+          fetch(url1 + gpid)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              $("#gp_main_gpname").html(data.groupname);
+              group_manager_id = data.memberid;
+              let a1 =
+                "http://localhost:8080/lazy-trip-back/group/group_setting.html?groupid=";
+              location.href = a1 + data.groupid;
+            })
+            .catch((error) => console.log("error", error));
+        });
+
+        //載入成員列表
+
+        fetch(
+          "http://localhost:8080/lazy-trip-back/group?action=getGroupMems&groupid=" +
+            gpid
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            $.each(data, function (index, item) {
+              // console.log(item.username);
+              var list_html = "";
+              var mem_name = "";
+              var mem_pic = "";
+              if (item.img != null) {
+                // console.log(item.img);
+              } else {
+              }
+              if (item.username != null) {
+                // console.log(item.username);
+                mem_name = item.username;
+              } else if (item.name != null) {
+                // console.log(item.name);
+                mem_name = item.name;
+              } else {
+                mem_name = "暫無會員名";
+              }
+
+              // <label
+              //   ><img
+              //     class="group_main_img_member_list"
+              //     src="./test.png"
+              //   />中文中文中文中文</label
+              // >
+              list_html += '<div class="member_list_content">';
+              list_html += '<label><img class="group_main_img_member_list"';
+              list_html += 'src="./test.png"/>';
+              list_html += mem_name;
+              list_html += "</label></div>";
+
+              $(".group_member_list").append(list_html);
+            });
+          })
+          .catch((error) => console.log("error", error));
+
+        //顯示群組留言
+
+        fetch(
+          "http://localhost:8080/lazy-trip-back/group?action=getGroupCons&groupid=" +
+            gpid
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            $.each(data, function (index, item) {
+              var list_html = "";
+              var mem_name = "";
+              var mem_pic = "";
+              if (item.member.img != null) {
+                // console.log(item.img);
+              } else {
+              }
+              if (item.member.username != null) {
+                // console.log(item.member.username);
+                mem_name = item.member.username;
+              } else if (item.member.name != null) {
+                // console.log(item.member.name);
+                mem_name = item.member.name;
+              } else {
+                mem_name = "暫無會員名";
+              }
+              list_html = `<article class="message is-primary">
+            <div
+              class="columns group_message message-body"
+              style="position: relative"
+              id = "div${item.memberid}"
+            >
+              <button
+                class="delete_content_btn"
+                style="position: absolute; top: 5px; right: 15px"
+              >
+                x
+              </button>
+              <img
+                src="./test.png"
+                class="column is-1 group_main_img_content"
+              />
+              <div class="column is-9">
+                <span class="group_main_member_content_name">${mem_name}</span
+                ><br />
+                <span>${item.discussioncontent}</span>
+              </div>
+              <div class="column is-2 content_time">
+                <span class="group_main_msg_time">${item.dicussionday}</span>
+                <p></p>
+                <span class="group_main_msg_time">${item.dicussiontime}</span>
+              </div>
+            </div>
+          </article>`;
+              $(".content_section").append(list_html);
+            });
           })
           .catch((error) => console.log("error", error));
       });
