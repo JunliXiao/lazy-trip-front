@@ -55,7 +55,7 @@ function toggleActiveMenuListItem(event) {
 }
 
 function showSuggestions() {
-    node_results.innerHTML = '';
+    clearResults();
 
     fetch(API_ROOT + API_FRIEND + `?member_id=${specifier_id}&query_type=suggestion`)
         .then((res) => res.json())
@@ -79,7 +79,7 @@ function showSuggestions() {
 }
 
 function showFriends() {
-    node_results.innerHTML = '';
+    clearResults();
 
     fetch(API_ROOT + API_FRIEND + `?member_id=${specifier_id}&query_type=friend`)
         .then((res) => res.json())
@@ -103,7 +103,7 @@ function showFriends() {
 }
 
 function showRequests(direction) {
-    node_results.innerHTML = '';
+    clearResults();
 
     fetch(API_ROOT + API_FRIEND_REQUEST + `?member_id=${specifier_id}&direction=${direction}`)
         .then((res) => res.json())
@@ -129,7 +129,7 @@ function showRequests(direction) {
 }
 
 function showChatrooms() {
-  node_results.innerHTML = '';
+  clearResults();
 
   fetch(API_ROOT + API_CHAT + `?member_id=${specifier_id}`)
   .then((res) => res.json())
@@ -145,6 +145,7 @@ function showChatrooms() {
       let newItem = document.createElement("chatroom-component");
       newItem.setAttribute("chatroom-id", ch["id"]);
       newItem.setAttribute("chatroom-name", ch["name"]);
+      newItem.setAttribute("chatroom-created-at", ch["createdAtUnix"]);
       node_results.appendChild(newItem);
       });
     })
@@ -265,4 +266,8 @@ function setBulmaModal() {
           closeAllModals();
         }
       });
+}
+
+function clearResults() {
+  node_results.innerHTML = '';
 }
