@@ -54,7 +54,7 @@ class Header extends HTMLElement {
 
         <a href="#" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
-          <a class="navbar-item">
+          <a class="navbar-item mem_main">
             <span class="icon-text">
               <span class="icon">
                 <i class="fas fa-user"></i>
@@ -83,6 +83,36 @@ class Header extends HTMLElement {
 
   connectedCallback() {
     this.innerHTML = this.header_html;
+    $(document).on("click", "a.mem_main", function () {
+      let ori = location.origin;
+      location.href = ori + "/lazy-trip-back/page/member/main.html";
+    });
+    $(function () {
+      // Function-----------------
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+      //   ---------------
+      let username = getCookie("memUsername");
+      let location = window.location.origin;
+      if (username != null) {
+        $("span.username").text(username);
+      } else {
+        let html = `
+        <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" href="${location}/lazy-trip-back/page/signup.html">
+            <strong> 註冊 </strong>
+          </a>
+          <a class="button is-light" href="${location}/lazy-trip-back/page/login.html"> 登入 </a>
+        </div>
+      </div>`;
+        $("div.member").empty();
+        $("div.member").append(html);
+      }
+    });
   }
 }
 
@@ -135,7 +165,3 @@ class Example extends HTMLElement {
 customElements.define("header-component", Header);
 customElements.define("footer-component", Footer);
 customElements.define("example-component", Example);
-
-$("span.username").on("click", function () {
-  location.href = "http://localhost:8080/lazy-trip-back/page/member/main.html";
-});

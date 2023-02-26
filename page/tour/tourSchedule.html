@@ -269,6 +269,7 @@
         margin: 5px;
       }
       .add_attraction,
+      .edit_attraction,
       .reset_attraction {
         width: 100%;
       }
@@ -311,6 +312,22 @@
       /* 捲軸滑塊在滑鼠移過捲軸區域時顯示的樣式 */
       ::-webkit-scrollbar-thumb:active {
         background: #7a3306;
+      }
+      /* div.icon */
+      /* 返回主行程與check icon */
+      div.icon {
+        width: 100%;
+        justify-content: space-between;
+      }
+      div.icon > div.return {
+        margin: 10px;
+        font-size: 1.2rem;
+        padding-top: 10px;
+      }
+      div.icon > div.check {
+        margin: 10px;
+        font-size: 1.2rem;
+        padding-top: 10px;
       }
     </style>
   </head>
@@ -387,8 +404,7 @@
                     清除
                   </button>
                 </li>
-                <li>
-                  <!--有選取到某一景點則可以點選"加入景點"，class轉換成ok-->
+                <li class="addAttractionBtn">
                   <button class="button add_attraction">加入景點</button>
                 </li>
               </ul>
@@ -422,3 +438,27 @@
     ></script>
   </body>
 </html>
+
+<!-- <div dataDate="2022-10-10"></div>
+<div dataDate="2022-10-11"></div>
+<div dataDate="2022-10-12"></div>
+
+<div dataDate="2022-10-10">
+  <div dataId="1">s</div>
+  <div dataId="4">s2</div>
+</div>
+<div dataDate="2022-10-11">
+  <div dataId="2">v</div>
+</div>
+<div dataDate="2022-10-12">
+  <div dataId="3">z</div>
+</div>
+
+<script>
+  let arr = [
+    { date: "2022-10-10", name: "s", id: 1 },
+    { date: "2022-10-11", name: "v", id: 2 },
+    { date: "2022-10-12", name: "z", id: 3 },
+    { date: "2022-10-10", name: "s2", id: 4 },
+  ];
+</script> -->
