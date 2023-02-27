@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- jquery -->
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
+    <!-- cropper -->
+    <link rel="stylesheet" href="../../asset/css/croppie.css" />
+    <script src="../../asset/js/croppie.min.js"></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../../asset/js/components.js?ver=2"
+      type="text/javascript"
+    ></script>
+    <script defer src="js/mem_component.js" type="text/javascript"></script>
+    <!-- 初始化 Bulma -->
+    <script defer src="../../asset/js/bulma-init.js?ver=2"></script>
+    <style>
+      div.mem_img > img {
+        border-radius: 100%;
+        width: 100px;
+        height: 100px;
+      }
+      div.upload_img > img {
+        border-radius: 100%;
+        width: 100px;
+        height: 100px;
+      }
+      span.mem_acc {
+        text-align: start;
+      }
+      span.gear {
+        border: 1px solid black;
+      }
+      div.upload_img > a > img {
+        border-radius: 100%;
+        width: 100px;
+        height: 100px;
+      }
+      div.img_test {
+        top: 40px;
+        /* color: white; */
+
+        position: absolute;
+        z-index: 5;
+      }
+      div.upload_img {
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <header-component></header-component>
+
+    <!-- 網頁主體 -->
+    <section class="section mt-6">
+      <div class="container mb-3 is-max-widescreen">
+        <div class="tile is-ancestor">
+          <div class="tile is-parent box is-12">
+            <div class="tile is-child is-5">
+              <nav class="level">
+                <div class="level-left">
+                  <div class="level-item has-text-centered">
+                    <div class="mem_img ml-4">
+                      <img src="../../asset/img/default.png" alt="" />
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <span class="mem_username mb-6 is-size-3">AAA</span>
+                  </div>
+                </div>
+              </nav>
+
+              <div class="tabs is-medium mt-4">
+                <ul>
+                  <li class="is-active">
+                    <a class="tabs" data-id="dynamic_msg">動態消息</a>
+                  </li>
+                  <li><a class="tabs" data-id="comment">評論</a></li>
+                  <li><a class="tabs" data-id="img">相片</a></li>
+                  <li><a class="tabs" data-id="tour">旅程</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="tile is-child"></div>
+            <div class="tile is-child is-2">
+              <!-- <button
+                class="button js-modal-trigger mt-3"
+                data-target="modal-self-edit"
+              >
+                <span class="icon">
+                  <i class="fa-solid fa-gear"></i>
+                </span>
+                <span>編輯個人資料</span>
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns">
+        <div class="column is-one-quarter">
+          <div class="card mb-3">
+            <div class="card-content ml-4">
+              <div class="content intro">
+                <p id="address">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-building"></i></span
+                  >居住於
+                </p>
+
+                <p id="reg_date">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-calendar"></i></span
+                  >加入於
+                </p>
+
+                <p id="intro">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-envelope-open-text"></i> </span
+                  >簡介:
+                </p>
+                <textarea
+                  name=""
+                  id="intro"
+                  cols="20"
+                  rows="10"
+                  readonly
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-7">
+          <div id="dynamic_msg" class="content-tab">
+            <card-component></card-component>
+          </div>
+          <div id="comment" class="content-tab" style="display: none">
+            <card-component></card-component>
+            <card-component></card-component>
+          </div>
+          <div id="img" class="content-tab" style="display: none">
+            <card-component></card-component>
+          </div>
+          <div id="tour" class="content-tab" style="display: none">
+            <card-component></card-component>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer-component></footer-component>
+
+    <script>
+      $(function () {
+        const mem_username = $("span.mem_username");
+        const img = $("div.mem_img");
+        const img_upload = $("div.mem_img_upload > div > a");
+        const fig_img = $("figure.image.is-48x48 ");
+
+        const address = $("input#input-address");
+        const username = $("input#input-username");
+        const intro = $("textarea#input-intro");
+
+        // ------------------------------
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+        // ---------------------------------
+
+        $(document).on("click", "a.tabs", function () {
+          let tab_id = $(this).attr("data-id");
+          let tab_content = document.getElementsByClassName("content-tab");
+
+          $(this).closest("ul").find("li").removeClass("is-active");
+          $(this).closest("li").addClass("is-active");
+          for (let i = 0; i < tab_content.length; i++) {
+            tab_content[i].style.display = "none";
+          }
+          document.getElementById(tab_id).style.display = "block";
+        });
+
+        function getData() {
+          let x = new URLSearchParams(location.search);
+          let id = x.get("member_id");
+
+          fetch(`find?id=${id}`)
+            .then((resp) => resp.json())
+            .then((member) => {
+              let mem_img;
+              if (member.hasOwnProperty("imgBase64Str")) {
+                mem_img = `<img src="data:image/*;base64,${member.imgBase64Str}" alt="Placeholder image"
+            class="is-rounded">`;
+                mem_img_upload = `
+              <img src="data:image/*;base64,${member.imgBase64Str}" alt="Placeholder image"
+            class="is-rounded">
+                    <div class="img_test">上傳個人圖片</div>`;
+              } else {
+                mem_img = `<img src="../../asset/img/default.png" alt="Placeholder image"
+            class="is-rounded">`;
+                mem_img_upload = `
+             <img src="../../asset/img/default.png" alt="Placeholder image"
+            class="is-rounded">
+                    <div class="img_test">上傳個人圖片</div>`;
+              }
+              img.empty();
+              fig_img.empty();
+              img_upload.empty();
+              img.prepend(mem_img);
+              fig_img.prepend(mem_img);
+              img_upload.prepend(mem_img_upload);
+              mem_username.text(member.username);
+
+              $("input[name=gender][value=" + member.gender + "]").prop(
+                "checked",
+                true
+              );
+
+              address.val(member.address);
+              username.val(member.username);
+              intro.val(member.intro);
+
+              if (member.address == null || member.address == "") {
+                $("p#address").empty();
+              } else {
+                let adr = member.address;
+                $("p#address").append(
+                  `<span> ${adr.substr(0, adr.indexOf("市") + 1)}</span>`
+                );
+              }
+              $("p#reg_date").append(`<span>${member.reg_date} </span>`);
+              $("textarea#intro").val(member.intro);
+            });
+        }
+        getData();
+      });
+    </script>
+  </body>
+</html>

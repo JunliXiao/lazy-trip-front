@@ -37,8 +37,9 @@
           <form class="box" action="#" method="post" id="form-signup">
             <div class="content msg"><p>請填寫以下欄位</p></div>
             <div class="field account">
+              <p class="mt-1"></p>
               <label class="label" for="input-account">帳號</label>
-              <div class="control">
+              <div class="control has-icons-left">
                 <input
                   class="input"
                   type="email"
@@ -46,12 +47,16 @@
                   placeholder="alexyang@email.com"
                   id="input-account"
                 />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
               </div>
             </div>
 
             <div class="field password">
+              <p class="mt-1"></p>
               <label class="label" for="input-password">密碼</label>
-              <div class="control">
+              <div class="control has-icons-left">
                 <input
                   class="input"
                   type="password"
@@ -59,12 +64,16 @@
                   placeholder="********"
                   id="input-password"
                 />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-lock"></i>
+                </span>
               </div>
             </div>
 
             <div class="field username">
+              <p class="mt-1"></p>
               <label class="label" for="input-username">暱稱</label>
-              <div class="control">
+              <div class="control has-icons-left">
                 <input
                   class="input"
                   type="text"
@@ -72,10 +81,14 @@
                   placeholder="暱稱"
                   id="input-username"
                 />
+                <span class="icon is-small is-left">
+                  <i class="fa-solid fa-user"></i>
+                </span>
               </div>
             </div>
 
             <div class="field gender">
+              <p class="mt-1"></p>
               <label class="label" for="input-gender">性別</label>
               <div class="control">
                 <label><input type="radio" name="gender" value="男" />男</label>
@@ -87,6 +100,7 @@
             </div>
 
             <div class="field birthday">
+              <p class="mt-1"></p>
               <label class="label" for="input-birthday">生日</label>
               <div class="control">
                 <input
@@ -146,36 +160,81 @@
           .split("T")[0];
         $("button#btn-signup").on("click", function () {
           var gender = $("input[type=radio][name=gender]:checked");
-          console.log(gender);
-          // console.log(birth);
-          fetch("register", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              account: account.val(),
-              password: password.val(),
-              username: username.val(),
-              gender: gender.val(),
-              birthday: birth.value,
-            }),
-          }).then((resp) => {
-            resp.json().then((body) => {
-              if (body.successful == false) {
-                let msg = body.message;
-                $("div.msg").text(msg);
-                $("div.msg").css("color", "red");
-                $("html,body").animate({ scrollTop: 0 }, "fast");
-              } else {
-                alert(
-                  `successful: ${body.successful} message: ${body.message}`
-                );
+          let error;
+          let mail_regex = new RegExp(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
+          // 6 ~ 16 字中英文組成，至少包含 1 個大寫英文與小寫英文，至少包含 1 個數字
+          let ps_regex = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/);
 
-                location.href = location.origin + "/lazy-trip-back/index.html";
-              }
+          error = false;
+          $("div.field.account > p").empty();
+          $("div.field.password > p").empty();
+          $("div.field.username > p").empty();
+          $("div.field.gender > p").empty();
+          $("div.field.birthday > p").empty();
+          if (!mail_regex.test(account.val().trim())) {
+            let msg = `帳號須為電子信箱`;
+            $("div.field.account > p").prepend(msg);
+            $("div.field.account > p").css("color", "red");
+            error = true;
+          }
+          if (!ps_regex.test(password.val().trim())) {
+            let msg = `密碼需為 6 ~ 16 字中英文組成，至少包含 1 個大寫英文與小寫英文，至少包含 1 個數字`;
+            $("div.field.password > p").prepend(msg);
+            $("div.field.password > p").css("color", "red");
+            error = true;
+          }
+          if (username.val().trim() == "") {
+            let msg = `暱稱不能為空`;
+            $("div.field.username > p").prepend(msg);
+            $("div.field.username > p").css("color", "red");
+            error = true;
+          }
+          if (gender.val() == null) {
+            let msg = `性別不能為空`;
+            $("div.field.gender > p").prepend(msg);
+            $("div.field.gender > p").css("color", "red");
+            error = true;
+          }
+          if (birth.value == null) {
+            let msg = `生日不能為空`;
+            $("div.field.birthday > p").prepend(msg);
+            $("div.field.birthday > p").css("color", "red");
+            error = true;
+          }
+
+          if (error) {
+            $("html,body").animate({ scrollTop: 0 }, "fast");
+          } else {
+            fetch("register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                account: account.val().trim(),
+                password: password.val().trim(),
+                username: username.val().trim(),
+                gender: gender.val(),
+                birthday: birth.value,
+              }),
+            }).then((resp) => {
+              resp.json().then((body) => {
+                if (body.successful == false) {
+                  let msg = body.message;
+                  $("div.msg").text(msg);
+                  $("div.msg").css("color", "red");
+                  $("html,body").animate({ scrollTop: 0 }, "fast");
+                } else {
+                  alert(
+                    `successful: ${body.successful} message: ${body.message}`
+                  );
+
+                  location.href =
+                    location.origin + "/lazy-trip-back/index.html";
+                }
+              });
             });
-          });
+          }
         });
       });
     </script>
