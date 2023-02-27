@@ -116,7 +116,30 @@
           <div class="card mb-3">
             <div class="card-content ml-4">
               <div class="content intro">
-                <div class="">簡介</div>
+                <p id="address">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-building"></i></span
+                  >居住於
+                </p>
+
+                <p id="reg_date">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-calendar"></i></span
+                  >加入於
+                </p>
+
+                <p id="intro">
+                  <span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-envelope-open-text"></i> </span
+                  >簡介:
+                </p>
+                <textarea
+                  name=""
+                  id="intro"
+                  cols="20"
+                  rows="10"
+                  readonly
+                ></textarea>
               </div>
               <button
                 class="button js-modal-trigger"
@@ -200,31 +223,6 @@
                 name="phone"
                 placeholder="0912345678"
                 id="input-phone"
-              />
-            </div>
-          </div>
-          <div class="field">
-            <label class="label" for="input-address">住址</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                name="address"
-                placeholder="OO市XX區YY路N巷M號"
-                id="input-address"
-              />
-            </div>
-          </div>
-
-          <div class="field username">
-            <label class="label" for="input-username">暱稱</label>
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                name="username"
-                placeholder="暱稱"
-                id="input-username"
               />
             </div>
           </div>
@@ -317,7 +315,7 @@
             <label class="label" for="input-intro">個人簡介</label>
             <textarea
               class="textarea is-medium"
-              placeholder="Medium size textarea field"
+              placeholder="個人簡介"
               id="input-intro"
             >
             </textarea>
@@ -382,7 +380,7 @@
         const address = $("input#input-address");
         const username = $("input#input-username");
         const birth = document.getElementById("input-birthday");
-        const intro = $("input#input-intro");
+        const intro = $("textarea#input-intro");
 
         birth.max = new Date(
           new Date().getTime() - new Date().getTimezoneOffset() * 60000
@@ -423,8 +421,8 @@
               id: parseInt(getCookie("memId")),
               name: name.val().trim(),
               phone: phone.val().trim(),
-              address: address.val().trim(),
-              username: username.val().trim(),
+              // address: address.val().trim(),
+              // username: username.val().trim(),
               gender: gender.val(),
               birthday: birth.value,
             }),
@@ -439,19 +437,16 @@
         });
 
         $("button.btn_intro").on("click", function () {
-          fetch("upload", {
+          fetch("saveintro", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               id: parseInt(getCookie("memId")),
-              name: name.val(),
-              phone: phone.val(),
-              address: address.val(),
-              username: username.val(),
-              gender: gender.val(),
-              birthday: birth.value,
+              address: address.val().trim(),
+              username: username.val().trim(),
+              intro: intro.val().trim(),
             }),
           })
             .then((resp) => resp.json())
@@ -480,6 +475,7 @@
             }
           });
         });
+
         function getData() {
           fetch(`find?id=${getCookie("memId")}`)
             .then((resp) => resp.json())
@@ -518,6 +514,17 @@
               username.val(member.username);
               birth.value = `${member.birthday}`;
               intro.val(member.intro);
+
+              if (member.address == null || member.address == "") {
+                $("p#address").empty();
+              } else {
+                let adr = member.address;
+                $("p#address").append(
+                  `<span> ${adr.substr(0, adr.indexOf("市") + 1)}</span>`
+                );
+              }
+              $("p#reg_date").append(`<span>${member.reg_date} </span>`);
+              $("textarea#intro").val(member.intro);
             });
         }
         getData();
