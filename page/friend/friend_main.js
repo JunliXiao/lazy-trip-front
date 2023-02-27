@@ -10,14 +10,14 @@ const node_summary = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
 
 // Requester, Addressee / Specifier, Other
-const specifier_id = 4;
+const specifier_id = 3;
 
 // API 路徑
 const API_ROOT = "http://127.0.0.1:8080/lazy-trip-back";
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
-const API_CHAT_MEMBER = "api/chat/member";
+const API_CHAT_MEMBER = "/api/chat/member";
 
 // 頁面初始化
 document.addEventListener("DOMContentLoaded", () => {

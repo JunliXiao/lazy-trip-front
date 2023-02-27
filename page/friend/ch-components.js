@@ -4,6 +4,7 @@ class Chatroom extends HTMLElement {
   CHATROOM_ID;
   CHATROOM_NAME;
   CHATROOM_SINCE;
+  CHATROOM_MEMBERS;
 
   constructor() {
     super();
@@ -13,9 +14,8 @@ class Chatroom extends HTMLElement {
     this.CHATROOM_ID = this.getAttribute("chatroom-id");
     this.CHATROOM_NAME = this.getAttribute("chatroom-name");
     let dt = new Date(this.getAttribute("chatroom-created-at") * 1000);
-    let dt_string = `自 ${dt.getFullYear()} 年 ${dt.getMonth()} 月 ${dt.getDate()}`;
-    this.CHATROOM_SINCE = new 
-
+    let since_string = `建立自 ${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}`;
+    this.CHATROOM_SINCE = since_string;
 
     this.innerHTML = 
     `
@@ -37,7 +37,7 @@ class Chatroom extends HTMLElement {
               <div class="column">
                 <div class="content">
                   <p class="title is-4">${this.getAttribute("chatroom-name")}</p>
-                  <p class="subtitle is-6">${this.CHATROOM_ID} · ${this.getAttribute("chatroom-created-at")}</p>
+                  <p class="subtitle is-6">${this.CHATROOM_SINCE}</p>
                 </div>
               </div>              
             </div>      
@@ -52,9 +52,25 @@ class Chatroom extends HTMLElement {
     </div>
     `;
 
+    if(this.CHATROOM_NAME.trim() == "") {
+      let ajax_call = API_ROOT + API_CHAT_MEMBER + `?chatroom_id=${this.CHATROOM_ID}`;
+      fetch(ajax_call)
+        .then((res) => res.json())
+        .then((members) => 
+          {
+            let usernames = [];
+            members.map(member => {
+              if(member.id != specifier_id) usernames.push(member.username);
+            });
+            // this.shadowRoot.querySelector("p.title").textContent = usernames.join("、");
+          }
+        )
+        .catch((err) => console.log(err));   
+    }
+     
+
     this.querySelector("button._start_chat").addEventListener("click", (event) => {
 
-      console.log(`Start chat in chatroom ${this.CHATROOM_ID}`)
       let newItem = document.createElement("chatlog-component");
       newItem.setAttribute("chatroom-id", this.CHATROOM_ID);
       newItem.setAttribute("chatroom-name", this.CHATROOM_NAME);
@@ -62,7 +78,10 @@ class Chatroom extends HTMLElement {
       document.getElementById("cols-chatlog-area").appendChild(newItem);
 
     });
+
   }
+
+  
 
 }
 
@@ -124,7 +143,8 @@ class ChatLog extends HTMLElement {
     }
     .floating-chat :focus {
       outline: 0;
-      box-shadow: 0 0 3pt 2pt rgba(221, 91, 11, 0.4);
+      border-color: #dd5b0b;
+      box-shadow: 0 0 0 0.125rem rgba(221, 91, 11, 0.25);
     }
     .floating-chat button {
       background: transparent;
@@ -330,7 +350,8 @@ class ChatLog extends HTMLElement {
     });
 
     this.shadowRoot.querySelector("button.send").addEventListener("click", () => {
-      let msg = this.shadowRoot.querySelector("div.text-box").textContent;
+      let msg = this.shadowRoot.querySelector("div.text-box").textContent.trim();
+      if(msg == "") alert("聊天訊息內容不能空白");
       let newItem = document.createElement("li");
       newItem.textContent = msg;
       newItem.setAttribute("class", "self");
