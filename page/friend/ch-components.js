@@ -4,7 +4,6 @@ class Chatroom extends HTMLElement {
   CHATROOM_ID;
   CHATROOM_NAME;
   CHATROOM_SINCE;
-  CHATROOM_MEMBERS;
 
   constructor() {
     super();
@@ -36,7 +35,7 @@ class Chatroom extends HTMLElement {
             <div class="columns">
               <div class="column">
                 <div class="content">
-                  <p class="title is-4">${this.getAttribute("chatroom-name")}</p>
+                  <p class="title is-4">${this.CHATROOM_NAME}</p>
                   <p class="subtitle is-6">${this.CHATROOM_SINCE}</p>
                 </div>
               </div>              
@@ -52,17 +51,26 @@ class Chatroom extends HTMLElement {
     </div>
     `;
 
-    if(this.CHATROOM_NAME.trim() == "") {
-      let ajax_call = API_ROOT + API_CHAT_MEMBER + `?chatroom_id=${this.CHATROOM_ID}`;
-      fetch(ajax_call)
+    // 如果沒有設定聊天室本身的名字 (預設一個空格)，改用聊天室成員的暱稱或名字組成
+    if(this.CHATROOM_NAME.trim().length === 0) {
+      fetch(API_ROOT + API_CHAT_MEMBER + `?chatroom_id=${this.CHATROOM_ID}`)
         .then((res) => res.json())
         .then((members) => 
           {
-            let usernames = [];
-            members.map(member => {
-              if(member.id != specifier_id) usernames.push(member.username);
-            });
-            // this.shadowRoot.querySelector("p.title").textContent = usernames.join("、");
+            // 排除使用者本人
+            let others = members.filter(m => m.id != specifier_id);
+            let title_names = [];
+            for (let i = 0; i < others.length; i++) {
+              // 若有暱稱則用暱稱 (username)；若無，則用名字 (name)
+              let name_show = others[i].hasOwnProperty("username") ? others[i].username : others[i].name;
+              title_names.push(name_show);
+              // 只取 3 位聊天室成員
+              if (title_names.length == 3) break;
+            }
+            // 若排除本人的成員數超過三人，則說明有更多成員
+            this.CHATROOM_NAME = others.length > 3 ? title_names.join("、") + " ..." : title_names.join("、");
+            this.setAttribute("chatroom-name", this.CHATROOM_NAME);
+            document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] p.title`).textContent = this.CHATROOM_NAME;
           }
         )
         .catch((err) => console.log(err));   
