@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LazyTrip.io | 揪團</title>
     <!-- Bulma 自訂 -->
-    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link rel="stylesheet" href="../../../asset/css/my-bulma.css" />
     <!-- 自定義 CSS -->
-    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <link rel="stylesheet" href="../../../asset/css/index-style.css" />
     <!-- Font Awesome -->
     <script
       src="https://kit.fontawesome.com/0548105e54.js"
@@ -18,14 +18,14 @@
     <!-- 共用元件 -->
     <script
       defer
-      src="../../asset/js/components.js"
+      src="../../../asset/js/components.js"
       type="text/javascript"
     ></script>
 
     <!-- 初始化 Bulma -->
-    <script defer src="../../asset/js/bulma-init.js"></script>
+    <script defer src="../../../asset/js/bulma-init.js"></script>
     <!--GroupCss-->
-    <link rel="stylesheet" href="./css/group.css" />
+    <link rel="stylesheet" href=".././css/group.css" />
   </head>
   <body>
     <!--預計加入:滑到內容若為登入者的留言要顯示刪除按鈕在右上角-->
@@ -133,7 +133,10 @@
       <div class="column is-1 group_member">
         <div class="columns" style="height: 300px">
           <div class="column group_member_list">
-            <div class="field group_main_member_list_title">
+            <div
+              class="field group_main_member_list_title"
+              style="justify-content: center"
+            >
               <label>成員列表</label>
             </div>
           </div>
@@ -161,29 +164,9 @@
     <script>
       window.addEventListener("load", function () {
         let invite_fd_el = document.getElementById("invite_fd");
-        invite_fd_el.onclick = () => {
-          let show_alert = document.getElementById("group_main_fs_alert");
-          show_alert.style.display = "block";
-          let close_alert = document.getElementById("alert_ok");
-          function close() {
-            show_alert.style.display = "none";
-          }
-          close_alert.addEventListener("click", close);
-        };
-        let search_fd_el = document.getElementById("search_fd");
-        search_fd_el.onclick = () => {
-          let search_fd_ct = document.getElementById("fd_id");
-          var submit_vl = fd_id.value;
-          // console.log(submit_vl);
-          var search_rs_txt = document.getElementById("search_rs");
-          search_rs_txt.innerText = submit_vl;
-          search_rs_txt.style.display = "block";
-        };
-        search_rs.onclick = () => {
-          alert("已發送邀請");
-        };
-
-        //綁定enter提交
+        let group_mem_total;
+        let member_limit;
+        //提交內容
         $("#new_content_btn").click(function () {
           var value = $("#new_content_input").val();
           value = $.trim(value);
@@ -191,23 +174,54 @@
             alert("請輸入內容");
           } else {
             // alert($("#new_content_input").val());
+            //新增
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            myHeaders.append(
+              "Cookie",
+              "JSESSIONID=65AEB3628907BAC51411185C78D24BC4"
+            );
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("action", "addContent");
+            urlencoded.append("content", value);
+            urlencoded.append("groupid", gpid);
+
+            var requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: "follow",
+            };
+
+            fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+              .then((response) => response.text())
+              .then((result) => {
+                //重整留言內容
+                $(".content_section").html("");
+                showContents();
+                //重整輸入框
+                $("#new_content_input").val("");
+              })
+              .catch((error) => console.log("error", error));
           }
         });
+        //綁定enter提交
         $("#new_content_input").keyup(function (event) {
           if (event.which === 13) {
             $("#new_content_btn").click();
           }
         });
 
-        $("#new_content_btn").click(function () {
-          // alert("clicked!");
-        });
-
         //fetch獲取群組資訊
         let getUrlString = location.href;
         var url = new URL(getUrlString);
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
-        // console.log(gpid);
+        let user_id;
+        // console.log("gpid=" + gpid);
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -233,9 +247,13 @@
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            $("#gp_main_gpname").html(data.groupname);
-            group_manager_id = data.memberid;
-            if (data.tourid != 0) {
+            $("#gp_main_gpname").html(data[0].groupname);
+            group_manager_id = data[0].memberid;
+            member_limit = data[0].groupmembercount;
+            user_id = data[1].id;
+            console.log("管理者為" + group_manager_id);
+            console.log("使用者為" + user_id);
+            if (data[0].tourid != 0) {
               var requestOptions = {
                 method: "GET",
                 redirect: "follow",
@@ -243,7 +261,7 @@
 
               fetch(
                 "http://localhost:8080/lazy-trip-back/group?action=getTourInfo&tourid=" +
-                  data.tourid,
+                  data[0].tourid,
                 requestOptions
               )
                 .then((response) => response.json())
@@ -262,17 +280,22 @@
         $("#group_setting").click(function () {
           // console.log(group_manager_id);
           //串上member後使用者的memberid若等於group_manager_id才可以觸發
-          fetch(url1 + gpid)
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              $("#gp_main_gpname").html(data.groupname);
-              group_manager_id = data.memberid;
-              let a1 =
-                "http://localhost:8080/lazy-trip-back/group/group_setting.html?groupid=";
-              location.href = a1 + data.groupid;
-            })
-            .catch((error) => console.log("error", error));
+          if (group_manager_id == user_id) {
+            // console.log("gpid" + gpid);
+            fetch(url1 + gpid)
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data);
+                $("#gp_main_gpname").html(data.groupname);
+                group_manager_id = data.memberid;
+                let a1 =
+                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_setting.html?groupid=";
+                location.href = a1 + data[0].groupid;
+              })
+              .catch((error) => console.log("error", error));
+          } else {
+            alert("沒有權限!");
+          }
         });
 
         //載入成員列表
@@ -284,15 +307,22 @@
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
+            group_mem_total = data.length;
+            console.log("群組共有" + group_mem_total);
             $.each(data, function (index, item) {
               // console.log(item.username);
               var list_html = "";
               var mem_name = "";
               var mem_pic = "";
-              if (item.img != null) {
-                // console.log(item.img);
+              var img_src = "";
+
+              if (item.imgBase64Str != null) {
+                // console.log("有喔");
+                img_src = "data:image/*;base64," + item.imgBase64Str;
               } else {
+                img_src = "./test.png";
               }
+
               if (item.username != null) {
                 // console.log(item.username);
                 mem_name = item.username;
@@ -310,62 +340,106 @@
               //   />中文中文中文中文</label
               // >
               list_html += '<div class="member_list_content">';
+              if (item.id == group_manager_id) {
+                list_html +=
+                  '<i style="color: yellow;" class="fa-solid fa-crown"></i>';
+              }
               list_html += '<label><img class="group_main_img_member_list"';
-              list_html += 'src="./test.png"/>';
+              list_html += ' src="';
+              list_html += img_src;
+              list_html += '"/>';
               list_html += mem_name;
-              list_html += "</label></div>";
+              list_html += "</label>";
+              list_html += "</div>";
 
               $(".group_member_list").append(list_html);
             });
           })
           .catch((error) => console.log("error", error));
 
-        //顯示群組留言
+        //邀請朋友按鍵
+        invite_fd_el.onclick = () => {
+          if (group_mem_total < member_limit) {
+            // alert("OK");
+          }
+          let show_alert = document.getElementById("group_main_fs_alert");
+          show_alert.style.display = "block";
+          let close_alert = document.getElementById("alert_ok");
+          function close() {
+            show_alert.style.display = "none";
+          }
+          close_alert.addEventListener("click", close);
+        };
+        let search_fd_el = document.getElementById("search_fd");
+        search_fd_el.onclick = () => {
+          let search_fd_ct = document.getElementById("fd_id");
+          var submit_vl = fd_id.value;
+          // console.log(submit_vl);
+          var search_rs_txt = document.getElementById("search_rs");
+          search_rs_txt.innerText = submit_vl;
+          search_rs_txt.style.display = "block";
+        };
+        search_rs.onclick = () => {
+          alert("已發送邀請");
+        };
 
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getGroupCons&groupid=" +
-            gpid
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            $.each(data, function (index, item) {
-              var list_html = "";
-              var mem_name = "";
-              var mem_pic = "";
-              if (item.member.img != null) {
-                // console.log(item.img);
-              } else {
-              }
-              if (item.member.username != null) {
-                // console.log(item.member.username);
-                mem_name = item.member.username;
-              } else if (item.member.name != null) {
-                // console.log(item.member.name);
-                mem_name = item.member.name;
-              } else {
-                mem_name = "暫無會員名";
-              }
-              list_html = `<article class="message is-primary">
+        //顯示群組留言func()
+        var showContents = function () {
+          fetch(
+            "http://localhost:8080/lazy-trip-back/group?action=getGroupCons&groupid=" +
+              gpid
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              $.each(data, function (index, item) {
+                var list_html = "";
+                var mem_name = "";
+                var mem_pic = "";
+                var img_src = "";
+                var delete_btn_str = "";
+                var amend_btn_str = "";
+                if (item.member.imgBase64Str != null) {
+                  // console.log("有喔");
+                  img_src = "data:image/*;base64," + item.member.imgBase64Str;
+                } else {
+                  img_src = "./test.png";
+                }
+
+                //刪除按鈕顯示判斷
+                if (item.memberid === user_id || group_manager_id === user_id) {
+                  delete_btn_str = "";
+                } else {
+                  delete_btn_str = " display : none";
+                }
+
+                if (item.member.username != null) {
+                  // console.log(item.member.username);
+                  mem_name = item.member.username;
+                } else if (item.member.name != null) {
+                  // console.log(item.member.name);
+                  mem_name = item.member.name;
+                } else {
+                  mem_name = "暫無會員名";
+                }
+                list_html = `<article class="message is-primary">
             <div
               class="columns group_message message-body"
               style="position: relative"
-              id = "div${item.memberid}"
+              id="${item.discussion}"
             >
-              <button
-                class="delete_content_btn"
-                style="position: absolute; top: 5px; right: 15px"
-              >
-                x
-              </button>
+
+            <span id="span_del${item.discussion}" class="icon_delete" style="position: absolute; top: 5px; right: 15px;cursor: pointer ;${delete_btn_str}"
+          ><i class="fa-solid fa-trash-can"></i></span>
+
               <img
-                src="./test.png"
+                src="${img_src}"
                 class="column is-1 group_main_img_content"
               />
               <div class="column is-9">
                 <span class="group_main_member_content_name">${mem_name}</span
                 ><br />
-                <span>${item.discussioncontent}</span>
+                <p id="p${item.discussion}">${item.discussioncontent}</p>
               </div>
               <div class="column is-2 content_time">
                 <span class="group_main_msg_time">${item.dicussionday}</span>
@@ -374,10 +448,59 @@
               </div>
             </div>
           </article>`;
-              $(".content_section").append(list_html);
-            });
-          })
-          .catch((error) => console.log("error", error));
+                $(".content_section").append(list_html);
+                var span_del = "#span_del" + item.discussion;
+                $(span_del).click(function (e) {
+                  e.stopPropagation();
+                  // console.log("!!");
+                  var that = this;
+                  console.log($(that).closest("div").attr("id"));
+                  var r = confirm("確定要刪除此筆留言嗎?");
+                  if (r == true) {
+                    //放入fetch delete 以及alert放在成功後
+                    var myHeaders = new Headers();
+                    myHeaders.append(
+                      "Content-Type",
+                      "application/x-www-form-urlencoded"
+                    );
+                    myHeaders.append(
+                      "Cookie",
+                      "JSESSIONID=65AEB3628907BAC51411185C78D24BC4"
+                    );
+
+                    var urlencoded = new URLSearchParams();
+                    urlencoded.append("action", "delDiscussion");
+
+                    var requestOptions = {
+                      method: "DELETE",
+                      headers: myHeaders,
+                      body: urlencoded,
+                      redirect: "follow",
+                    };
+
+                    fetch(
+                      "http://localhost:8080/lazy-trip-back/group?action=delDiscussion&discussionId=" +
+                        item.discussion,
+                      requestOptions
+                    )
+                      .then((response) => response.text())
+                      .then((result) => {
+                        alert("刪除成功!");
+                        //重整留言內容
+                        $(".content_section").html("");
+                        showContents();
+                      })
+                      .catch((error) => console.log("error", error));
+                  } else {
+                    e.preventDefault();
+                  }
+                });
+              });
+            })
+            .catch((error) => console.log("error", error));
+        };
+        //首次載入時顯示內容
+        showContents();
       });
     </script>
   </body>
