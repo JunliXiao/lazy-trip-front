@@ -137,10 +137,10 @@
         let gp_mem_num_el = document.getElementById("gp_mem_num");
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
-        let btn_amend = document.getElementById("btn_uncheckmem");
+        let btn_uncheckmem = document.getElementById("btn_uncheckmem");
         let group_mem_total;
-
-        //加載時的fetch，取得群組資訊
+        let gp_id_list = [];
+        let user_id;
         let getUrlString = location.href;
         var url = new URL(getUrlString);
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
@@ -157,23 +157,42 @@
         // console.log(url1 + gpid);
         let group_manager_id;
 
-        let member_limit;
-        fetch(url1 + gpid)
+        //加載時的fetch，得到使用者
+        fetch(
+          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
+        )
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            //$("#gp_main_gpname").html(data[0].groupname);
-            group_manager_id = data[0].memberid;
-            $("#gp_name").val(data[0].groupname);
-            $("#gp_mem_num").val(data[0].groupmembercount);
-            // console.log(data.ifjoingroupdirectly);
-            if (data[0].ifjoingroupdirectly == "1") {
-              $("#check_join").attr("checked", true);
-            } else if (data[0].ifjoingroupdirectly == "2") {
-              $("#any_join").attr("checked", true);
-            }
+            user_id = data.id;
           })
-          .catch((error) => console.log("error", error));
+          .then(
+            //加載時的fetch，取得群組資訊
+            fetch(url1 + gpid)
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data);
+                //$("#gp_main_gpname").html(data[0].groupname);
+                group_manager_id = data[0].memberid;
+                $("#gp_name").val(data[0].groupname);
+                $("#gp_mem_num").val(data[0].groupmembercount);
+                // console.log(data.ifjoingroupdirectly);
+                if (data[0].ifjoingroupdirectly == "1") {
+                  $("#check_join").attr("checked", true);
+                } else if (data[0].ifjoingroupdirectly == "2") {
+                  $("#any_join").attr("checked", true);
+                }
+                console.log("權限:" + group_manager_id);
+                console.log("使用者" + user_id);
+
+                //驗證使用者權限
+                if (!(user_id === group_manager_id)) {
+                  alert("沒有權限!");
+                  history.back();
+                }
+              })
+              .catch((error) => console.log("error", error))
+          );
 
         //得到群組目前人數
         fetch(
@@ -186,6 +205,7 @@
             group_mem_total = data.length;
             console.log("目前群組人數 : " + group_mem_total);
             $.each(data, function (index, item) {
+              gp_id_list.push(item.id);
               if (item.id != group_manager_id) {
                 var list_html = "";
                 var mem_name = "";
@@ -232,6 +252,7 @@
           })
           .catch((error) => console.log("error", error));
 
+        console.log(gp_id_list);
         //刪除揪團
         //要記得除了刪除揪團還要刪除揪團成員表
         //先多再一(先gp_mem再gp)
@@ -323,6 +344,14 @@
             e.preventDefault();
           }
         };
+
+        //申請者審核按鈕
+        $(btn_uncheckmem).click(function (e) {
+          e.preventDefault();
+          let a =
+            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_applying.html?groupid=";
+          location.href = a + gpid;
+        });
       };
     </script>
   </body>

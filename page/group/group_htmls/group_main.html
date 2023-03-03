@@ -35,17 +35,27 @@
     <div id="group_main_fs_alert">
       <div class="group_main_fs_alert_bg"></div>
       <div class="group_main_fs_alert_show">
-        <div class="group_main_fs_alert_title">請輸入想找的朋友ID</div>
-        <input
-          class="input fs_alert_txt"
-          id="fd_id"
-          type="text"
-          placeholder="請輸入ID"
-        />
-        <span class="icon" id="search_fd">
-          <i class="fa-solid fas fa-lg fa-magnifying-glass"></i>
-        </span>
-        <div id="search_rs">沒有結果</div>
+        <div class="group_main_fs_alert_title">請選擇想邀請的朋友</div>
+        <div id="fr_list">
+          <!-- <div class="field">
+            <label>
+              <input type="checkbox" name="to_add_mems" />
+              <img
+                class="group_setting_img_member_list"
+                src="./test.png"
+              />asdsadsa1
+            </label>
+          </div>
+          <div class="field">
+            <label>
+              <input type="checkbox" name="to_add_mems" />
+              <img
+                class="group_setting_img_member_list"
+                src="./test.png"
+              />asdsadsa1
+            </label> -->
+          <!-- </div> -->
+        </div>
         <div class="btn_s button" id="alert_ok">OK</div>
       </div>
     </div>
@@ -166,6 +176,8 @@
         let invite_fd_el = document.getElementById("invite_fd");
         let group_mem_total;
         let member_limit;
+        let show_alert = document.getElementById("group_main_fs_alert");
+        let close_alert = document.getElementById("alert_ok");
         //提交內容
         $("#new_content_btn").click(function () {
           var value = $("#new_content_input").val();
@@ -299,7 +311,7 @@
         });
 
         //載入成員列表
-
+        let gp_id_list = []; //for friend use
         fetch(
           "http://localhost:8080/lazy-trip-back/group?action=getGroupMems&groupid=" +
             gpid
@@ -353,35 +365,138 @@
               list_html += "</div>";
 
               $(".group_member_list").append(list_html);
+              gp_id_list.push(item.id);
             });
+            // console.log("gp_id_list:" + gp_id_list);
+            驗證使用者是否為群組成員;
+            if (!gp_id_list.includes(user_id)) {
+              alert("非本群組成員!");
+              history.back();
+            }
           })
           .catch((error) => console.log("error", error));
 
         //邀請朋友按鍵
+        var to_invite_frds;
         invite_fd_el.onclick = () => {
           if (group_mem_total < member_limit) {
-            // alert("OK");
+            //get所有狀態mems
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            myHeaders.append(
+              "Cookie",
+              "JSESSIONID=C6EA2AFEBD4A401564097DBC28F0F458"
+            );
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("action", "getGroupMemsInList");
+            urlencoded.append("groupid", gpid);
+
+            var requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: "follow",
+            };
+
+            fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                $.each(result, function (index, item) {
+                  gp_id_list.push(item.memberid);
+                });
+              })
+              .catch((error) => console.log("error", error));
+
+            //get好友
+            fetch(
+              `http://localhost:8080/lazy-trip-back/api/friend?member_id=${user_id}&query_type=friend`
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                $("#fr_list").html("");
+                $.each(result, function (index, item) {
+                  if (!gp_id_list.includes(item.id)) {
+                    var fr_list_html;
+                    var mem_name = "";
+                    if (item.username != null) {
+                      // console.log(item.username);
+                      mem_name = item.username;
+                    } else if (item.name != null) {
+                      // console.log(item.name);
+                      mem_name = item.name;
+                    } else {
+                      mem_name = "暫無會員名";
+                    }
+                    fr_list_html = `<div class="field">
+                    <label>
+                    <input type="checkbox"  class="to_invite_frds"  value="${item.id}"/>
+                    ${mem_name}
+                  </label>
+                   </div>`;
+                  }
+                  $("#fr_list").append(fr_list_html);
+                });
+              })
+              .catch((error) => console.log("error", error));
+          } else {
+            alert("人數已滿!");
           }
-          let show_alert = document.getElementById("group_main_fs_alert");
           show_alert.style.display = "block";
-          let close_alert = document.getElementById("alert_ok");
-          function close() {
-            show_alert.style.display = "none";
+
+          // let checked = document.querySelector("[name=to_invite_frds]:checked");
+          // if (checked) {
+          //   console.log("有選取");
+          //   console.log(checked);
+          // } else {
+          //   console.log("未選取");
+          // }
+        };
+        //OK按鈕
+        close_alert.addEventListener("click", function () {
+          show_alert.style.display = "none";
+          to_invite_frds = $(".to_invite_frds:checked");
+          var to_invite_frds_obj = [];
+          if (to_invite_frds.length > 0) {
+            $.each(to_invite_frds, function (index, item) {
+              var mem_num = $(item).val();
+              to_invite_frds_obj[index] = mem_num;
+            });
+
+            //呼叫邀請朋友api
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            // myHeaders.append(
+            //   "Cookie",
+            //   "JSESSIONID=44157488CC9D80ACE1DA3D41E380D4B0"
+            // );
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("action", "inviteFriend");
+            for (var i = 0; i < to_invite_frds_obj.length; i++) {
+              urlencoded.append("mem" + i, to_invite_frds_obj[i]);
+            }
+            urlencoded.append("groupid", gpid);
+            var requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: "follow",
+            };
+
+            fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+              .then((response) => response.text())
+              .then((result) => alert("邀請成功!"))
+              .catch((error) => alert("邀請失敗，請稍後再試"));
           }
-          close_alert.addEventListener("click", close);
-        };
-        let search_fd_el = document.getElementById("search_fd");
-        search_fd_el.onclick = () => {
-          let search_fd_ct = document.getElementById("fd_id");
-          var submit_vl = fd_id.value;
-          // console.log(submit_vl);
-          var search_rs_txt = document.getElementById("search_rs");
-          search_rs_txt.innerText = submit_vl;
-          search_rs_txt.style.display = "block";
-        };
-        search_rs.onclick = () => {
-          alert("已發送邀請");
-        };
+        });
 
         //顯示群組留言func()
         var showContents = function () {

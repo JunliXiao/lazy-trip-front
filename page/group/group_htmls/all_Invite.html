@@ -37,71 +37,58 @@
       <div class="column is-8">
         <section class="section">
           <!-- 標題 -->
-          <div class="content has-text-centered"><h1>申請中成員</h1></div>
-          <div class="content has-text-centered"><h3>揪團名</h3></div>
+          <div class="content has-text-centered">
+            <h1>揪團邀請列表</h1>
+          </div>
           <!-- 表單 -->
           <form class="box" action="#" method="post" id="form_gp_setting">
-            <!--新增成員-->
-            <div class="field">
-              <label class="label" for="gp_name">申請中成員</label>
-            </div>
+            <!--邀請中揪團列表-->
+
             <div id="mem_to_add">
               <div class="field is_applying">
                 <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <input type="radio" name="to_add_mems" class="mems" />
+                  揪團名團名
                   <ul>
                     <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">當前行程:</label>
+                      <label class="info">行程行程行程行程</label>
                     </li>
                     <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">人數上限:</label>
+                      <label class="spe_need">上限</label>
                     </li>
                   </ul>
                 </label>
               </div>
               <div class="field is_applying">
                 <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <input type="radio" name="to_add_mems" class="mems" />
+                  揪團名團名
                   <ul>
                     <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">當前行程:</label>
+                      <label class="info">行程行程行程行程</label>
                     </li>
                     <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">人數上限:</label>
+                      <label class="spe_need">上限</label>
                     </li>
                   </ul>
                 </label>
               </div>
               <div class="field is_applying">
                 <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
+                  <input type="radio" name="to_add_mems" class="mems" />
+                  揪團名團名
                   <ul>
                     <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">當前行程:</label>
+                      <label class="info">行程行程行程行程</label>
                     </li>
                     <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
+                      <label style="font-size: 16px">人數上限:</label>
+                      <label class="spe_need">上限</label>
                     </li>
                   </ul>
                 </label>
@@ -115,7 +102,7 @@
                   type="submit"
                   id="btn_gp_amend"
                 >
-                  新增
+                  接受
                 </button>
               </div>
               <div class="control">
@@ -141,51 +128,6 @@
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
         let btn_amend = document.getElementById("btn_uncheckmem");
-        let url1 =
-          "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
-        // console.log(url1 + gpid);
-        let group_manager_id;
-        let getUrlString = location.href;
-        var url = new URL(getUrlString);
-        let gpid = url.searchParams.get("groupid"); // 回傳 groupid
-
-        //加載時的fetch，得到使用者
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            user_id = data.id;
-          })
-          .then(
-            //加載時的fetch，取得群組資訊
-            fetch(url1 + gpid)
-              .then((response) => response.json())
-              .then((data) => {
-                console.log(data);
-                //$("#gp_main_gpname").html(data[0].groupname);
-                group_manager_id = data[0].memberid;
-                $("#gp_name").val(data[0].groupname);
-                $("#gp_mem_num").val(data[0].groupmembercount);
-                // console.log(data.ifjoingroupdirectly);
-                if (data[0].ifjoingroupdirectly == "1") {
-                  $("#check_join").attr("checked", true);
-                } else if (data[0].ifjoingroupdirectly == "2") {
-                  $("#any_join").attr("checked", true);
-                }
-                console.log("權限:" + group_manager_id);
-                console.log("使用者" + user_id);
-
-                //驗證使用者權限
-                if (!(user_id === group_manager_id)) {
-                  alert("沒有權限!");
-                  history.back();
-                }
-              })
-              .catch((error) => console.log("error", error))
-          );
-
         gp_amend_el.onclick = (e) => {
           if ($("input.mems:checked").length != 0) {
             alert("新增成功!");
