@@ -50,7 +50,12 @@ class Header extends HTMLElement {
           </div>
         </div>
 
-        <a href="/page/group/group_all.html" class="navbar-item"> 揪團 </a>
+        <div class="navbar-item has-dropdown is-hoverable group">
+        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
+        <div class="navbar-dropdown">
+        <a class="navbar-item"> 揪團邀請 </a>
+        </div>
+        </div>
 
         <a href="#" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
