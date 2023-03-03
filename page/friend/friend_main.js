@@ -10,7 +10,8 @@ const node_summary = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
 
 // Requester, Addressee / Specifier, Other
-const specifier_id = 4;
+let params = new URLSearchParams(window.location.search);
+const specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
 
 // API 路徑
 const API_ROOT = "http://127.0.0.1:8080/lazy-trip-back";

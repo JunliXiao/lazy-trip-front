@@ -247,33 +247,33 @@ class ChatLog extends HTMLElement {
       height: 0;
       border-top: 10px solid rgba(195, 195, 195, 0.2);
     }
-    .floating-chat .chat .messages li.other {
+    .floating-chat .chat .messages li.self {
       animation: show-chat-odd 0.15s 1 ease-in;
       -moz-animation: show-chat-odd 0.15s 1 ease-in;
       -webkit-animation: show-chat-odd 0.15s 1 ease-in;
       float: right;
       margin-right: 45px;
     }
-    .floating-chat .chat .messages li.other:before {
+    .floating-chat .chat .messages li.self:before {
       right: -45px;
       background-image: url(https://github.com/Thatkookooguy.png);
     }
-    .floating-chat .chat .messages li.other:after {
+    .floating-chat .chat .messages li.self:after {
       border-right: 10px solid transparent;
       right: -10px;
     }
-    .floating-chat .chat .messages li.self {
+    .floating-chat .chat .messages li.other {
       animation: show-chat-even 0.15s 1 ease-in;
       -moz-animation: show-chat-even 0.15s 1 ease-in;
       -webkit-animation: show-chat-even 0.15s 1 ease-in;
       float: left;
       margin-left: 45px;
     }
-    .floating-chat .chat .messages li.self:before {
+    .floating-chat .chat .messages li.other:before {
       left: -45px;
       background-image: url(https://github.com/ortichon.png);
     }
-    .floating-chat .chat .messages li.self:after {
+    .floating-chat .chat .messages li.other:after {
       border-left: 10px solid transparent;
       left: -10px;
     }
@@ -353,6 +353,8 @@ class ChatLog extends HTMLElement {
     `;
     this.shadowRoot.appendChild(container);
     
+    let messageList = this.shadowRoot.querySelector("ul.messages");
+
     this.shadowRoot.querySelector("button.close").addEventListener("click", () => {
       document.getElementById("cols-chatlog-area").removeChild(this);
     });
@@ -363,11 +365,322 @@ class ChatLog extends HTMLElement {
       let newItem = document.createElement("li");
       newItem.textContent = msg;
       newItem.setAttribute("class", "self");
-      this.shadowRoot.querySelector("ul.messages").appendChild(newItem);
+      messageList.appendChild(newItem);
     });
+
+    const webSocket = new WebSocket(`ws://localhost:8080/lazy-trip-back/socket/${specifier_id}?chatroom_id=${this.getAttribute("chatroom-id")}`);
+
+    webSocket.onopen = (event) => console.log("Connect Success!");
+
+    webSocket.onmessage = (event) => {
+      let messages = JSON.parse(event.data);
+      messages.forEach(m => {
+        let newItem = document.createElement("li");
+        let newItemType = m.senderId == specifier_id ? "self" : "other";
+        newItem.classList.add(newItemType);
+        newItem.textContent = m.message;
+        messageList.appendChild(newItem);
+      });
+    };
+	
+  }
+
+}
+
+class ChatLog2 extends HTMLElement {
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+
+    let style = document.createElement("style");
+    style.textContent = `
+    @font-face {
+      font-family: FakePearl-ExtraLight;
+      src: url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-ExtraLight.woff2) format("woff2"),
+           url(https://cdn.jsdelivr.net/gh/max32002/FakePearl@1.1/webfont/FakePearl-ExtraLight.woff) format("woff");
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "FakePearl-ExtraLight";
+      color: rgb(39, 89, 109);
+    }
+
+    .floating-chat {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      bottom: 2%;
+      right: 1%;
+      width: 40px;
+      height: 40px;
+      transform: translateY(70px);
+      transition: all 250ms ease-out;
+      border-radius: 50%;
+      opacity: 0;
+      background-color: white;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    .floating-chat.enter:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+      opacity: 1;
+    }
+    .floating-chat.enter {
+      transform: translateY(0);
+      opacity: 0.6;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.14);
+    }
+    .floating-chat.expand {
+      width: 350px;
+      max-height: 450px;
+      height: 450px;
+      border-radius: 5px;
+      cursor: auto;
+      opacity: 1;
+    }
+    .floating-chat :focus {
+      outline: 0;
+      border-color: #dd5b0b;
+      box-shadow: 0 0 0 0.125rem rgba(221, 91, 11, 0.25);
+    }
+    .floating-chat button {
+      background: transparent;
+      border: 0;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .floating-chat .chat {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+      border-radius: 50%;
+      transition: all 250ms ease-out;
+      margin: auto;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    .floating-chat .chat.enter {
+      opacity: 1;
+      border-radius: 0;
+      margin: 10px;
+      width: auto;
+      height: auto;
+    }
+    .floating-chat .chat .header {
+      flex-shrink: 0;
+      padding-bottom: 10px;
+      display: flex;
+      background: transparent;
+    }
+    .floating-chat .chat .header .title {
+      flex-grow: 1;
+      flex-shrink: 1;
+      font-weight: 600;
+      padding: 0 5px;
+    }
+    .floating-chat .chat .header button {
+      flex-shrink: 0;
+    }
+    .floating-chat .chat .messages {
+      padding: 10px;
+      margin: 0;
+      list-style: none;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      flex-grow: 1;
+      border-radius: 4px;
+      background: transparent;
+    }
+    .floating-chat .chat .messages::-webkit-scrollbar {
+      width: 5px;
+    }
+    .floating-chat .chat .messages::-webkit-scrollbar-track {
+      border-radius: 5px;
+      background-color: rgba(250, 250, 250, 0.7);
+    }
+    .floating-chat .chat .messages::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: rgba(125, 125, 125, 0.5);
+    }
+    .floating-chat .chat .messages .msg div.text {
+      position: relative;
+      clear: both;
+      display: inline-block;
+      padding: 9px 13px;
+      margin: 0 0 20px 0;
+      font: 12px/16px;
+      border-radius: 10px;
+      background-color: rgb(241, 241, 241);
+      word-wrap: break-word;
+      max-width: 81%;
+    }
+    .floating-chat .chat .messages .msg div.text:before {
+      position: absolute;
+      top: 0;
+      width: 25px;
+      height: 25px;
+      border-radius: 25px;
+      content: "";
+      background-size: cover;
+    }
+    .floating-chat .chat .messages .msg div.text:after {
+      position: absolute;
+      top: 10px;
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid rgba(195, 195, 195, 0.2);
+    }
+    .floating-chat .chat .messages .msg div.self {
+      animation: show-chat-odd 0.15s 1 ease-in;
+      -moz-animation: show-chat-odd 0.15s 1 ease-in;
+      -webkit-animation: show-chat-odd 0.15s 1 ease-in;
+      float: right;
+      margin-right: 45px;
+    }
+
+    .floating-chat .chat .messages .msg div.avatar {
+      float: right;
+    }
+    
+    .floating-chat .chat .messages .msg div.self:after {
+      border-right: 10px solid transparent;
+      right: -10px;
+    }
+    .floating-chat .chat .messages .msg div.other {
+      animation: show-chat-even 0.15s 1 ease-in;
+      -moz-animation: show-chat-even 0.15s 1 ease-in;
+      -webkit-animation: show-chat-even 0.15s 1 ease-in;
+      float: left;
+      margin-left: 45px;
+    }
+
+    .floating-chat .chat .messages .msg div.other:after {
+      border-left: 10px solid transparent;
+      left: -10px;
+    }
+    .floating-chat .chat .footer {
+      flex-shrink: 0;
+      display: flex;
+      padding-top: 10px;
+      max-height: 90px;
+      background: transparent;
+    }
+    .floating-chat .chat .footer .text-box {
+      border-radius: 3px;
+      background: rgb(235, 235, 235);
+      min-height: 100%;
+      min-width: 80%;
+      margin: 0 5px;     
+      overflow-y: auto;
+      padding: 2px 5px;
+    }
+    .floating-chat .chat .footer .text-box::-webkit-scrollbar {
+      width: 5px;
+    }
+    .floating-chat .chat .footer .text-box::-webkit-scrollbar-track {
+      border-radius: 5px;
+      background-color: rgba(125, 125, 125, 0.7);
+    }
+    .floating-chat .chat .footer .text-box::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: rgba(250, 250, 250, 0.1);
+    }
+    button.close {
+      border-radius: 50%;
+    }
+    .footer button {
+      font-size: 20px;
+    }
+    button:hover {
+      background-color: rgb(231, 231, 231);
+    }
+    `;
+    
+    this.shadowRoot.appendChild(style);
+  }
+
+  connectedCallback() {
+    let container = document.createElement("div");
+    container.setAttribute("style","position: fixed; bottom: 0%; right: 20%");
+    container.innerHTML = `
+    <div class="floating-chat enter expand">
+      <div class="chat enter" style="">
+          <div class="header">
+              <span class="title">
+                ${this.getAttribute("chatroom-name")}
+              </span>
+              <button class="close">
+              ✖
+              </button>      
+          </div>
+          <div class="messages">
+              <div class="msg">
+                <div class="self text">嗷嗚嗚嗚，汪汪汪</div>
+                <div class="avatar">
+                  <img src="https://github.com/Thatkookooguy.png" />
+                </div>
+              </div>
+              <div class="msg">
+                <div class="self text">我們是狗嗎？🐶</div>
+              </div>
+              <div class="msg">
+                <div class="other text">不對</div>
+              </div>
+          </div>
+          <div class="footer">
+              <button>❐</button>
+              <div class="text-box" contenteditable="true" disabled="true"></div>
+              <button id="sendMessage" class="send"><b>➢</b></button>
+          </div>
+      </div>
+    </div>
+    `;
+    this.shadowRoot.appendChild(container);
+    
+    let messageList = this.shadowRoot.querySelector("ul.messages");
+
+    this.shadowRoot.querySelector("button.close").addEventListener("click", () => {
+      document.getElementById("cols-chatlog-area").removeChild(this);
+    });
+
+    this.shadowRoot.querySelector("button.send").addEventListener("click", () => {
+      let msg = this.shadowRoot.querySelector("div.text-box").textContent.trim();
+      if(msg == "") alert("聊天訊息內容不能空白");
+      let newItem = document.createElement("li");
+      newItem.textContent = msg;
+      newItem.setAttribute("class", "self");
+      messageList.appendChild(newItem);
+    });
+
+    const webSocket = new WebSocket(`ws://localhost:8080/lazy-trip-back/socket/${specifier_id}?chatroom_id=${this.getAttribute("chatroom-id")}`);
+
+    webSocket.onopen = (event) => console.log("Connect Success!");
+
+    webSocket.onmessage = (event) => {
+      let messages = JSON.parse(event.data);
+      messages.forEach(m => {
+        let newItem = document.createElement("div");
+        let newItemType = m.senderId == specifier_id ? "self" : "other";
+        newItem.classList.add(newItemType);
+        newItem.textContent = m.message;
+        messageList.appendChild(newItem);
+      });
+    };
+	
   }
 
 }
 
 customElements.define("chatroom-component", Chatroom);
 customElements.define("chatlog-component", ChatLog);
+customElements.define("chatlog2-component", ChatLog2);
