@@ -9,12 +9,6 @@ class ResultCard extends HTMLElement {
 
   buildCard(button_html) {
     this.card_html = `
-    <style>
-      .icon .fas:hover{
-        font-size: 1.4em;
-        transition: 0.2s ease-out-elastic;
-      } 
-    </style>
     <div class="card mb-6">
       <div class="card-content">
 

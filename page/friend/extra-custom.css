@@ -1,0 +1,18 @@
+/* ul#left-menu li {
+  border-top: 2px solid hsl(197deg, 47%, 96%);
+  border-left: 2px solid hsl(197deg, 47%, 96%);
+  border-right: 2px solid hsl(197deg, 47%, 96%);
+}
+
+ul#left-menu li:last-child {
+  border-bottom: 2px solid hsl(197deg, 47%, 96%);
+} */
+
+friend-component .icon .fas:hover{
+  font-size: 1.4em;
+  transition: 0.2s ease-out-elastic;
+} 
+
+div.navbar-brand a.navbar-item:hover {
+  color: rgb(39, 89, 109);
+}
