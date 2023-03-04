@@ -45,9 +45,9 @@
             <!--邀請中揪團列表-->
 
             <div id="mem_to_add">
-              <div class="field is_applying">
+              <!-- <div class="field is_applying">
                 <label>
-                  <input type="radio" name="to_add_mems" class="mems" />
+                  <input type="radio" name="to_add_gps" class="mems" />
                   揪團名團名
                   <ul>
                     <li>
@@ -60,39 +60,7 @@
                     </li>
                   </ul>
                 </label>
-              </div>
-              <div class="field is_applying">
-                <label>
-                  <input type="radio" name="to_add_mems" class="mems" />
-                  揪團名團名
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">當前行程:</label>
-                      <label class="info">行程行程行程行程</label>
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">人數上限:</label>
-                      <label class="spe_need">上限</label>
-                    </li>
-                  </ul>
-                </label>
-              </div>
-              <div class="field is_applying">
-                <label>
-                  <input type="radio" name="to_add_mems" class="mems" />
-                  揪團名團名
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">當前行程:</label>
-                      <label class="info">行程行程行程行程</label>
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">人數上限:</label>
-                      <label class="spe_need">上限</label>
-                    </li>
-                  </ul>
-                </label>
-              </div>
+              </div> -->
             </div>
             <!-- 表單按鈕 -->
             <div class="field is-grouped">
@@ -128,37 +96,86 @@
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
         let btn_amend = document.getElementById("btn_uncheckmem");
+        let user_id;
+        let list_invite_html;
+        //得到使用者
+        fetch(
+          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data);
+            user_id = data.id;
+
+            //取得資料
+            fetch(
+              "http://localhost:8080/lazy-trip-back/groupmembers?action=getAllInvite"
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                $.each(result, function (index, item) {
+                  console.log(item.groupVO.groupname);
+                  list_invite_html = `<div class="field is_applying">
+                <label>
+                  <input
+                    type="radio"
+                    name="to_add_gps"
+                    class="mems"
+                    value="${item.groupmember}"
+                  />
+                  ${item.groupVO.groupname}
+                  <ul>
+                    <li>
+                      <label style="font-size: 16px">當前行程:</label>
+                      <label class="info">${item.groupVO.tourVO.tourTitle}</label>
+                    </li>
+                    <li>
+                      <label style="font-size: 16px">人數上限:</label>
+                      <label class="spe_need">${item.groupVO.groupmembercount}</label>
+                    </li>
+                  </ul>
+                </label>
+              </div>`;
+                });
+                $("#mem_to_add").html("");
+                $("#mem_to_add").html(list_invite_html);
+              })
+              .catch((error) => console.log("error", error));
+          });
+
         gp_amend_el.onclick = (e) => {
           if ($("input.mems:checked").length != 0) {
-            alert("新增成功!");
+            e.preventDefault();
+
             //預計放入直接前往該揪團主頁
           } else {
-            alert("請確認要新增的成員!");
+            alert("請確認要操作的揪團邀請!");
             e.preventDefault();
           }
         };
 
         $("#btn_gp_del").on("click", function (e) {
           if ($("input.mems:checked").length != 0) {
-            var r = confirm("確定要拒絕以上成員嗎");
+            var r = confirm("確定要拒絕此揪團邀請嗎");
             if (r == true) {
               alert("拒絕成功!");
             } else {
               e.preventDefault();
             }
           } else {
-            alert("請確認要拒絕的成員!");
+            alert("請確認要操作的揪團!");
             e.preventDefault();
           }
         });
 
         //限制選5筆
         $("input[type=checkbox]").click(function () {
-          $("input[name='to_add_mems']").attr("disabled", true);
-          if ($("input[name='to_add_mems']:checked").length >= 5) {
-            $("input[name='to_add_mems']:checked").attr("disabled", false);
+          $("input[name='to_add_gps']").attr("disabled", true);
+          if ($("input[name='to_add_gps']:checked").length >= 5) {
+            $("input[name='to_add_gps']:checked").attr("disabled", false);
           } else {
-            $("input[name='to_add_mems']").attr("disabled", false);
+            $("input[name='to_add_gps']").attr("disabled", false);
           }
         });
       };

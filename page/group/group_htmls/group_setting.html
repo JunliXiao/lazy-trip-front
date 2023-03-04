@@ -157,6 +157,68 @@
         // console.log(url1 + gpid);
         let group_manager_id;
 
+        //得到群組目前人數
+        let getGpMemFunc = function () {
+          fetch(
+            "http://localhost:8080/lazy-trip-back/groupmembers?action=getGroupMems&groupid=" +
+              gpid
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              group_mem_total = data.length;
+              console.log("目前群組人數 : " + group_mem_total);
+              $.each(data, function (index, item) {
+                gp_id_list.push(item.id);
+                if (item.id != group_manager_id) {
+                  var list_html = "";
+                  var mem_name = "";
+                  var mem_pic = "";
+                  var img_src = "";
+
+                  if (item.imgBase64Str != null) {
+                    // console.log("有喔");
+                    img_src = "data:image/*;base64," + item.imgBase64Str;
+                  } else {
+                    img_src = "./test.png";
+                  }
+
+                  if (item.username != null) {
+                    // console.log(item.username);
+                    mem_name = item.username;
+                  } else if (item.name != null) {
+                    // console.log(item.name);
+                    mem_name = item.name;
+                  } else {
+                    mem_name = "暫無會員名";
+                  }
+                  list_html += '<div class="member_list_content">';
+                  if (item.id == group_manager_id) {
+                    list_html +=
+                      '<i style="color: yellow;" class="fa-solid fa-crown"></i>';
+                  }
+
+                  list_html += "<label>";
+                  list_html +=
+                    '<input class="to_del_mems" type="checkbox" name="to_add_mems" id="';
+                  list_html += item.id;
+                  list_html += '"/>';
+                  list_html += '<img class="group_main_img_member_list"';
+                  list_html += ' src="';
+                  list_html += img_src;
+                  list_html += '"/>';
+                  list_html += mem_name;
+                  list_html += "</label>";
+                  list_html += "</div>";
+                }
+                $("#group_setting_mem_to_del").append(list_html);
+              });
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        };
+
         //加載時的fetch，得到使用者
         fetch(
           "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
@@ -190,67 +252,18 @@
                   alert("沒有權限!");
                   history.back();
                 }
+                getGpMemFunc();
               })
-              .catch((error) => console.log("error", error))
+
+              .catch((error) => {
+                console.log(error);
+
+                if (error.toString().includes("TypeError")) {
+                  alert("請確認揪團資訊!");
+                  history.back();
+                }
+              })
           );
-
-        //得到群組目前人數
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getGroupMems&groupid=" +
-            gpid
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            group_mem_total = data.length;
-            console.log("目前群組人數 : " + group_mem_total);
-            $.each(data, function (index, item) {
-              gp_id_list.push(item.id);
-              if (item.id != group_manager_id) {
-                var list_html = "";
-                var mem_name = "";
-                var mem_pic = "";
-                var img_src = "";
-
-                if (item.imgBase64Str != null) {
-                  // console.log("有喔");
-                  img_src = "data:image/*;base64," + item.imgBase64Str;
-                } else {
-                  img_src = "./test.png";
-                }
-
-                if (item.username != null) {
-                  // console.log(item.username);
-                  mem_name = item.username;
-                } else if (item.name != null) {
-                  // console.log(item.name);
-                  mem_name = item.name;
-                } else {
-                  mem_name = "暫無會員名";
-                }
-                list_html += '<div class="member_list_content">';
-                if (item.id == group_manager_id) {
-                  list_html +=
-                    '<i style="color: yellow;" class="fa-solid fa-crown"></i>';
-                }
-
-                list_html += "<label>";
-                list_html +=
-                  '<input class="to_del_mems" type="checkbox" name="to_add_mems" id="';
-                list_html += item.id;
-                list_html += '"/>';
-                list_html += '<img class="group_main_img_member_list"';
-                list_html += ' src="';
-                list_html += img_src;
-                list_html += '"/>';
-                list_html += mem_name;
-                list_html += "</label>";
-                list_html += "</div>";
-              }
-              $("#group_setting_mem_to_del").append(list_html);
-            });
-          })
-          .catch((error) => console.log("error", error));
 
         console.log(gp_id_list);
         //刪除揪團
@@ -281,7 +294,7 @@
             //刪除成員
             var to_del_mems = $(".to_del_mems:checked");
             let url_del_mems =
-              "http://localhost:8080/lazy-trip-back/group?action=delGroupMember";
+              "http://localhost:8080/lazy-trip-back/groupmembers?action=delGroupMember";
             if (to_del_mems.length > 0) {
               console.log("被勾選人數:" + to_del_mems.length);
               url_del_mems += "&groupid=" + gpid;

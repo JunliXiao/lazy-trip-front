@@ -69,7 +69,10 @@
           redirect: "follow",
         };
 
-        fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+        fetch(
+          "http://localhost:8080/lazy-trip-back/groupmembers",
+          requestOptions
+        )
           .then((response) => response.json())
           .then((result) => {
             console.log(result);

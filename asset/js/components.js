@@ -46,14 +46,14 @@ class Header extends HTMLElement {
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item"> 新的行程 </a>
-            <a href="/page/group/group_htmls/group_new_group.html" class="navbar-item"> 新的揪團 </a>
+            <a href="/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
           </div>
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable group">
         <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
         <div class="navbar-dropdown">
-        <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html class="navbar-item"> 揪團邀請 </a>
+        <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
         </div>
         </div>
 
