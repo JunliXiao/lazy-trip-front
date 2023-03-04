@@ -12,13 +12,42 @@ class Header extends HTMLElement {
     >
     <!-- Logo -->
     <div class="navbar-brand">
-      <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/index.html">
+      <a class="navbar-item has-text-primary" href="http://localhost:8080/lazy-trip-back/index.html">
         <!-- <img
           src="https://bulma.io/images/bulma-logo.png"
           width="112"
           height="28"
         /> -->
-        <strong>LazyTrip.io</strong>
+        &nbsp;
+        <span class="icon has-text-primary">
+        <i class="fas fa-lg fa-mountain-sun"></i> 
+        </span>
+        &nbsp;&nbsp;
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-l"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-a"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-z"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-y"></i> 
+        </span>
+        &nbsp;<b>&bull;</b>&nbsp;
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-t"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-r"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-i"></i> 
+        </span>
+        <span class="icon has-text-primary">
+          <i class="fas fa-lg fa-p"></i> 
+        </span>  
       </a>
 
       <a
@@ -46,15 +75,15 @@ class Header extends HTMLElement {
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item"> 新的行程 </a>
-            <a href="/page/group/group_htmls/group_new_group.html" class="navbar-item"> 新的揪團 </a>
+            <a href="/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
           </div>
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable group">
-        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
-        <div class="navbar-dropdown">
-        <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html class="navbar-item"> 揪團邀請 </a>
-        </div>
+          <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
+          <div class="navbar-dropdown">
+          <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
+          </div>
         </div>
 
         <a href="#" class="navbar-item"> 行程 </a>
