@@ -60,6 +60,10 @@
       div.upload_img {
         width: 100px;
       }
+      .preview > img {
+        width: 100px;
+        height: 100px;
+      }
     </style>
   </head>
   <body>
@@ -137,7 +141,7 @@
                   name=""
                   id="intro"
                   cols="20"
-                  rows="10"
+                  rows="5"
                   readonly
                 ></textarea>
               </div>
@@ -155,7 +159,10 @@
           <div class="card mb-3">
             <div class="card-content">
               <div class="content ml-4">
-                <button class="button">
+                <button
+                  class="button js-modal-trigger"
+                  data-target="modal-share-img"
+                >
                   <span class="icon">
                     <i class="fa-solid fa-image"></i>
                   </span>
@@ -163,7 +170,10 @@
                 </button>
               </div>
               <div class="content ml-4">
-                <button class="button">
+                <button
+                  class="button js-modal-trigger"
+                  data-target="modal-post-comment"
+                >
                   <span class="icon">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </span>
@@ -331,7 +341,7 @@
     <!-- 上傳個人圖片 modal -->
     <div id="modal-self-img" class="modal">
       <div class="modal-background"></div>
-      <div class="modal-card">
+      <div class="modal-card" style="width: 1000px">
         <header class="modal-card-head">
           <p class="modal-card-title">上傳圖片</p>
           <button class="delete" aria-label="close"></button>
@@ -347,12 +357,20 @@
                   accept="image/*"
                 /><i class="fa fa-photo"></i> 上傳圖片</label
               >
-
-              <div id="oldImg" style="display: none"></div>
-
               <button id="crop_img" class="button">
                 <i class="fa fa-scissors"></i> 裁剪圖片
               </button>
+
+              <nav class="level">
+                <div class="level-left">
+                  <div class="ml-4" id="oldImg" style="display: none"></div>
+                  <div class="level-item">
+                    <div id="newImgInfo"></div>
+                    <div id="newImg"></div>
+                  </div>
+                </div>
+              </nav>
+              <div id="oldImg" style="display: none"></div>
 
               <div id="newImgInfo"></div>
               <div id="newImg"></div>
@@ -366,6 +384,76 @@
       </div>
     </div>
 
+    <!-- 分享圖片 -->
+
+    <!-- 發佈評論 -->
+    <div id="modal-post-comment" class="modal">
+      <div
+        class="modal-background"
+        style="background-color: opacity ':' 0.3"
+      ></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">編輯簡介</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <form
+            id="imgForm"
+            enctype="multipart/form-data"
+            method="post"
+            action="post"
+          >
+            <div class="field comment">
+              <label class="label" for="textarea-comment">發表您的評論</label>
+              <textarea
+                class="textarea is-medium"
+                placeholder="這家的枕頭令人流連忘返!"
+                id="textarea-comment"
+                name="comment"
+              ></textarea>
+            </div>
+            <div class="field comment">
+              <label class="label" for="input-intro">分享圖片(選填)</label>
+              <div class="file is-medium is-boxed">
+                <label class="file-label">
+                  <input
+                    class="file-input upl"
+                    type="file"
+                    name="img"
+                    accept="image/*"
+                    multiple
+                  />
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fa-solid fa-image"></i>
+                    </span>
+                    <span class="file-label"> 上傳圖片 </span>
+                  </span>
+                </label>
+              </div>
+              <div class="preview mt-3"></div>
+            </div>
+          </form>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-success btn_comment">保存</button>
+          <button class="button">取消</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- 成功用訊息視窗 -->
+    <div
+      id="message-box"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 40%;
+        padding: 10px;
+      "
+    ></div>
     <footer-component></footer-component>
 
     <script>
@@ -381,6 +469,8 @@
         const username = $("input#input-username");
         const birth = document.getElementById("input-birthday");
         const intro = $("textarea#input-intro");
+
+        const comment = $("textarea#comment");
 
         birth.max = new Date(
           new Date().getTime() - new Date().getTimezoneOffset() * 60000
@@ -476,7 +566,14 @@
           });
         });
 
+        $("button.btn_comment").on("click", function () {
+          $("form#imgForm").submit();
+          // location.href = "main.html";
+        });
+
         function getData() {
+          let x = new URLSearchParams(location.search);
+          let msg = x.get("message");
           fetch(`find?id=${getCookie("memId")}`)
             .then((resp) => resp.json())
             .then((member) => {
@@ -524,8 +621,26 @@
                 );
               }
               $("p#reg_date").append(`<span>${member.reg_date} </span>`);
-              $("textarea#intro").val(member.intro);
+              if (member.intro == "" || member.intro == null) {
+                $("textarea#intro").remove();
+              } else {
+                $("textarea#intro").val(member.intro);
+              }
             });
+
+          if (msg === "success") {
+            let html = `
+            <div class="notification is-link">
+              
+              您的評論已經成功發佈!
+            </div>;`;
+            $("div#message-box").append(html);
+            $("div#message-box").fadeIn(1000, function () {
+              setTimeout(() => {
+                $("div#message-box").fadeOut(1000, function () {});
+              }, 3000);
+            });
+          }
         }
         getData();
 
@@ -598,9 +713,11 @@
               height = this.height,
               fileSize = Math.round(file.size / 1000),
               html = "";
-
+            html += "<div style='width:200px'>";
             html += "<p>原始圖片尺寸 " + width + "x" + height + "</p>";
             html += "<p>檔案大小約 " + fileSize + "k</p>";
+            html += "</div>";
+
             $("#oldImg").before(html);
           };
 
@@ -628,6 +745,58 @@
               });
           });
         })(jQuery);
+
+        // 評論with圖片
+        var Preview = new (function () {
+          var root = $("form#imgForm");
+          // 連續的圖片編碼
+          var imgcode = "";
+          // 選取發生改變
+          this.change_file = function () {
+            root.on("change", ".upl", function () {
+              show(this);
+            });
+          };
+
+          // 批次圖片，先清空後再插入
+          var show = function (input) {
+            if (input.files && input.files[0]) {
+              clean();
+              each_img(input.files);
+            }
+          };
+
+          // 批次讀取，最後再一次寫入
+          var each_img = function (files) {
+            $.each(files, function (index, file) {
+              var src = URL.createObjectURL(file);
+              create_imgcode(src);
+            });
+
+            // 放置預覽元素後重設
+            root.find(".preview").html(imgcode);
+            reset();
+          };
+
+          // 建立圖片
+          var create_imgcode = function (src) {
+            imgcode += '<img class="img mr-3" src="' + src + '">';
+          };
+
+          // 清空預覽區域
+          var clean = function () {
+            root.find(".preview").empty();
+          };
+
+          // 還原 input[type=file]
+          var reset = function () {
+            imgcode = "";
+            // root.find(".upl").val(null);
+          };
+        })();
+
+        // 執行
+        Preview.change_file();
       });
     </script>
   </body>
