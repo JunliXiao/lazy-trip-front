@@ -9,9 +9,10 @@
   }
 
 // =======  設定品牌顏色 / 初始變數 (initial variables) =======
-$blue: #04b5fb;
+$blue: hsl(197, 85%, 53%);
 // $turquoise: hsl(171, 100%, 41%);
-$secondary-orange: #dd5b0b;
+// #dd5b0b
+$secondary-orange: hsl(23, 91%, 45%);
 $black:        hsl(197, 47%, 4%);
 $black-bis:    hsl(197, 47%, 7%);
 $black-ter:    hsl(197, 47%, 14%);
@@ -41,17 +42,14 @@ $link: $secondary-orange;
 // $input-border-color: transparent;
 // $input-shadow: none;
 
+// $menu-item-hover-color: $text-strong !default
+// $menu-item-hover-background-color: $background !default
+// $menu-item-active-color: hsl(23, 100%, 21%);
+// $menu-item-active-background-color: hsl(23, 100%, 96%);
+$menu-item-active-color: hsl(23, 100%, 21%);
+$menu-item-active-background-color: hsl(23, 100%, 96%);
+
+
 // ======= 匯入所需的 Bulma 模組 =======
 @import "../vendor/bulma-0.9.4/bulma.sass";
-// @import "../vendor/bulma-0.9.4/sass/utilities/_all.sass";
-// @import "../vendor/bulma-0.9.4/sass/base/_all.sass";
-// @import "../vendor/bulma-0.9.4/sass/elements/_all.sass";
-// @import "../vendor/bulma-0.9.4/sass/form/_all.sass";
-// @import "../vendor/bulma-0.9.4/sass/components/navbar.sass";
-// @import "../vendor/bulma-0.9.4/sass/components/card.sass";
-// @import "../vendor/bulma-0.9.4/sass/components/dropdown.sass";
-// @import "../vendor/bulma-0.9.4/sass/components/menu.sass";
-// @import "../vendor/bulma-0.9.4/sass/components/modal.sass";
-// @import "../vendor/bulma-0.9.4/sass/layout/footer.sass";
-// @import "../vendor/bulma-0.9.4/sass/layout/section.sass";
 
