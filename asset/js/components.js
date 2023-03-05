@@ -12,44 +12,40 @@ class Header extends HTMLElement {
     >
     <!-- Logo -->
     <div class="navbar-brand">
-      <a class="navbar-item has-text-primary" href="http://localhost:8080/lazy-trip-back/index.html">
-        <!-- <img
-          src="https://bulma.io/images/bulma-logo.png"
-          width="112"
-          height="28"
-        /> -->
+      <a id="navbar-logo-area" class="navbar-item has-text-primary" href="http://localhost:8080/lazy-trip-back/index.html">
         &nbsp;
         <span class="icon has-text-primary">
-        <i class="fas fa-lg fa-mountain-sun"></i> 
+        <i class="fas fa-mountain-sun"></i> 
         </span>
         &nbsp;&nbsp;
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-l"></i> 
+          <i class="fas fa-l"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-a"></i> 
+          <i class="fas fa-a"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-z"></i> 
+          <i class="fas fa-z"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-y"></i> 
+          <i class="fas fa-y"></i> 
         </span>
         &nbsp;<b>&bull;</b>&nbsp;
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-t"></i> 
+          <i class="fas fa-t"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-r"></i> 
+          <i class="fas fa-r"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-i"></i> 
+          <i class="fas fa-i"></i> 
         </span>
         <span class="icon has-text-primary">
-          <i class="fas fa-lg fa-p"></i> 
+          <i class="fas fa-p"></i> 
         </span>  
       </a>
 
+      <!-- 當畫面尺寸夠小時顯示為 navbar burger -->
       <a
         role="button"
         class="navbar-burger"
