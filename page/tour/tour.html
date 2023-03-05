@@ -20,7 +20,12 @@
     </header>
     <main>
       <div class="search_btn">
-        <input class="input" type="text" placeholder="搜尋行程" />
+        <input
+          id="tour_search"
+          class="input"
+          type="text"
+          placeholder="搜尋行程"
+        />
       </div>
       <div class="nav_tab">
         <div class="tabs">
@@ -91,8 +96,8 @@
             <br />
             <label for="trip_tag">標籤：</label>
             <select name="trip_tag" id="trip_tag">
-              <option value="in_progress">進行中</option>
-              <option value="want_to_go">想去</option>
+              <option value="進行中">進行中</option>
+              <option value="想去">想去</option>
             </select>
             <br />
             <button type="button" class="button trip_create_btn">完成</button>
@@ -125,7 +130,7 @@
           style="background-color: #ebf9ff"
         >
           <div class="message-header" style="background-color: #04b5fb">
-            <p>標籤</p>
+            <p>現有標籤管理</p>
           </div>
           <div class="message-body contents">
             <input
@@ -137,7 +142,7 @@
             />
             <p>標籤</p>
             <ul class="trip_tag_detail">
-              <li class="trip_tag_el">
+              <li data-tag="進行中" class="trip_tag_el">
                 <input
                   type="checkbox"
                   name="trip_tag_el_checkbox"
@@ -146,7 +151,7 @@
                 <span>進行中</span>
                 <button class="button delete"></button>
               </li>
-              <li class="trip_tag_el">
+              <li data-tag="想去" class="trip_tag_el">
                 <input
                   type="checkbox"
                   name="trip_tag_el_checkbox"
@@ -164,6 +169,7 @@
               placeholder="輸入標籤"
             />
             <button class="button trip_tag_create">創建新標籤</button>
+            <button class="button trip_tag_confirm">確認</button>
           </div>
         </div>
       </div>
