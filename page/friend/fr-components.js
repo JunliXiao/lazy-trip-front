@@ -9,7 +9,7 @@ class ResultCard extends HTMLElement {
 
   buildCard(button_html) {
     this.card_html = `
-    <div class="card mb-6">
+    <div class="card mb-6 mx-6">
       <div class="card-content">
 
         <div class="media">
