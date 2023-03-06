@@ -1,7 +1,15 @@
 $(function () {
   const account = $("input#input-username");
   const password = $("input#input-password");
-
+  $(document).on(
+    "keydown",
+    "input#input-username, input#input-password",
+    function (e) {
+      if (e.keyCode == 13) {
+        $("button#btn-login").click();
+      }
+    }
+  );
   $("button#btn-login").on("click", function () {
     $("p.msg").text();
     fetch("login", {
