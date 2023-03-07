@@ -33,7 +33,7 @@ $(function () {
 
 function init() {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourQueryOne?tourId=${tourId}`,
+    url: `http://localhost:8080/lazy-trip-back/TourQueryOneByTourId?tourId=${tourId}`,
     type: "GET",
     success: function (data) {
       initRenderTourData(data);

@@ -88,6 +88,11 @@ function initTag() {
   });
 }
 
+$(document).on("click", "i.fa-tag", function renderTagMessageBox() {
+  // let tag_li_checkbox =
+  let targetCard = $(this).closest("div.column.item").attr("data-card");
+});
+
 $(function () {
   init();
 });
@@ -362,7 +367,25 @@ $(".trip_tag_lightbox > .contents").on("click", function (e) {
 // 點擊創建新標籤產生新標籤
 let targetTour;
 $(document).on("click", "i.fa-tag", function () {
+  // 清空tagMessageBox勾選欄位
+  let tag_li = $(`ul.trip_tag_detail li.trip_tag_el`);
+  tag_li.find("input#trip_tag_el_checkbox").prop("checked", false);
   targetTour = $(this).closest("div.column.item");
+  // 更新tagMessageBox的標籤勾選資訊
+  let key;
+  for (let i = 0; i < Object.keys(tag_obj).length; i++) {
+    if (targetTour.attr("data-card") === Object.keys(tag_obj)[i]) {
+      key = Object.keys(tag_obj)[i];
+      for (let j = 0; j < tag_obj[key].length; j++) {
+        targetTag_li = $(
+          `ul.trip_tag_detail li.trip_tag_el[data-tag=${tag_obj[key][j]}]`
+        );
+        if (targetTag_li.attr("data-tag") === tag_obj[key][j]) {
+          targetTag_li.find("input#trip_tag_el_checkbox").prop("checked", true);
+        }
+      }
+    }
+  }
 });
 // 產生新tag
 $(".contents > .trip_tag_create").on("click", function createNewTag() {
@@ -424,10 +447,12 @@ function initRenderTagInfo(data) {
   $(".trip_tag_input").val("");
 }
 
+// 標籤管理頁面 -- 勾選觸發新增至主行程card與刪除功能
 $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
   let targetTagPlace = targetTour.find("div.trip_tag_place > ul");
   let targetTourId = targetTour.attr("data-card");
   let tourTagTitle = $(this).closest("li.trip_tag_el").attr("data-tag");
+
   let that = $(this);
   if ($(this).prop("checked")) {
     $.ajax({
@@ -443,6 +468,7 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
       success: function (data) {
         alert("新增成功");
         let textContent = that.closest("li.trip_tag_el").find("span").text();
+        console.log("4" + textContent);
         $(`<li data-tag=${textContent}>${textContent}</li>`).prependTo(
           targetTagPlace
         );
@@ -551,14 +577,26 @@ $(document).on("click", "div.trip_tag_place > ul > li", function () {
   });
 });
 
-$(".trip_tag_search").on("keyup", function () {
+// 標籤管理頁面 -- 搜尋功能
+$(document).on("keyup", "#trip_tag_search", function (e) {
   if (e.keyCode === 13) {
-    let queryStr = $(".trip_tag_search").val();
+    let queryStr = $("#trip_tag_search").val();
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTagQuery?queryStr=${queryStr}`,
+      url: `http://localhost:8080/lazy-trip-back/tourTagQuery?queryStr=${queryStr}&memberId=${member_Id}`,
       type: "GET",
       success: function (data) {
         console.log(data);
+        $("ul.trip_tag_detail").html("");
+        let str = "";
+        for (let i = 0; i < data.length; i++) {
+          str += `
+          <li data-tag=${data[i]} class="trip_tag_el">
+            <input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox"/>
+            <span>${data[i]}</span>
+            <button class="button delete"></button>         
+          </li>`;
+        }
+        $("ul.trip_tag_detail").html(str);
       },
       error: function (xhr) {
         console.log("error");
