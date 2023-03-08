@@ -8,7 +8,7 @@
     <!-- Bulma 自訂 -->
     <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
     <!-- 自定義 CSS -->
-    <link rel="stylesheet" href="#" />
+    <link rel="stylesheet" href="extra-custom.css" />
     <!-- Font Awesome -->
     <script
       src="https://kit.fontawesome.com/0548105e54.js"
@@ -32,12 +32,15 @@
     <header-component></header-component>
 
     <!-- 主體 -->
-    <div class="columns mb-0 pb-0" style="min-height: 800px">
+    <div class="columns mb-0 pb-0 _main_body">
       <!-- 左側欄 -->
-      <div class="column mb-0 pb-0">
+      <div class="column mb-0 pr-0 pb-0 _left_menu">
         <div class="section">
           <aside class="menu" style="width: 100%">
-            <ul class="menu-list has-text-centered has-text-weight-semibold">
+            <ul
+              class="menu-list has-text-centered has-text-weight-semibold"
+              id="left-menu"
+            >
               <li id="li-suggestions">
                 <a class="is-size-4 py-5 is-active">你可能感興趣</a>
               </li>
@@ -58,49 +61,43 @@
         </div>
       </div>
       <!-- 右側內容 -->
-      <div class="column is-three-quarters mb-0 pb-0">
-        <div class="section">
-          <nav class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <!-- 搜尋框 -->
-                <div class="field has-addons">
-                  <p class="control">
-                    <input
-                      class="input"
-                      type="text"
-                      placeholder="搜尋會員帳號"
-                    />
-                  </p>
-                  <p class="control">
-                    <button class="button">搜尋</button>
-                  </p>
-                </div>
+      <div class="column is-three-quarters m-0 p-0">
+        <nav class="level pt-6 px-6">
+          <div class="level-left">
+            <div class="level-item">
+              <!-- 搜尋框 -->
+              <div class="field has-addons">
+                <p class="control">
+                  <input class="input" type="text" placeholder="搜尋會員帳號" />
+                </p>
+                <p class="control">
+                  <button class="button">搜尋</button>
+                </p>
               </div>
             </div>
-
-            <div class="level-right">
-              <div class="level-item">
-                <span class="icon is-large is-clickable">
-                  <i class="fas fa-lg fa-comment"></i>
-                </span>
-                <!-- 結果篩選控制 -->
-                <div class="buttons has-addons is-right">
-                  <button class="button">AA</button>
-                  <button class="button">BB</button>
-                  <button class="button">CC</button>
-                  <button class="button">DD</button>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <hr />
-          <div id="div-no-result" class="content" style="display: none">
-            <h3>目前沒有相關結果</h3>
           </div>
-          <div id="div-results" class="block"></div>
+
+          <div class="level-right">
+            <div class="level-item">
+              <span class="icon is-large is-clickable">
+                <i class="fas fa-lg fa-comment"></i>
+              </span>
+              <!-- 結果篩選控制 -->
+              <div class="buttons has-addons is-right">
+                <button class="button">AA</button>
+                <button class="button">BB</button>
+                <button class="button">CC</button>
+                <button class="button">DD</button>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <hr class="mb-0" />
+        <div id="div-no-result" class="content" style="display: none">
+          <h3>目前沒有相關結果</h3>
         </div>
+        <div id="div-results" class="block"></div>
       </div>
     </div>
 
@@ -144,6 +141,7 @@
 
     <!-- 頁尾 -->
     <footer-component></footer-component>
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
     <script src="friend_main.js"></script>
   </body>
 </html>

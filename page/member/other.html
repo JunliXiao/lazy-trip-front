@@ -247,7 +247,12 @@
                 );
               }
               $("p#reg_date").append(`<span>${member.reg_date} </span>`);
-              $("textarea#intro").val(member.intro);
+              if (member.intro == "" || member.intro == null) {
+                $("p#intro").remove();
+                $("textarea#intro").remove();
+              } else {
+                $("textarea#intro").val(member.intro);
+              }
             });
         }
         getData();

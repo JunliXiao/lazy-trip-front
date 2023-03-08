@@ -76,7 +76,7 @@ class Header extends HTMLElement {
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable group">
-        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
+        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 行程 </a>
         <div class="navbar-dropdown">
         <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
         </div>
@@ -162,8 +162,8 @@ class Footer extends HTMLElement {
         </div>
         <div class="column">
           <div class="content">
-            <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
+            <h4>用戶前台</h4>
+            <a href="#">首頁</a>
           </div>
         </div>
       </div>

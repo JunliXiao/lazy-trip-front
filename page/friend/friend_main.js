@@ -51,7 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 使用之函數
 function toggleActiveMenuListItem(event) {
-    document.querySelector("ul.menu-list li a.is-active").classList.remove("is-active");
+    event.target.closest("ul.menu-list").childNodes.forEach(node => {
+      if (node.nodeName == "LI") {
+        let a = node.firstElementChild;
+        if(a.classList.contains("is-active")) a.classList.remove("is-active");
+      } else if (node.nodeName == "CHATROOM-COMPONENT") {
+        let a_list = $(node).find("a");
+        if(a_list[0].classList.contains("is-active")) a_list[0].classList.remove("is-active");
+      }
+    });
     event.target.classList.add("is-active");
 }
 
@@ -131,6 +139,8 @@ function showRequests(direction) {
 
 function showChatrooms() {
   clearResults();
+  createChatLayout();
+  let node_chatroom_list = document.querySelector("ul._chatroom_list");
 
   fetch(API_ROOT + API_CHAT + `?member_id=${specifier_id}`)
   .then((res) => res.json())
@@ -147,10 +157,26 @@ function showChatrooms() {
       newItem.setAttribute("chatroom-id", ch["id"]);
       newItem.setAttribute("chatroom-name", ch["name"]);
       newItem.setAttribute("chatroom-created-at", ch["createdAtUnix"]);
-      node_results.appendChild(newItem);
+      node_chatroom_list.appendChild(newItem);
       });
     })
   .catch((err) => console.log(err));
+
+    function createChatLayout() {
+      let layout = `
+        <div class="columns _chat_layout p-0 m-0">
+          <div class="column is-one-third _chatroom_container p-0 m-0">
+            <aside class="menu" style="width: 100%">
+              <ul
+                class="menu-list _chatroom_list has-text-left"
+              ></ul>
+            </aside>
+          </div>
+          <div class="column _chat_log m-0 p-0"></div>
+        </div>
+      `;
+      node_results.innerHTML = layout;
+    }
 
 }
 
