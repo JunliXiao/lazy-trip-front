@@ -122,8 +122,7 @@ document
           tourImg: base64,
           memberId: 2,
         });
-        document.querySelector("div.wrapper").innerHTML = "";
-        renderTourData(tour_arr);
+        renderOneTourData(tour_arr);
       },
       error: function (xhr) {
         console.log("error");
@@ -174,6 +173,60 @@ function renderTourData(tour_arr) {
                 </div>`;
   }
   $("div.wrapper").html(new_card);
+}
+// 創立主行程的渲染function
+function renderOneTourData(tour_arr) {
+  let new_card = "";
+  for (let i = tour_arr.length; i >= tour_arr.length; i--) {
+    new_card += `<div data-card=${tour_arr[i - 1].tourId} class="column item">
+                  <div class="card">
+                    <div class="card-image">
+                      <div class="icon_total">
+                      <a href="#" class="trip_pen">
+                          <span class="icon"><i class="fas fa-pen"></i></span>
+                      </a>
+                        <a href="#" class="trip_tag">
+                          <span class="icon"><i class="fas fa-tag"></i></span>
+                        </a>
+                        <a href="#" class="trip_edit">
+                          <span class="icon"><i class="fas fa-edit"></i></span>
+                        </a>
+                        <a href="#" class="trip_delete">
+                          <span class="icon"><i class="fas fa-trash"></i></span>
+                        </a>
+                      </div>
+                      <figure class="image is-2by1" style="overflow: hidden">
+                        <img class="trip_item_img" src="data:image/*;base64,${
+                          tour_arr[i - 1].tourImg
+                        }" alt="" />
+                        <input type="file" class="update_tour_img -none">
+                      </figure>
+                    </div>
+                    <div class="card-content">
+                      <div class="trip_item_block">
+                        <h2 class="title is-4">${tour_arr[i - 1].tourTitle}</h2>
+                        <input type="text" class="tour_name_update -none" placeholder="更新行程名稱…" value=${
+                          tour_arr[i - 1].tourTitle
+                        }>
+                        <time class="startDate">${
+                          tour_arr[i - 1].startDate
+                        }</time> ~ 
+                        <time class="endDate">${tour_arr[i - 1].endDate}</time>
+                        <input type="date" class="tour_startDate_update -none" placeholder="更新起始日期…" value=${
+                          tour_arr[i - 1].startDate
+                        }>
+                        <input type="date" class="tour_endDate_update -none" placeholder="更新結束日期…" value=${
+                          tour_arr[i - 1].endDate
+                        }>
+                        <div class="trip_tag_place">
+                          <ul style="display: flex"></ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+  }
+  $("div.wrapper").append(new_card);
 }
 
 // ====================刪除行程的提示視窗=========================
@@ -468,7 +521,18 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
       success: function (data) {
         alert("新增成功");
         let textContent = that.closest("li.trip_tag_el").find("span").text();
-        console.log("4" + textContent);
+        // 更新tag_obj
+        for (let i = 0; i < Object.keys(tag_obj).length; i++) {
+          if (parseInt(Object.keys(tag_obj)[i]) != targetTourId) {
+            // 創立新的key(tourId)
+            console.log(111);
+          } else {
+            console.log(222);
+            tag_obj[targetTourId].push(textContent);
+            console.log(333);
+          }
+        }
+        // 渲染到tourTagMessageBox管理頁面上
         $(`<li data-tag=${textContent}>${textContent}</li>`).prependTo(
           targetTagPlace
         );
@@ -488,6 +552,15 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
         for (let i = 0; i < renderTargetTag.length; i++) {
           if (currentDataTag === $(renderTargetTag[i]).attr("data-tag")) {
             renderTargetTag[i].remove();
+          }
+        }
+        // 更新tag_obj
+        for (let i = 0; i < Object.keys(tag_obj).length; i++) {
+          if (parseInt(Object.keys(tag_obj)[i]) != targetTourId) {
+            const index = tag_obj[targetTourId].indexOf(currentDataTag);
+            if (index > -1) {
+              tag_obj[targetTourId].splice(index, 1);
+            }
           }
         }
       },
