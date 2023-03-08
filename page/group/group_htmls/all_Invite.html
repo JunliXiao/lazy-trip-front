@@ -38,7 +38,7 @@
         <section class="section">
           <!-- 標題 -->
           <div class="content has-text-centered">
-            <h1>揪團邀請列表</h1>
+            <h1>揪團邀請與審核狀態</h1>
           </div>
           <!-- 表單 -->
           <form class="box" action="#" method="post" id="form_gp_setting">
@@ -49,6 +49,7 @@
                 <label>
                   <input type="radio" name="to_add_gps" class="mems" />
                   揪團名團名
+                  <span class="invite_reviewing">審核中</span>
                   <ul>
                     <li>
                       <label style="font-size: 16px">當前行程:</label>
@@ -63,7 +64,7 @@
               </div> -->
             </div>
             <!-- 表單按鈕 -->
-            <div class="field is-grouped">
+            <div class="field is-grouped btns-invite">
               <div class="control">
                 <button
                   class="button is-primary has-text-centered"
@@ -79,7 +80,7 @@
                   type="button"
                   id="btn_gp_del"
                 >
-                  拒絕
+                  刪除
                 </button>
               </div>
             </div>
@@ -98,6 +99,9 @@
         let btn_amend = document.getElementById("btn_uncheckmem");
         let user_id;
         let list_invite_html;
+        let invite_status;
+        let status_html;
+        let join_how_html;
         //得到使用者
         fetch(
           "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
@@ -114,32 +118,63 @@
               .then((response) => response.json())
               .then((result) => {
                 console.log(result);
-                $.each(result, function (index, item) {
-                  console.log(item.groupVO.groupname);
-                  list_invite_html = `<div class="field is_applying">
-                <label>
-                  <input
-                    type="radio"
-                    name="to_add_gps"
-                    class="mems"
-                    value="${item.groupmember}"
-                  />
-                  ${item.groupVO.groupname}
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">當前行程:</label>
-                      <label class="info">${item.groupVO.tourVO.tourTitle}</label>
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">人數上限:</label>
-                      <label class="spe_need">${item.groupVO.groupmembercount}</label>
-                    </li>
-                  </ul>
-                </label>
-              </div>`;
-                });
                 $("#mem_to_add").html("");
-                $("#mem_to_add").html(list_invite_html);
+                $.each(result, function (index, item) {
+                  console.log(item.groupVO);
+                  status = item.gmstatus;
+                  if (item.groupVO.ifjoingroupdirectly == 1) {
+                    join_how_html = '<span class="need_approve">需審核</span>';
+                  } else {
+                    join_how_html = '<span class="dont_need_approve"></span>';
+                  }
+                  switch (status) {
+                    case "2":
+                      status_html =
+                        '<span class="invite_reviewing">審核中</span>';
+                      break;
+                    case "4":
+                      status_html =
+                        '<span class="invite_refused">已拒絕</span>';
+                      break;
+                    default:
+                      status_html = '<span class="invite_new">新邀請!</span>';
+                  }
+                  list_invite_html = `<label>
+                      <div class="card mb-4" >
+                        <div class="card-content">
+                          <div class="media">
+                            <div class="media-left">
+                              <input type="radio" name="to_add_gps" class="mems" value="${item.groupmember}"/>
+                            </div>
+                            <div class="media-content">
+                              <div class="columns">
+                                <div class="column is-12">
+                                  <div class="content">
+                                    <p
+                                      class="title invite is-12"
+                                      style="margin-bottom: 16px"
+                                      id="p${index}"
+                                    >
+                                    ${item.groupVO.groupname}
+                                    ${join_how_html}
+                                    ${status_html}
+                                    </p>
+                                    <label style="font-size: 16px">當前行程:</label>
+                                    <label class="info">${item.groupVO.tourVO.tourTitle}</label>
+                                    <br />
+                                    <label style="font-size: 16px">人數上限:</label>
+                                    <label class="spe_need">${item.groupVO.groupmembercount}</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="media-right"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </label>`;
+                  $("#mem_to_add").append(list_invite_html);
+                });
               })
               .catch((error) => console.log("error", error));
           });
@@ -147,14 +182,65 @@
         gp_amend_el.onclick = (e) => {
           if ($("input.mems:checked").length != 0) {
             e.preventDefault();
+            //  console.log($("input.mems:checked").val());
+            // console.log($("input.mems:checked")[0].parent());
+            let input_el = $("input.mems:checked")[0];
+            let span_el = $(input_el).parent().parent().find("span")[0];
+            let gp_p = $(input_el).parent().parent().find("p")[0];
+            let gp_name = $(gp_p)
+              .contents()
+              .filter(function () {
+                return this.nodeType === 3;
+              })
+              .text()
+              .trim();
+            let encodedStr = encodeURIComponent(gp_name);
+            // let decodedStr = decodeURIComponent(tests);
+            let join_how;
 
-            //預計放入直接前往該揪團主頁
+            if (span_el.className == "need_approve") {
+              join_how = 1;
+            } else {
+              join_how = 2;
+            }
+            //接受邀請
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("action", "acceptInvite");
+            urlencoded.append("need_Approval", join_how);
+            urlencoded.append("gp_member", $("input.mems:checked").val());
+
+            var requestOptions = {
+              method: "POST",
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: "follow",
+            };
+
+            fetch(
+              "http://localhost:8080/lazy-trip-back/groupmembers",
+              requestOptions
+            )
+              .then((response) => response.text())
+              .then((result) => {
+                let url =
+                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/new_group_invite.html";
+                url += "?Id=" + $("input.mems:checked").val();
+                url += "&gpName=" + encodedStr;
+                location.href = url;
+              })
+              .catch((error) => console.log("error", error));
           } else {
             alert("請確認要操作的揪團邀請!");
             e.preventDefault();
           }
         };
-
+        //刪除邀請
         $("#btn_gp_del").on("click", function (e) {
           if ($("input.mems:checked").length != 0) {
             var r = confirm("確定要拒絕此揪團邀請嗎");

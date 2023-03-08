@@ -159,10 +159,11 @@
         <label class="label">留言</label>
         <div class="control">
           <input
-            class="input"
+            class="input input1"
             id="new_content_input"
             type="text"
             placeholder="請輸入想說的話"
+            maxlength="20"
           />
         </div>
         <button name="" id="new_content_btn">提交</button>
@@ -466,7 +467,7 @@
           //   console.log("未選取");
           // }
         };
-        //OK按鈕
+        //邀請OK按鈕
         close_alert.addEventListener("click", function () {
           show_alert.style.display = "none";
           to_invite_frds = $(".to_invite_frds:checked");
@@ -509,7 +510,17 @@
               .catch((error) => alert("邀請失敗，請稍後再試"));
           }
         });
-
+        //限制字數
+        var limitTestFunc = function () {
+          $(".input1").keyup(function () {
+            var length = $(this).val().length;
+            if (length >= maxLength) {
+              // 截取超出的字符
+              $(this).val($(this).val().substring(0, maxLength));
+            }
+          });
+        };
+        limitTestFunc();
         //顯示群組留言func()
         var showContents = function () {
           fetch(
