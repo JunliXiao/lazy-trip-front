@@ -301,7 +301,6 @@ $(".trip_create_lightbox > .contents").on("click", function (e) {
 
 // ======================行程標題與日期修改====================== //
 $(document).on("click", "a.trip_pen", function () {
-  let update_tour_img;
   let update_tour_name;
   let tour_startDate_update;
   let tour_endDate_update;
@@ -341,11 +340,6 @@ $(document).on("click", "a.trip_pen", function () {
       .find("input.tour_endDate_update")
       .val()
       .trim();
-    // update_tour_img = $(this)
-    //   .closest("div.card")
-    //   .find("img.trip_item_img")
-    //   .attr("src")
-    //   .trim();
     if (update_tour_name == "") {
       alert("請輸入行程名稱");
     } else {

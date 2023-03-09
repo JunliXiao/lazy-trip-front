@@ -437,7 +437,6 @@ function initMap() {
           strictBounds: false,
         }
       );
-      // 秀出user的旅程路線圖
 
       autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
