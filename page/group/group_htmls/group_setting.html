@@ -293,17 +293,19 @@
             e.preventDefault();
             //刪除成員
             var to_del_mems = $(".to_del_mems:checked");
+
             let url_del_mems =
               "http://localhost:8080/lazy-trip-back/groupmembers?action=delGroupMember";
             if (to_del_mems.length > 0) {
               console.log("被勾選人數:" + to_del_mems.length);
+
               url_del_mems += "&groupid=" + gpid;
               $.each(to_del_mems, function (index, item) {
                 console.log($(item).attr("id"));
                 var mem = "&mem" + index + "=" + $(item).attr("id");
                 url_del_mems += mem;
               });
-              // console.log(url_del_mems);
+              console.log(url_del_mems);
 
               //fetch
               var myHeaders = new Headers();
@@ -322,10 +324,10 @@
 
               fetch(url_del_mems, requestOptions)
                 .then((response) => response.text())
-                .then((result) => console.log(result))
+                .then((result) => console.log("!!"))
                 .catch((error) => console.log("error", error));
 
-              //修改資訊
+              //   //修改資訊
             }
             var requestOptions = {
               method: "PUT",

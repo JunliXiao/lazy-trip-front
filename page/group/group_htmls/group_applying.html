@@ -41,71 +41,50 @@
           <div class="content has-text-centered"><h3>揪團名</h3></div>
           <!-- 表單 -->
           <form class="box" action="#" method="post" id="form_gp_setting">
-            <!--新增成員-->
             <div class="field">
               <label class="label" for="gp_name">申請中成員</label>
             </div>
             <div id="mem_to_add">
-              <div class="field is_applying">
-                <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                  </ul>
-                </label>
-              </div>
-              <div class="field is_applying">
-                <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                  </ul>
-                </label>
-              </div>
-              <div class="field is_applying">
-                <label>
-                  <input type="checkbox" name="to_add_mems" class="mems" />
-                  <img class="img_member_list" src="./test.png" />asdsadsa1
-                  <ul>
-                    <li>
-                      <label style="font-size: 16px">簡介:</label>
-                      <label class="info"
-                        >簡介20個字簡介簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                    <li>
-                      <label style="font-size: 16px">特殊需求:</label>
-                      <label class="spe_need"
-                        >特殊需求20個字簡介簡介簡介簡介簡介簡介簡</label
-                      >
-                    </li>
-                  </ul>
-                </label>
-              </div>
+              <!-- <label>
+                <div class="card">
+                  <div class="card-content inviteList">
+                    <div class="media">
+                      <div class="media-left inviteMediaLeft">
+                        <input
+                          type="checkbox"
+                          name="to_add_mems"
+                          class="mems"
+                          value="12"
+                        />
+                        <figure class="image is-48x48">
+                          <img class="img_inviteList" src="./test.png" />
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <div class="columns">
+                          <div class="column is-10">
+                            <div class="content">
+                              <p
+                                class="title invite is-11"
+                                style="margin-bottom: 16px"
+                                id="p0"
+                              >
+                                小美ㄉ揪團
+                              </p>
+                              <label style="font-size: 16px">簡介:</label>
+                              <label class="info">沒有行程</label>
+                              <br />
+                              <label style="font-size: 16px">特殊需求:</label>
+                              <label class="spe_need">5</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="media-right"></div>
+                    </div>
+                  </div>
+                </div>
+              </label> -->
             </div>
             <!-- 表單按鈕 -->
             <div class="field is-grouped">
@@ -147,6 +126,8 @@
         let group_manager_id;
         let getUrlString = location.href;
         var url = new URL(getUrlString);
+        let limit;
+        let mem_count = 0;
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
 
         //加載時的fetch，得到使用者
@@ -163,52 +144,232 @@
             fetch(url1 + gpid)
               .then((response) => response.json())
               .then((data) => {
+                limit = data[0].groupmembercount;
                 console.log(data);
                 //$("#gp_main_gpname").html(data[0].groupname);
                 group_manager_id = data[0].memberid;
                 $("#gp_name").val(data[0].groupname);
                 $("#gp_mem_num").val(data[0].groupmembercount);
                 // console.log(data.ifjoingroupdirectly);
-                if (data[0].ifjoingroupdirectly == "1") {
-                  $("#check_join").attr("checked", true);
-                } else if (data[0].ifjoingroupdirectly == "2") {
-                  $("#any_join").attr("checked", true);
-                }
                 console.log("權限:" + group_manager_id);
                 console.log("使用者" + user_id);
-
                 //驗證使用者權限
                 if (!(user_id === group_manager_id)) {
                   alert("沒有權限!");
                   history.back();
                 }
               })
+
+              .then(() => {
+                //渲染至表單
+                var myHeaders = new Headers();
+                myHeaders.append(
+                  "Cookie",
+                  "JSESSIONID=31AC4F68B68FCD3E277BEFD31DF0A5E3"
+                );
+                fetch(
+                  "http://localhost:8080/lazy-trip-back/groupmembers?action=getGroupMemsInList&groupid=" +
+                    gpid
+                )
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log(result);
+                    $.each(result, function (index, item) {
+                      //取得群組人數
+                      if (item.gmstatus == 1) {
+                        mem_count += 1;
+                      }
+                      //渲染
+                      if (item.gmstatus == 2) {
+                        console.log(item.member.name);
+                        var list_html = "";
+                        var mem_name = "";
+                        var mem_pic = "";
+                        var img_src = "";
+                        var intro = "";
+                        var need = "";
+
+                        if (item.selfintro) {
+                          intro = item.selfintro;
+                        } else {
+                          intro = "無";
+                        }
+                        if (item.specialneed) {
+                          need = item.specialneed;
+                        } else {
+                          need = "無";
+                        }
+                        if (item.member.imgBase64Str != null) {
+                          // console.log("有喔");
+                          img_src =
+                            "data:image/*;base64," + item.member.imgBase64Str;
+                        } else {
+                          img_src = "./test.png";
+                        }
+                        if (item.member.username != null) {
+                          // console.log(item.member.username);
+                          mem_name = item.member.username;
+                        } else if (item.member.name != null) {
+                          // console.log(item.member.name);
+                          mem_name = item.member.name;
+                        } else {
+                          mem_name = "暫無會員名";
+                        }
+                        list_html = `<label>
+                <div class="card">
+                  <div class="card-content inviteList">
+                    <div class="media">
+                      <div class="media-left inviteMediaLeft">
+                        <input
+                          type="checkbox"
+                          name="to_add_mems"
+                          class="mems"
+                          id="${item.groupmember}"
+                        />
+                        <figure class="image is-48x48">
+                          <img class="img_inviteList" src="${img_src}" />
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <div class="columns">
+                          <div class="column is-10">
+                            <div class="content">
+                              <p
+                                class="title invite is-11"
+                                style="margin-bottom: 16px"
+                                
+                              >
+                                ${mem_name}
+                              </p>
+                              <label style="font-size: 16px">簡介:</label>
+                              <label class="info">${intro}</label>
+                              <br />
+                              <label style="font-size: 16px">特殊需求:</label>
+                              <label class="spe_need">${need}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="media-right"></div>
+                    </div>
+                  </div>
+                </div>
+              </label>`;
+                        $("#mem_to_add").append(list_html);
+                      }
+                    });
+                  })
+                  .catch((error) => console.log("error", error));
+              })
+              .then(() => {
+                let url_del_mems =
+                  "http://localhost:8080/lazy-trip-back/groupmembers?action=opGroupMember";
+                gp_amend_el.onclick = (e) => {
+                  e.preventDefault();
+                  var to_del_mems = $("input.mems:checked");
+                  console.log(to_del_mems);
+                  if ($("input.mems:checked").length != 0) {
+                    if ($("input.mems:checked").length + mem_count <= limit) {
+                      //fetch
+                      var myHeaders = new Headers();
+                      myHeaders.append(
+                        "Content-Type",
+                        "application/x-www-form-urlencoded"
+                      );
+                      myHeaders.append(
+                        "Cookie",
+                        "JSESSIONID=6C7574F99CC35CE872941D38D3A1DF88"
+                      );
+
+                      var urlencoded = new URLSearchParams();
+                      urlencoded.append("action", "opGroupMember");
+                      urlencoded.append("groupid", gpid);
+                      urlencoded.append("toDo", "1");
+                      $.each(to_del_mems, function (index, item) {
+                        urlencoded.append("mem" + index, $(item).attr("id"));
+                      });
+
+                      var requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: urlencoded,
+                        redirect: "follow",
+                      };
+
+                      fetch(
+                        "http://localhost:8080/lazy-trip-back/groupmembers",
+                        requestOptions
+                      )
+                        .then((response) => response.text())
+                        .then((result) => {
+                          alert("新增成功!");
+                          location.reload();
+                        })
+                        .catch((error) => console.log("error", error));
+                    } else {
+                      alert("超出群組人數上限!請重新選擇");
+                    }
+                    e.preventDefault();
+                  } else {
+                    alert("請確認要新增的成員!");
+                    e.preventDefault();
+                  }
+                };
+                //拒絕按鈕
+                $("#btn_gp_del").on("click", function (e) {
+                  e.preventDefault();
+                  if ($("input.mems:checked").length != 0) {
+                    var r = confirm("確定要拒絕以上成員嗎");
+                    if (r == true) {
+                      var to_del_mems = $("input.mems:checked");
+
+                      //fetch
+                      var myHeaders = new Headers();
+                      myHeaders.append(
+                        "Content-Type",
+                        "application/x-www-form-urlencoded"
+                      );
+                      myHeaders.append(
+                        "Cookie",
+                        "JSESSIONID=6C7574F99CC35CE872941D38D3A1DF88"
+                      );
+
+                      var urlencoded = new URLSearchParams();
+                      urlencoded.append("action", "opGroupMember");
+                      urlencoded.append("groupid", gpid);
+                      urlencoded.append("toDo", "4");
+                      $.each(to_del_mems, function (index, item) {
+                        urlencoded.append("mem" + index, $(item).attr("id"));
+                      });
+
+                      var requestOptions = {
+                        method: "POST",
+                        headers: myHeaders,
+                        body: urlencoded,
+                        redirect: "follow",
+                      };
+
+                      fetch(
+                        "http://localhost:8080/lazy-trip-back/groupmembers",
+                        requestOptions
+                      )
+                        .then((response) => response.text())
+                        .then((result) => {
+                          alert("拒絕成功!");
+                          location.reload();
+                        })
+                        .catch((error) => console.log("error", error));
+                    } else {
+                      e.preventDefault();
+                    }
+                  } else {
+                    alert("請確認要拒絕的成員!");
+                    e.preventDefault();
+                  }
+                });
+              })
               .catch((error) => console.log("error", error))
           );
-
-        gp_amend_el.onclick = (e) => {
-          if ($("input.mems:checked").length != 0) {
-            alert("新增成功!");
-            //預計放入直接前往該揪團主頁
-          } else {
-            alert("請確認要新增的成員!");
-            e.preventDefault();
-          }
-        };
-
-        $("#btn_gp_del").on("click", function (e) {
-          if ($("input.mems:checked").length != 0) {
-            var r = confirm("確定要拒絕以上成員嗎");
-            if (r == true) {
-              alert("拒絕成功!");
-            } else {
-              e.preventDefault();
-            }
-          } else {
-            alert("請確認要拒絕的成員!");
-            e.preventDefault();
-          }
-        });
 
         //限制選5筆
         $("input[type=checkbox]").click(function () {

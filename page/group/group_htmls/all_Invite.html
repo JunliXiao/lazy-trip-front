@@ -134,7 +134,7 @@
                       break;
                     case "4":
                       status_html =
-                        '<span class="invite_refused">已拒絕</span>';
+                        '<span class="invite_refused">已被拒</span>';
                       break;
                     default:
                       status_html = '<span class="invite_new">新邀請!</span>';
@@ -245,23 +245,38 @@
           if ($("input.mems:checked").length != 0) {
             var r = confirm("確定要拒絕此揪團邀請嗎");
             if (r == true) {
-              alert("拒絕成功!");
+              var myHeaders = new Headers();
+              myHeaders.append(
+                "Cookie",
+                "JSESSIONID=668E58D4C615EAF3AE4703A79EC3DAD9"
+              );
+
+              var requestOptions = {
+                method: "DELETE",
+                headers: myHeaders,
+                redirect: "follow",
+              };
+
+              fetch(
+                "http://localhost:8080/lazy-trip-back/groupmembers?action=deleteInvite&gp_member=" +
+                  $("input.mems:checked").val(),
+                requestOptions
+              )
+                .then((response) => response.text())
+                .then((result) => {
+                  alert("拒絕成功!");
+                  location.reload();
+                })
+                .catch((error) => {
+                  console.log("error", error);
+                  alert("操作失敗，請稍後再試!");
+                });
             } else {
               e.preventDefault();
             }
           } else {
             alert("請確認要操作的揪團!");
             e.preventDefault();
-          }
-        });
-
-        //限制選5筆
-        $("input[type=checkbox]").click(function () {
-          $("input[name='to_add_gps']").attr("disabled", true);
-          if ($("input[name='to_add_gps']:checked").length >= 5) {
-            $("input[name='to_add_gps']:checked").attr("disabled", false);
-          } else {
-            $("input[name='to_add_gps']").attr("disabled", false);
           }
         });
       };

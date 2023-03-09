@@ -31,7 +31,7 @@
     <!--預計加入:滑到內容若為登入者的留言要顯示刪除按鈕在右上角-->
     <!-- 導覽列 -->
     <header-component></header-component>
-    <!--彈窗-->
+    <!--彈窗(邀請)-->
     <div id="group_main_fs_alert">
       <div class="group_main_fs_alert_bg"></div>
       <div class="group_main_fs_alert_show">
@@ -57,6 +57,49 @@
           <!-- </div> -->
         </div>
         <div class="btn_s button" id="alert_ok">OK</div>
+      </div>
+    </div>
+    <!--彈窗(行程)-->
+    <div id="group_main_fs_alert2">
+      <div class="group_main_fs_alert_bg2"></div>
+      <div
+        class="group_main_fs_alert_show2"
+        style="overflow-y: scroll; overflow-x: hidden"
+      >
+        <div class="group_main_fs_alert_title2">請選擇群組行程</div>
+        <div id="fr_list2">
+          <div class="columns">
+            <div class="column is-1"></div>
+            <div
+              class="column wrapper"
+              style="display: flex; flex-wrap: wrap"
+              id="trips"
+            >
+              <!-- 第一個card -->
+              <div class="column item">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-2by1" style="overflow: hidden">
+                      <img class="trip_item_img" src="./img/01.jpg" alt="" />
+                    </figure>
+                  </div>
+                  <div class="card-content" style="padding: 10px">
+                    <div class="trip_item_block">
+                      <h2 class="title is-4" style="margin: 0px">台北七日遊</h2>
+                      <time datetime="2023-1-1">2023-1-1 ~ 2023-1-7</time>
+                      <div class="trip_tag_place">
+                        <ul style="display: flex"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!---->
+            </div>
+            <div class="column is-1"></div>
+          </div>
+        </div>
+        <div class="btn_s2 button" id="alert_ok2">OK</div>
       </div>
     </div>
 
@@ -178,10 +221,18 @@
         let group_mem_total;
         let member_limit;
         let show_alert = document.getElementById("group_main_fs_alert");
+        let show_alert2 = document.getElementById("group_main_fs_alert2");
         let close_alert = document.getElementById("alert_ok");
         let gp_id_list = []; //for friend use
         let user_id;
-
+        //----------
+        $(".trip_name").click(function () {
+          show_alert2.style.display = "block";
+        });
+        $("#alert_ok2").click(function () {
+          show_alert2.style.display = "none";
+        });
+        //----------
         //提交內容
         $("#new_content_btn").click(function () {
           var value = $("#new_content_input").val();
@@ -511,6 +562,7 @@
           }
         });
         //限制字數
+        var maxLength = 20;
         var limitTestFunc = function () {
           $(".input1").keyup(function () {
             var length = $(this).val().length;
@@ -537,6 +589,7 @@
                 var img_src = "";
                 var delete_btn_str = "";
                 var amend_btn_str = "";
+                var if_mem = "";
                 if (item.member.imgBase64Str != null) {
                   // console.log("有喔");
                   img_src = "data:image/*;base64," + item.member.imgBase64Str;
@@ -576,7 +629,8 @@
               />
               <div class="column is-9">
                 <span class="group_main_member_content_name">${mem_name}</span
-                ><br />
+                >${if_mem}
+                <br />
                 <p id="p${item.discussion}">${item.discussioncontent}</p>
               </div>
               <div class="column is-2 content_time">
