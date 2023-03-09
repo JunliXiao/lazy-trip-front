@@ -122,6 +122,15 @@
                   刪除群組
                 </button>
               </div>
+              <div class="control">
+                <button
+                  class="button is-info is-light has-text-centered"
+                  type="button"
+                  id="back"
+                >
+                  返回主頁
+                </button>
+              </div>
             </div>
           </form>
         </section>
@@ -272,8 +281,76 @@
         $("#btn_gp_delete_group").on("click", function (e) {
           var r = confirm("確定要刪除此揪團嗎");
           if (r == true) {
-            fet;
-            alert("刪除成功!");
+            //先刪除成員
+            var myHeaders = new Headers();
+            myHeaders.append(
+              "Cookie",
+              "JSESSIONID=5E700E47190F0B030869E6F949949302"
+            );
+
+            var requestOptions = {
+              method: "DELETE",
+              headers: myHeaders,
+              redirect: "follow",
+            };
+
+            fetch(
+              "http://localhost:8080/lazy-trip-back/groupmembers?action=delAllGroupMember&groupid=" +
+                gpid,
+              requestOptions
+            )
+              .then((response) => response.text())
+              .then((result) => {
+                //再刪除討論
+                var myHeaders = new Headers();
+                myHeaders.append(
+                  "Cookie",
+                  "JSESSIONID=5E700E47190F0B030869E6F949949302"
+                );
+
+                var requestOptions = {
+                  method: "DELETE",
+                  headers: myHeaders,
+                  redirect: "follow",
+                };
+
+                fetch(
+                  "http://localhost:8080/lazy-trip-back/discussion?action=delAllDis&groupid=" +
+                    gpid,
+                  requestOptions
+                )
+                  .then((response) => response.text())
+                  .then((result) => {
+                    //再刪除揪團
+                    var myHeaders = new Headers();
+                    myHeaders.append(
+                      "Cookie",
+                      "JSESSIONID=5E700E47190F0B030869E6F949949302"
+                    );
+
+                    var requestOptions = {
+                      method: "DELETE",
+                      headers: myHeaders,
+                      redirect: "follow",
+                    };
+                    fetch(
+                      "http://localhost:8080/lazy-trip-back/group?action=delOneGroup&groupid=" +
+                        gpid,
+                      requestOptions
+                    )
+                      .then((response) => response.text())
+                      .then((result) => {
+                        alert("刪除成功!");
+                        location.href =
+                          "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_all.html";
+                      })
+                      .catch((error) => {
+                        alert("請稍後再試");
+                      });
+                  })
+                  .catch((error) => console.log("error", error));
+              })
+              .catch((error) => console.log("error", error));
           } else {
             e.preventDefault();
           }
@@ -327,7 +404,7 @@
                 .then((result) => console.log("!!"))
                 .catch((error) => console.log("error", error));
 
-              //   //修改資訊
+              //修改資訊
             }
             var requestOptions = {
               method: "PUT",
@@ -366,6 +443,11 @@
           let a =
             "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_applying.html?groupid=";
           location.href = a + gpid;
+        });
+        $("#back").click(() => {
+          location.href =
+            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=" +
+            gpid;
         });
       };
     </script>

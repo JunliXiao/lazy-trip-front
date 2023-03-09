@@ -38,7 +38,7 @@
         <section class="section">
           <!-- 標題 -->
           <div class="content has-text-centered"><h1>申請中成員</h1></div>
-          <div class="content has-text-centered"><h3>揪團名</h3></div>
+          <div class="content has-text-centered"><h3 id="h3_gp_name"></h3></div>
           <!-- 表單 -->
           <form class="box" action="#" method="post" id="form_gp_setting">
             <div class="field">
@@ -106,6 +106,16 @@
                   拒絕
                 </button>
               </div>
+
+              <div class="control">
+                <button
+                  class="button is-info is-light has-text-centered"
+                  type="button"
+                  id="back"
+                >
+                  返回主頁
+                </button>
+              </div>
             </div>
           </form>
         </section>
@@ -146,6 +156,7 @@
               .then((data) => {
                 limit = data[0].groupmembercount;
                 console.log(data);
+                $("#h3_gp_name").html(data[0].groupname);
                 //$("#gp_main_gpname").html(data[0].groupname);
                 group_manager_id = data[0].memberid;
                 $("#gp_name").val(data[0].groupname);
@@ -379,6 +390,11 @@
           } else {
             $("input[name='to_add_mems']").attr("disabled", false);
           }
+        });
+        $("#back").click(() => {
+          location.href =
+            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=" +
+            gpid;
         });
       };
     </script>
