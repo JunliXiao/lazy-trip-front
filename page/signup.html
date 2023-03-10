@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../asset/css/my-bulma.css" />
     <!-- 自定義 CSS -->
     <link rel="stylesheet" href="../asset/css/index-style.css" />
-    <link rel="stylesheet" href="../asset/css/bulma-switch.min.css" />
     <!-- Font Awesome -->
     <script
       src="https://kit.fontawesome.com/0548105e54.js"
@@ -68,7 +67,7 @@
       .onoffswitch-inner:before {
         content: "會員";
         padding-left: 10px;
-        background-color: #2487de;
+        background-color: hsl(197, 85%, 53%);
         color: #ffffff;
       }
       .onoffswitch-inner:after {
@@ -450,6 +449,11 @@
         )
           .toISOString()
           .split("T")[0];
+        // function-------------------
+
+        window.addEventListener("pageshow", function (e) {
+          $(document).find("input#myonoffswitch").prop("checked", true);
+        });
 
         $("input#myonoffswitch").on("change", function () {
           $("div.content-member").toggleClass("-on");
@@ -532,7 +536,7 @@
                     );
 
                     location.href =
-                      location.origin + "/lazy-trip-back/index.html";
+                      location.origin + "/lazy-trip-back/page/login.html";
                   }
                 });
               });
