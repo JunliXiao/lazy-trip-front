@@ -38,14 +38,18 @@
 
     <section class="section" id="gps" style="margin: auto; text-align: center">
       <ul class="group_list">
-        <!-- <li>
-            <a href="#">
-              <div class="one_gp">
-                <p class="title">揪團名-只能點這個</p>
-                <p class="subtitle">6人</p>
-              </div>
-            </a> -->
-        <!-- </li> -->
+        <li>
+          <a
+            href="http://localhost:8080/lazy-trip-back/page/group/group_htmls/new_group.html"
+          >
+            <div class="one_gp card">
+              <p class="title" style="font-size: 30px; text-align: center">
+                建立揪團
+              </p>
+              <p class="subtitle">與好友一起來趟旅遊吧</p>
+            </div>
+          </a>
+        </li>
       </ul>
     </section>
     <!-- 頁尾 -->
@@ -77,25 +81,26 @@
           .then((result) => {
             console.log(result);
             let list_html = "";
+            if (result.length != 0) {
+              $.each(result, function (index, item) {
+                let a =
+                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=";
 
-            $.each(result, function (index, item) {
-              let a =
-                "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=";
-
-              list_html += '<li><a href="';
-              list_html += a + item.groupid;
-              list_html += '">';
-              list_html += '<div class="one_gp">';
-              list_html += '<p class="title">';
-              list_html += item.groupname;
-              list_html += "</p>";
-              list_html += '<p class="subtitle">';
-              list_html += "群組人數:";
-              list_html += item.groupmembercount;
-              list_html += "人";
-              list_html += "</p></div></a></li>";
-            });
-            $(".group_list").html(list_html);
+                list_html += '<li><a href="';
+                list_html += a + item.groupid;
+                list_html += '">';
+                list_html += '<div class="one_gp card">';
+                list_html += '<p class="title">';
+                list_html += item.groupname;
+                list_html += "</p>";
+                list_html += '<p class="subtitle">';
+                list_html += "群組人數:";
+                list_html += item.groupmembercount;
+                list_html += "人";
+                list_html += "</p></div></a></li>";
+              });
+              $(".group_list").html(list_html);
+            }
           })
           .catch((error) => console.log("error", error));
       });

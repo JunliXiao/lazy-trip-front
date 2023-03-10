@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io</title>
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/company-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="#" />
+    <!-- jq -->
+    <script src="../../../asset/js/jquery-3.6.3.min.js"></script>
+    <!-- Font Awesome -->
+    <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../../asset/js/company-components.js"
+      type="text/javascript"
+    ></script>
+
+    <!-- 初始化 Bulma -->
+    <script defer src="../../asset/js/bulma-init.js"></script>
+  </head>
+
+  <body>
+    <!-- 導覽列 -->
+    <header-component></header-component>
+
+    <!-- 主體 -->
+    <div class="columns mb-0 pb-0" style="min-height: 800px">
+      <!-- 左側欄 -->
+      <div class="column mb-0 pb-0">
+        <div class="section">
+          <aside class="menu" style="width: 100%">
+            <ul class="menu-list has-text-centered has-text-weight-semibold">
+              <li id="li-suggestions">
+                <a class="is-size-4 py-5 is-active">房間管理</a>
+              </li>
+              <ul id="li-friends">
+                <a class="is-size-4 py-5">房型新增</a>
+              </ul>
+
+              <li id="li-friends">
+                <a class="is-size-4 py-5">房間總覽</a>
+              </li>
+
+              <li id="li-suggestions">
+                <a class="is-size-4 py-5 is-active">廠商訂單管理</a>
+              </li>
+              <li id="li-friends">
+                <a class="is-size-4 py-5">訂單資料</a>
+              </li>
+
+              <li id="li-friends">
+                <a class="is-size-4 py-5">廠商訂單</a>
+              </li>
+
+              <li id="li-suggestions">
+                <a class="is-size-4 py-5 is-active">優惠券管理</a>
+              </li>
+
+              <li id="li-received-requests">
+                <a class="is-size-4 py-5">優惠券總覽</a>
+              </li>
+              <li id="li-chatrooms">
+                <a class="is-size-4 py-5">優惠券新增</a>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+      <!-- 右側內容 -->
+      <div class="column is-three-quarters mb-0 pb-0">
+        <div class="section">
+          <nav class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <div class="field has-addons"></div>
+              </div>
+            </div>
+
+            <div class="level-right">
+              <div class="level-item">
+                <!-- 房型種類 -->
+                <div class="buttons has-addons is-right">
+                  <button class="button">雙人房</button>
+                  <button class="button">三人房</button>
+                </div>
+              </div>
+            </div>
+          </nav>
+          <div>
+            <ul class="companyInfo">
+              <li class="comapnyName">
+                <p>晶華酒店</p>
+              </li>
+              <li class="comapnyAddress">
+                <p>地址：xxxxxxxxxxxxxxxxxxxx</p>
+              </li>
+            </ul>
+          </div>
+          <hr />
+          <!-- box1 -->
+          <div class="box">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th colspan="7"></th>
+                </tr>
+                <h1 class="title">優惠券新增</h1>
+                <tr>
+                  <th><abbr title="companyID">優惠券編號</abbr></th>
+                  <th><abbr title="roomtype">優惠券內容</abbr></th>
+                  <th><abbr title="quantity">優惠券開始時間</abbr></th>
+                  <th><abbr title="introduction">優惠券結束時間</abbr></th>
+                  <th><abbr title="照片">優惠券打折</abbr></th>
+                  <th><abbr title="price">優惠券數量</abbr></th>
+                  <th><abbr title="price">優惠券使用數量</abbr></th>
+                </tr>
+              </thead>
+             
+                  <button
+                    class="delete btn"
+                    style="position: absolute; top: 0; right: 0"
+                  ></button>
+                </div>
+              </div>
+
+              <tbody>
+                <tr>
+                  <th>1</th>
+                  <td>38</td>
+                  <td>23</td>
+                  <td>2</td>
+                  <td>照片</td>
+                  <td>NT$ 2,000</td>
+                  <td>NT$ 2,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <td><button class="button is-primary">上傳</button></td>
+          <hr />
+          <!-- box2 -->
+          <div class="box">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th colspan="7"></th>
+                </tr>
+                <h1 class="title">倒數計時設定</h1>
+                <tr>
+                  <th><abbr title="companyID">優惠券編號</abbr></th>
+                  <th><abbr title="roomtype">優惠券內容</abbr></th>
+                  <th><abbr title="quantity">倒數時間</abbr></th>
+                  <th><abbr title="introduction">限時幾張</abbr></th>
+                  <th><abbr title="照片">有效日期</abbr></th>
+                  <th><abbr title="price">廣告排序</abbr></th>
+                  <th><abbr title="price">上架時間</abbr></th>
+                </tr>
+              </thead>
+             
+                  <button
+                    class="delete btn"
+                    style="position: absolute; top: 0; right: 0"
+                  ></button>
+                </div>
+              </div>
+
+              <tbody>
+                <tr>
+                  <th>1</th>
+                  <td>38</td>
+                  <td>23</td>
+                  <td>2</td>
+                  <td>照片</td>
+                  <td>NT$ 2,000</td>
+                  <td>NT$ 2,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <td><button class="button is-primary">上傳</button></td>
+        </div>
+      </div>
+    </div>
+    <!-- 頁尾 -->
+    <footer-component></footer-component>
+  </body>
+</html>

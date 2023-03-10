@@ -25,7 +25,11 @@
       src="../../asset/js/components.js?ver=2"
       type="text/javascript"
     ></script>
-    <script defer src="js/mem_component.js" type="text/javascript"></script>
+    <script
+      defer
+      src="js/mem_component.js?ver=1"
+      type="text/javascript"
+    ></script>
     <!-- 初始化 Bulma -->
     <script defer src="../../asset/js/bulma-init.js?ver=2"></script>
     <style>
@@ -87,7 +91,7 @@
               <div class="tabs is-medium mt-4">
                 <ul>
                   <li class="is-active">
-                    <a class="tabs" data-id="dynamic_msg">動態消息</a>
+                    <a class="tabs loaded" data-id="dynamic_msg">動態消息</a>
                   </li>
                   <li><a class="tabs" data-id="comment">評論</a></li>
                   <li><a class="tabs" data-id="img">相片</a></li>
@@ -137,8 +141,9 @@
                   name=""
                   id="intro"
                   cols="20"
-                  rows="10"
+                  rows="5"
                   readonly
+                  style="resize: none"
                 ></textarea>
               </div>
             </div>
@@ -146,19 +151,10 @@
         </div>
 
         <div class="column is-7">
-          <div id="dynamic_msg" class="content-tab">
-            <card-component></card-component>
-          </div>
-          <div id="comment" class="content-tab" style="display: none">
-            <card-component></card-component>
-            <card-component></card-component>
-          </div>
-          <div id="img" class="content-tab" style="display: none">
-            <card-component></card-component>
-          </div>
-          <div id="tour" class="content-tab" style="display: none">
-            <card-component></card-component>
-          </div>
+          <div id="dynamic_msg" class="content-tab"></div>
+          <div id="comment" class="content-tab" style="display: none"></div>
+          <div id="img" class="content-tab" style="display: none"></div>
+          <div id="tour" class="content-tab" style="display: none"></div>
         </div>
       </div>
     </section>
@@ -175,6 +171,8 @@
         const address = $("input#input-address");
         const username = $("input#input-username");
         const intro = $("textarea#input-intro");
+        let lookForMemberId = new URLSearchParams(location.search);
+        let otherMemId = lookForMemberId.get("member_id");
 
         // ------------------------------
 
@@ -196,13 +194,28 @@
             tab_content[i].style.display = "none";
           }
           document.getElementById(tab_id).style.display = "block";
+
+          // 點擊分頁讀取內容功能
+          if ($(this).hasClass("loaded")) {
+          } else {
+            if (tab_id == "comment") {
+              $(this).addClass("loaded");
+              listComments();
+            }
+            if (tab_id == "img") {
+              $(this).addClass("loaded");
+              listImgs();
+            }
+            if (tab_id == "tour") {
+              $(this).addClass("loaded");
+            }
+          }
         });
 
         function getData() {
-          let x = new URLSearchParams(location.search);
-          let id = x.get("member_id");
+          let mem_username = $(document).find("span.mem_username");
 
-          fetch(`find?id=${id}`)
+          fetch(`find?id=${otherMemId}`)
             .then((resp) => resp.json())
             .then((member) => {
               let mem_img;
@@ -228,6 +241,7 @@
               fig_img.prepend(mem_img);
               img_upload.prepend(mem_img_upload);
               mem_username.text(member.username);
+              memUsername = member.username;
 
               $("input[name=gender][value=" + member.gender + "]").prop(
                 "checked",
@@ -255,7 +269,258 @@
               }
             });
         }
+
+        function listPosts() {
+          $("div#dynamic_msg").empty();
+          fetch(`listposts?id=${otherMemId}`)
+            .then((resp) => resp.json())
+            .then((body) => {
+              let src = $("div.mem_img.ml-4 > img").attr("src");
+              for (let key in body) {
+                let check = false;
+                $("div#dynamic_msg > card-component").each(function () {
+                  var dataId = $(this).data("id");
+                  if (body[key].id == dataId) {
+                    check = true;
+                    return check;
+                  }
+                });
+                if (check) {
+                  $(document)
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.is-4by3")
+                    .append(
+                      `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
+                    );
+                } else {
+                  $("div#dynamic_msg").append(
+                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                  );
+                  if (body[key].hasOwnProperty("imgbase64Str")) {
+                    $(document)
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .append(
+                        `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
+                      );
+                  } else {
+                    $(document)
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .remove();
+                  }
+                  $(document)
+                    .find(`card-component#${body[key].id}`)
+                    .find("div.content")
+                    .text(body[key].text);
+                  $(document)
+                    .find(`card-component#${body[key].id}`)
+                    .find("p.post-time")
+                    .text(body[key].time);
+                  $(document)
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.image.is-48x48")
+                    .prepend(`<img src="${src}" alt="Placeholder image"
+            class="is-rounded">`);
+                }
+              }
+
+              if (body.successful == true) {
+                // location.assign("main.html");
+              }
+            });
+        }
+
+        function listComments() {
+          $("div#comment").empty();
+          fetch(`listcomments?id=${otherMemId}`)
+            .then((resp) => resp.json())
+            .then((body) => {
+              let src = $("div.mem_img.ml-4 > img").attr("src");
+              for (let key in body) {
+                let check = false;
+                $("div#comment > card-component").each(function () {
+                  var dataId = $(this).data("id");
+                  if (body[key].id == dataId) {
+                    check = true;
+                    return check;
+                  }
+                });
+                if (check) {
+                  $(document)
+                    .find("div#comment")
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.is-4by3")
+                    .append(
+                      `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
+                    );
+                } else {
+                  $("div#comment").append(
+                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                  );
+                  if (body[key].hasOwnProperty("imgbase64Str")) {
+                    $(document)
+                      .find("div#comment")
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .append(
+                        `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
+                      );
+                  } else {
+                    $(document)
+                      .find("div#comment")
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .remove();
+                  }
+                  $(document)
+                    .find("div#comment")
+                    .find(`card-component#${body[key].id}`)
+                    .find("div.content")
+                    .text(body[key].text);
+                  $(document)
+                    .find("div#comment")
+                    .find(`card-component#${body[key].id}`)
+                    .find("p.post-time")
+                    .text(body[key].time);
+                  $(document)
+                    .find("div#comment")
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.image.is-48x48")
+                    .prepend(`<img src="${src}" alt="Placeholder image"
+            class="is-rounded">`);
+                }
+              }
+
+              if (body.successful == true) {
+                // location.assign("main.html");
+              }
+            });
+        }
+
+        function listImgs() {
+          $("div#img").empty();
+          fetch(`listimgs?id=${otherMemId}`)
+            .then((resp) => resp.json())
+            .then((body) => {
+              let src = $("div.mem_img.ml-4 > img").attr("src");
+              for (let key in body) {
+                let check = false;
+                $("div#img > card-component").each(function () {
+                  var dataId = $(this).data("id");
+                  if (body[key].id == dataId) {
+                    check = true;
+                    return check;
+                  }
+                });
+                if (check) {
+                  $(document)
+                    .find("div#img")
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.is-4by3")
+                    .append(
+                      `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
+                    );
+                } else {
+                  $("div#img").append(
+                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                  );
+                  if (body[key].hasOwnProperty("imgbase64Str")) {
+                    $(document)
+                      .find("div#img")
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .append(
+                        `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
+                      );
+                  } else {
+                    $(document)
+                      .find("div#img")
+                      .find(`card-component#${body[key].id}`)
+                      .find("figure.is-4by3")
+                      .remove();
+                  }
+                  $(document)
+                    .find("div#img")
+                    .find(`card-component#${body[key].id}`)
+                    .find("div.content")
+                    .text("");
+                  $(document)
+                    .find("div#img")
+                    .find(`card-component#${body[key].id}`)
+                    .find("p.post-time")
+                    .text(body[key].time);
+                  $(document)
+                    .find("div#img")
+                    .find(`card-component#${body[key].id}`)
+                    .find("figure.image.is-48x48")
+                    .prepend(`<img src="${src}" alt="Placeholder image"
+            class="is-rounded">`);
+                }
+              }
+
+              if (body.successful == true) {
+                // location.assign("main.html");
+              }
+            });
+        }
+
         getData();
+        listPosts();
+
+        // 圖片輪播
+        // 選取輪播圖片容器
+        var $slideshow = $(".slideshow");
+
+        // 選取所有圖片和箭頭
+        var $slides = $slideshow.find("img");
+        var $prev = $slideshow.find(".prev");
+        var $next = $slideshow.find(".next");
+        var currentIndex = 0;
+
+        $(document).on("click", "a.prev", function (e) {
+          e.preventDefault();
+          let img_nums = $(this).closest("div").find("img").length;
+
+          if (img_nums != 1) {
+            // 隱藏當前圖片
+            $(this).closest("figure").find("img").eq(currentIndex).fadeOut(100);
+            // $slides.eq(currentIndex).fadeOut();
+
+            // 減少索引
+            currentIndex--;
+
+            // 如果索引小於0，則從最大值開始
+            if (currentIndex < 0) {
+              currentIndex = img_nums - 1;
+            }
+            // 顯示上一張圖片
+            $(this).closest("figure").find("img").eq(currentIndex).fadeIn(100);
+            // $slides.eq(currentIndex).fadeIn();
+          }
+        });
+
+        $(document).on("click", "a.next", function (e) {
+          e.preventDefault();
+          let img_nums = $(this).closest("div").find("img").length;
+          if (img_nums != 1) {
+            // 隱藏當前圖片
+            $(this).closest("figure").find("img").eq(currentIndex).fadeOut();
+            // $slides.eq(currentIndex).fadeOut();
+
+            // 增加索引
+            currentIndex++;
+
+            // 如果索引超出最大值，則從頭開始
+            if (currentIndex >= img_nums) {
+              currentIndex = 0;
+            }
+
+            // 顯示下一張圖片
+            $(this).closest("figure").find("img").eq(currentIndex).fadeIn();
+            // $slides.eq(currentIndex).fadeIn();
+          }
+        });
       });
     </script>
   </body>
