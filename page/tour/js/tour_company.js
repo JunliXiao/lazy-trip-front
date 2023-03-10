@@ -31,6 +31,7 @@ const trip_end_date = $("input#trip_end_date");
 const people = $("input#people");
 const trip_price = $("input#trip_price");
 const trip_img_upload = document.querySelector("input#trip_img_upload");
+const trip_feature = document.querySelector("input#trip_feature");
 const trip_comfirm_btn = $("button.trip_comfirm_btn");
 const trip_clear_btn = $("button.trip_clear_btn");
 
