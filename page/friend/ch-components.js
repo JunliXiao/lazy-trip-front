@@ -5,6 +5,8 @@ class Chatroom extends HTMLElement {
   CHATROOM_NAME;
   CHATROOM_SINCE;
 
+  static observedAttributes = ["chatroom-active"]
+
   constructor() {
     super();
   }
@@ -12,52 +14,35 @@ class Chatroom extends HTMLElement {
   connectedCallback() {
     this.CHATROOM_ID = this.getAttribute("chatroom-id");
     this.CHATROOM_NAME = this.getAttribute("chatroom-name");
-    let dt = new Date(this.getAttribute("chatroom-created-at") * 1000);
-    let since_string = `建立自 ${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}`;
-    this.CHATROOM_SINCE = since_string;
+    // let dt = new Date(this.getAttribute("chatroom-created-at") * 1000);
+    // let since_string = `建立自 ${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()} ${dt.getHours()}:${dt.getMinutes()}`;
+    // this.CHATROOM_SINCE = since_string;
 
-    this.innerHTML = 
-    `
-    <li>
-      <a class="is-size-5 py-4 _chatroom_name">
-        ${this.CHATROOM_NAME}
-        <span class="is-pulled-right has-text-success">
-          <i class="fas fa-circle"></i>
-        </span>
-      </a>
-    <li>
-    `;
+    let html;
 
-    // this.innerHTML = 
-    // `
-    // <div class="card mb-6 mr-6 has-background-light is-shadowless ">
-    //   <div class="card-content">
+    if (this.getAttribute("chatroom-active") == "true") {
+      html = `
+      <li>
+        <a class="is-size-5 py-4 _chatroom_name">
+          ${this.CHATROOM_NAME}
+          <span class="is-pulled-right has-text-success"><i class="fas fa-circle"></i></span>
+        </a>
+      <li>
+      `
+    } else {
+      html = `
+      <li>
+        <a class="is-size-5 py-4 _chatroom_name">
+          ${this.CHATROOM_NAME}
+        </a>
+      <li>
+      `
+    }
 
-    //     <div class="media">
-    //       <div class="media-left">
-    //       </div>
+    let chatMemberObserver = new Observer(this.CHATROOM_ID);
+    chatMembersObservable.add(chatMemberObserver);
 
-    //       <div class="media-content">
-    //         <div class="columns">
-    //           <div class="column">
-    //             <div class="content">
-    //               <p class="title is-4">${this.CHATROOM_NAME}</p>
-    //               <!-- <p class="subtitle is-6">${this.CHATROOM_SINCE}</p> -->
-    //             </div>
-    //           </div>              
-    //         </div>      
-    //       </div>
-
-    //       <div class="media-right">
-    //         <button class="_start_chat button is-primary is-light is-medium has-text-weight-bold">
-    //         C!
-    //         </button>     
-    //       </div>
-    //   </div>
-    // </div>
-    // `;
-
-
+    this.innerHTML = html;
 
     // 如果沒有設定聊天室本身的名字 (預設一個空格)，改用聊天室成員的暱稱或名字組成
     if(this.CHATROOM_NAME.trim().length === 0) {
@@ -99,7 +84,25 @@ class Chatroom extends HTMLElement {
 
   }
 
-  
+  attributeChangedCallback(attr, prev, curr) {
+    switch (attr) {
+      case "chatroom-active":
+        if (prev == "true" && curr == "false") {
+          document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] span.is-pulled-right`).remove();
+        };
+        if (prev == "false" && curr == "true") {
+          let spanNode = document.createElement("span");
+          spanNode.classList.add("is-pulled-right");
+          spanNode.classList.add("has-text-success");
+          let iNode = document.createElement("i");
+          iNode.classList.add("fas");
+          iNode.classList.add("fa-circle");
+          spanNode.appendChild(iNode);
+          document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).appendChild(spanNode);
+        }
+      break;
+    }
+  }
 
 }
 
@@ -378,7 +381,7 @@ class ChatLogSide extends HTMLElement {
       messageList.appendChild(newItem);
     });
 
-    const webSocket = new WebSocket(`ws://localhost:8080/lazy-trip-back/socket/${specifier_id}?chatroom_id=${this.getAttribute("chatroom-id")}`);
+    const webSocket = new WebSocket(WS_ROOT + `/chat-ws/${specifier_id}`);
 
     webSocket.onopen = (event) => console.log("Connect Success!");
 
@@ -543,36 +546,30 @@ class ChatLogArea extends HTMLElement {
     let messageList = this.shadowRoot.querySelector("ul._msg_list");
 
     this.shadowRoot.querySelector("button.send").addEventListener("click", () => {
-      let msg = this.shadowRoot.querySelector("div.text-box").textContent.trim();
+      let input_div = this.shadowRoot.querySelector("div.text-box");
+      let msg = input_div.textContent.trim();
       if(msg == "") {
         alert("聊天訊息內容不能空白");
       } else {
-        // let newItem = document.createElement("li");
-        // newItem.textContent = msg;
-        // newItem.setAttribute("class", "self");
-        // messageList.appendChild(newItem);
-        const dateTime = Date.now();
-        const timestamp = Math.floor(dateTime / 1000);  
-        let messageContent = new Object();
-        messageContent.senderId = specifier_id;
-        messageContent.chatroomId = this.getAttribute("chatroom-id");
-        messageContent.message = msg;
-        messageContent.sentAt = timestamp;
-        let wrapper = new Object();
-        wrapper.messageType = "new-message";
-        wrapper.messageContent = messageContent;
-        wrapper.memberId = specifier_id;
-        wrapper.chatroomId = this.getAttribute("chatroom-id");
-        webSocket.send(JSON.stringify(wrapper));
+        this.sendMessage(webSocket, msg);
       }
+      input_div.textContent = '';
+      input_div.focus();
     });
 
-    const webSocket = new WebSocket(`ws://localhost:8080/lazy-trip-back/chat-ws/${specifier_id}?chatroom_id=${this.getAttribute("chatroom-id")}`);
+    const webSocket = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
 
-    webSocket.onopen = (event) => console.log("Connect Success!");
+    webSocket.onopen = (event) => {
+      console.log("成功連線到 chat-ws");
+      let wrapper = new Object();
+      wrapper.messageType = "retrieve-history";
+      wrapper.memberId = specifier_id;
+      wrapper.chatroomId = this.getAttribute("chatroom-id");
+      webSocket.send(JSON.stringify(wrapper));
+    };
 
     webSocket.onmessage = (event) => {
-      // console.log(event);
+      console.log(event);
       let wrapper = JSON.parse(event.data);
       
       if (wrapper.messageType == "reload-history") {
@@ -584,6 +581,7 @@ class ChatLogArea extends HTMLElement {
           newItem.textContent = m.message;
           messageList.appendChild(newItem);
         });
+        messageList.scrollTop = messageList.scrollHeight;
 
       } else if (wrapper.messageType == "new-message") {
 
@@ -591,20 +589,28 @@ class ChatLogArea extends HTMLElement {
         let newItem = msg.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
         newItem.textContent = msg.message;
         messageList.appendChild(newItem);
+        messageList.scrollTop = messageList.scrollHeight;
 
-      } else if (wrapper.messageType == "online") {
-
-        console.log(`Member ID ${wrapper.memberId} is online`);
-
-      } else if (wrapper.messageType == "offline") {
-
-        console.log(`Member ID ${wrapper.memberId} is offline`);
-
-      }
-
+      } 
       
     };
 	
+  }
+
+  sendMessage(webSocket, msg) {
+    const dateTime = Date.now();
+    const timestamp = Math.floor(dateTime / 1000);  
+    let messageContent = new Object();
+    messageContent.senderId = specifier_id;
+    messageContent.chatroomId = this.getAttribute("chatroom-id");
+    messageContent.message = msg;
+    messageContent.sentAt = timestamp;
+    let wrapper = new Object();
+    wrapper.messageType = "new-message";
+    wrapper.messageContent = messageContent;
+    wrapper.memberId = specifier_id;
+    wrapper.chatroomId = this.getAttribute("chatroom-id");
+    webSocket.send(JSON.stringify(wrapper));
   }
 }
 
