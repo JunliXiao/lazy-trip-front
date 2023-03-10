@@ -20,6 +20,9 @@ const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
 const API_CHAT_MEMBER = "/api/chat/member";
 
+const WS_ROOT = "ws://localhost:8080/lazy-trip-back";
+let webSocket;
+
 // 頁面初始化
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
@@ -157,6 +160,7 @@ function showChatrooms() {
       newItem.setAttribute("chatroom-id", ch["id"]);
       newItem.setAttribute("chatroom-name", ch["name"]);
       newItem.setAttribute("chatroom-created-at", ch["createdAtUnix"]);
+      newItem.setAttribute("chatroom-active", chatMembersObservable.activeChatrooms.has(ch["id"]));
       node_chatroom_list.appendChild(newItem);
       });
     })

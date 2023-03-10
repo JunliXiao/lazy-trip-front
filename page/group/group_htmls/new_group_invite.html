@@ -100,7 +100,9 @@
         var url = new URL(getUrlString);
         let gpmid = url.searchParams.get("Id"); //
         let decodedStr = decodeURIComponent(url.searchParams.get("gpName"));
-        $("#name_title").html("歡迎加入 " + decodedStr);
+        if (decodedStr != null) {
+          $("#name_title").html("歡迎加入 " + decodedStr);
+        }
         var maxLength = 20;
         //防止輸入上限
         var limitTestFunc = function () {
@@ -173,22 +175,47 @@
                   e.preventDefault();
                   // console.log($("#gp_name").val());
                   // console.log($("#gp_mem_num").val());
-                  console.log();
-                  alert("修改成功!");
-                  // location.href =
-                  //   "http://localhost:8080/lazy-trip-back/page/group/group_htmls/all_invite.html";
+                  //修改自介
+                  var myHeaders = new Headers();
+                  myHeaders.append(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded"
+                  );
+                  myHeaders.append(
+                    "Cookie",
+                    "JSESSIONID=668E58D4C615EAF3AE4703A79EC3DAD9"
+                  );
+
+                  var urlencoded = new URLSearchParams();
+                  urlencoded.append("action", "updateInfo");
+                  urlencoded.append("selfintro", $("#gp_name").val());
+                  urlencoded.append("specialneed", $("#gp_mem_num").val());
+                  urlencoded.append("gp_member", gm_id);
+
+                  var requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: urlencoded,
+                    redirect: "follow",
+                  };
+
+                  fetch(
+                    "http://localhost:8080/lazy-trip-back/groupmembers",
+                    requestOptions
+                  )
+                    .then((response) => response.text())
+                    .then((result) => {
+                      var r = confirm("編輯成功!是否返回邀請頁?");
+                      if (r == true) {
+                        location.href =
+                          "http://localhost:8080/lazy-trip-back/page/group/group_htmls/all_invite.html";
+                      }
+                    })
+                    .catch((error) => console.log("error", error));
                 };
               })
               .catch((error) => console.log("error", error));
           });
-
-        gp_create_el.onclick = (e) => {
-          e.preventDefault();
-
-          alert("修改成功!");
-          location.href =
-            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/all_invite.html";
-        };
       });
     </script>
   </body>
