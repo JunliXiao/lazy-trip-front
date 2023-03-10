@@ -67,7 +67,7 @@
       .onoffswitch-inner:before {
         content: "會員";
         padding-left: 10px;
-        background-color: #2487de;
+        background-color: hsl(197, 85%, 53%);
         color: #ffffff;
       }
       .onoffswitch-inner:after {
@@ -449,6 +449,11 @@
         )
           .toISOString()
           .split("T")[0];
+        // function-------------------
+
+        window.addEventListener("pageshow", function (e) {
+          $(document).find("input#myonoffswitch").prop("checked", true);
+        });
 
         $("input#myonoffswitch").on("change", function () {
           $("div.content-member").toggleClass("-on");
