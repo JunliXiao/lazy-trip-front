@@ -5,7 +5,7 @@ class Chatroom extends HTMLElement {
   CHATROOM_NAME;
   CHATROOM_SINCE;
 
-  static observedAttributes = ["chatroom-active"]
+  static observedAttributes = ["chatroom-active"];
 
   constructor() {
     super();
@@ -46,7 +46,7 @@ class Chatroom extends HTMLElement {
 
     // 如果沒有設定聊天室本身的名字 (預設一個空格)，改用聊天室成員的暱稱或名字組成
     if(this.CHATROOM_NAME.trim().length === 0) {
-      fetch(API_ROOT + API_CHAT_MEMBER + `?chatroom_id=${this.CHATROOM_ID}`)
+      fetch(API_ROOT + API_CHAT_MEMBER + `?action=chatroom_member&chatroom_id=${this.CHATROOM_ID}`)
         .then((res) => res.json())
         .then((members) => 
           {
@@ -100,7 +100,7 @@ class Chatroom extends HTMLElement {
           spanNode.appendChild(iNode);
           document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).appendChild(spanNode);
         }
-      break;
+        break;
     }
   }
 
@@ -747,8 +747,203 @@ class OtherMessage extends ChatMessageTemplate {
 
 }
 
+class CreateChatroomModal extends HTMLElement {
+
+  NODE_DIV_MEMBERS;
+  NODE_INPUT_SEARCH;
+  NODE_NO_RESULTS;
+  NODE_LIST_SEARCH;
+  NODE_BUTTON_CREATE;
+
+  constructor() {
+    super();
+    this.innerHTML = 
+    `
+    <div id="modal-new-chatroom" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">建立新聊天室</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <lable class="label">選擇加入聊天室的會員</lable>
+          <div class="field is-grouped is-grouped-multiline _chatroom_members">
+          </div>
+          <div class="field">
+            <label class="label">搜尋</label>
+            <div class="control">
+              <input
+                class="input is-info"
+                type="text"
+                placeholder="會員暱稱或名字"
+                id="ipt-search-text"
+              />
+            </div>
+          </div>
+          <div class="menu">
+            <p style="display: none">沒有搜尋結果</p>
+            <ul class="menu-list _search_results">
+            </ul>
+            <span class="icon is-large _search_loading" style="display: none">
+              <i class="fas fa-2x fa-spinner fa-pulse"></i>
+            </span>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-info _create_chatroom">建立</button>
+          <button class="button _modal_cancel">取消</button>
+        </footer>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    `;
+
+    this.NODE_DIV_MEMBERS = this.querySelector("div._chatroom_members");
+    this.NODE_INPUT_SEARCH = this.querySelector("#ipt-search-text");
+    this.NODE_BUTTON_CREATE = this.querySelector("button._create_chatroom");
+    this.NODE_LIST_SEARCH = this.querySelector("ul._search_results");
+    this.NODE_NO_RESULTS = this.querySelector("div.menu p");
+
+    this.NODE_INPUT_SEARCH.addEventListener("input", debounce(this.onInputChange, 1500));
+    this.NODE_BUTTON_CREATE.addEventListener("click", (event) => {
+      this.NODE_BUTTON_CREATE.classList.add("is-loading");
+      let members = this.NODE_DIV_MEMBERS.querySelectorAll(`a[class="tag is-info is-light"]`);
+      let arr = [];
+      for (const member of members) {
+        arr.push(member.getAttribute("data-id"));
+      }
+      if (arr.length == 0) {
+        alert("沒有選擇任何成員！");
+      } else {
+        arr.push(specifier_id);
+        this.createChatroom(arr);
+      }
+      
+    });
+
+  }
+
+  async onInputChange(event) {
+    // 驗證查詢字串不為空
+    let search_text = event.target.value.trim();
+
+    // 取得此 DOM 元件和搜尋會員的 API 端點
+    const thisModal = document.querySelector("create-chatroom-modal");
+    const spinner = thisModal.querySelector("span._search_loading");
+
+    if (search_text == '') {
+      thisModal.NODE_LIST_SEARCH.innerHTML = '';
+      thisModal.NODE_NO_RESULTS.style["display"] = "block";
+      return;
+    };
+
+    spinner.style["display"] = "block";
+
+    // 取得 Ajax 回傳資料
+    const ajax_call_url = API_ROOT + API_CHAT_MEMBER + `?action=member&search_text=${search_text}`;
+    const searchResults = await fetch(ajax_call_url).then(response => response.json());
+
+    // 處理回傳結果
+    if (searchResults.length == 0) {
+      thisModal.NODE_LIST_SEARCH.innerHTML = '';
+      spinner.style["display"] = "none";
+      thisModal.NODE_NO_RESULTS.style["display"] = "block";
+    } else {
+      thisModal.NODE_NO_RESULTS.style["display"] = "none";
+      thisModal.NODE_LIST_SEARCH.innerHTML = '';
+      searchResults.forEach(member => {
+        let node = newSearchResult(member);
+        node.addEventListener("click", (event) => {
+          let id = event.target.closest("li").getAttribute("data-id");
+          let nickname = event.target.closest("li").getAttribute("data-nickname");
+
+          // 檢查是否已選擇，存在於，存在於上方 _chatroom_members 區塊
+          let added_members = thisModal.NODE_DIV_MEMBERS.querySelectorAll(`a[class="tag is-info is-light"]`);
+          let canAdd = true;
+          for (let member of added_members) {
+            if (member.getAttribute("data-id") == id) {
+              canAdd = false;
+              break;
+            }
+          }
+
+          if (canAdd) {
+            let newChatMember = newChatroomMember(nickname, id);
+            thisModal.NODE_DIV_MEMBERS.appendChild(newChatMember);
+          } else {
+            alert("已選擇此會員加入，請再選擇其他人");
+          }
+        })
+        thisModal.NODE_LIST_SEARCH.appendChild(node);
+      })
+      spinner.style["display"] = "none";
+    }
+
+    function newSearchResult(member) {
+      let li = document.createElement("li");
+      let a = document.createElement("a");
+      let nickname = member.username == undefined ? member.name : member.username; 
+      a.innerHTML = `<b>${nickname}</b> - ${member.name} - ${member.account}`;
+      li.setAttribute("data-id", member.id)
+      li.setAttribute("data-nickname", nickname);
+      li.appendChild(a);
+      return li;
+    }
+
+    function newChatroomMember(nickname, id) {
+      let aTagNickname = document.createElement("a");
+      let aTagDelete = document.createElement("a");
+      let divTags = document.createElement("div");
+      let divControl = document.createElement("div");
+      aTagNickname.setAttribute("class", "tag is-info is-light");
+      aTagNickname.setAttribute("data-id", id);
+      aTagNickname.textContent = nickname;
+      aTagDelete.setAttribute("class", "tag is-delete");
+      divTags.setAttribute("class", "tags has-addons are-medium");
+      divControl.setAttribute("class", "control");
+      divTags.appendChild(aTagNickname);
+      divTags.appendChild(aTagDelete);
+      divControl.appendChild(divTags);
+      aTagDelete.addEventListener("click", (event) => event.target.closest("div.control").remove());
+      return divControl;
+    }
+  }
+
+  createChatroom(arrayOfMembersId) {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/plain");
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(arrayOfMembersId),
+      redirect: 'follow'
+    };
+
+    fetch(API_ROOT + API_CHAT, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        let resultText = result == true ? "成功建立聊天室" : "成員間已有共同的聊天室";
+        
+        console.log(`${typeof result}: ${result}`);
+        // console.log(result == true);
+        console.log(result === "true");
+        this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+        confirm(resultText);
+      })
+      .catch(error => {
+        this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+        console.log('error', error);
+        alert("發生錯誤");
+      });
+  }
+
+}
+
 customElements.define("chatroom-component", Chatroom);
 customElements.define("chatlog-side-component", ChatLogSide);
 customElements.define("chatlog-area-component", ChatLogArea);
 customElements.define("msg-self", SelfMessage);
 customElements.define("msg-other", OtherMessage);
+customElements.define("create-chatroom-modal", CreateChatroomModal);
