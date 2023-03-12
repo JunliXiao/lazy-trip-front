@@ -1,120 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LazyTrip.io</title>
-    <!-- Bulma 原廠 -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
     <!-- Bulma 自訂 -->
     <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
-    <!-- 自定義 CSS -->
-    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- jQuery -->
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
     <!-- Font Awesome -->
-    <!-- 另外找的網址 -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-      crossorigin="anonymous"
-    />
-    <!-- 俊立的網址 -->
-    <!-- <script
+    <script
       src="https://kit.fontawesome.com/0548105e54.js"
       crossorigin="anonymous"
-    ></script> -->
-    <style>
-      * {
-        box-sizing: border-box;
-      }
-      main {
-        width: 65%;
-      }
-      aside {
-        width: 35%;
-      }
-      .redstar {
-        color: red;
-      }
-    </style>
+    ></script>
+    <!-- 共用元件 -->
+    <script
+      defer
+      src="../../asset/js/components.js"
+      type="text/javascript"
+    ></script>
+    <!-- 初始化 -->
+    <!-- <script defer src="../../asset/js/bulma-init.js"></script> -->
   </head>
   <body>
     <!-- 導覽列 -->
-    <nav
-      class="navbar has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <!-- Logo -->
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <!-- <img
-            src="https://bulma.io/images/bulma-logo.png"
-            width="112"
-            height="28"
-          /> -->
-          <strong>LazyTrip.io</strong>
-        </a>
-
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div id="navbarBasicExample" class="navbar-menu">
-        <!-- 靠左 -->
-        <div class="navbar-start"></div>
-
-        <!-- 靠右 -->
-        <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon"><i class="fas fa-plus"></i></span>
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 新的行程 </a>
-              <a class="navbar-item"> 新的揪團 </a>
-            </div>
-          </div>
-
-          <a href="#" class="navbar-item"> 揪團 </a>
-
-          <a href="#" class="navbar-item"> 行程 </a>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon-text"
-                ><span class="icon"><i class="fas fa-user"></i></span
-                ><span>周杰倫</span></span
-              >
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 我的頁面 </a>
-              <a class="navbar-item"> 我的訂單 </a>
-              <a class="navbar-item"> 我的好友 </a>
-              <a class="navbar-item"> 我的文章 </a>
-              <hr class="navbar-divider" />
-              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <header-component></header-component>
 
     <!-- 內容 -->
-
-    <!-- 內容跟導航列間距 高度長20px -->
-    <div style="height: 20px"></div>
 
     <!-- 飯店資料結構 欄位寬度佔畫面8/12 欄位居中 -->
     <div
@@ -123,6 +36,8 @@
     >
       <div id="bookingChildrenStart" class="column is-8">
         <!-- 填寫訂單開始 -->
+        <!-- 與導覽列間距 -->
+        <div style="height: 40px"></div>
         <div
           style="
             display: flex;
@@ -230,7 +145,7 @@
               </div>
               <div style="height: 5%; display: flex; justify-content: center">
                 <div
-                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+                  style="height: 1px; width: 86%; border: 1px solid #cbe3ec"
                 ></div>
               </div>
               <div
@@ -370,32 +285,13 @@
           </div>
         </div>
         <!-- 填寫訂單結束 -->
+        <!-- 與頁腳間距 -->
+        <div style="height: 30px"></div>
       </div>
     </div>
 
     <!-- 頁尾 -->
-    <footer class="footer">
-      <div class="columns is-mobile">
-        <!--這行常富多加了is-mobile 因為頁腳要響應式-->
-        <div class="column">
-          <div class="content">
-            <h4>關於</h4>
-            <p>
-              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
-              TGA105 梯第三組所製作之結訓專題。
-            </p>
-          </div>
-        </div>
-        <div class="column">
-          <div class="content">
-            <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <script src="../../asset/js/bulma-init.js"></script>
-    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
+    <footer-component></footer-component>
 
     <script>
       let cmBookingList;
@@ -558,7 +454,7 @@
                 alert("發生一些問題，請重新登入再填寫訂單");
               } else if (orderID > 0) {
                 sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
-                location.href = "./付款頁面.html";
+                location.href = "./order_pay_order.html";
               }
             } catch (e) {
               console.log("catch: " + e);
