@@ -87,7 +87,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
     	</button></a>
 
 	</div>
-
+<section class="section">
 	<table
 		class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" 
 		style="table-layout:fixed;"
@@ -141,7 +141,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 
 
 	</table>
-
+</section>
 
 
 
