@@ -91,6 +91,17 @@
     <footer-component></footer-component>
     <script>
       window.addEventListener("load", function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         let gp_create_el = document.getElementById("gp_create");
         let gp_name_el = document.getElementById("gp_name");
         let gp_mem_num_el = document.getElementById("gp_mem_num");
@@ -124,9 +135,7 @@
         limitTestFunc();
         //使用者id驗證
         //得到使用者
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
-        )
+        fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
             user_id = data.id;
@@ -152,16 +161,15 @@
               redirect: "follow",
             };
 
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers",
-              requestOptions
-            )
+            fetch(apiUrlGroupMembers, requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 if (user_id != result.memberid) {
                   alert("請確認資訊");
                   location.href =
-                    "http://localhost:8080/lazy-trip-back/page/group/group_htmls/all_invite.html";
+                    baseUrl +
+                    contextPath +
+                    "/page/group/group_htmls/all_invite.html";
                 } else {
                   console.log(result.selfintro);
                   $("#gp_name").val(result.selfintro);
@@ -199,22 +207,24 @@
                     redirect: "follow",
                   };
 
-                  fetch(
-                    "http://localhost:8080/lazy-trip-back/groupmembers",
-                    requestOptions
-                  )
+                  fetch(apiUrlGroupMembers, requestOptions)
                     .then((response) => response.text())
                     .then((result) => {
                       var r = confirm("編輯成功!是否返回邀請頁?");
                       if (r == true) {
                         location.href =
-                          "http://localhost:8080/lazy-trip-back/page/group/group_htmls/all_invite.html";
+                          baseUrl +
+                          contextPath +
+                          "/page/group/group_htmls/all_invite.html";
                       }
                     })
                     .catch((error) => console.log("error", error));
                 };
               })
-              .catch((error) => console.log("error", error));
+              .catch((error) => {
+                alert("請確認資訊!");
+                location.href = baseUrl + contextPath + "/index.html";
+              });
           });
       });
     </script>

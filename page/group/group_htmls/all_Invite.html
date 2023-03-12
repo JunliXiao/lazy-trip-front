@@ -93,6 +93,17 @@
     <footer-component></footer-component>
     <script>
       window.onload = function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         let gp_amend_el = document.getElementById("btn_gp_amend");
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
@@ -103,18 +114,14 @@
         let status_html;
         let join_how_html;
         //得到使用者
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
-        )
+        fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
             // console.log(data);
             user_id = data.id;
 
             //取得資料
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers?action=getAllInvite"
-            )
+            fetch(apiUrlGroupMembers + "?action=getAllInvite")
               .then((response) => response.json())
               .then((result) => {
                 console.log(result);
@@ -222,14 +229,13 @@
               redirect: "follow",
             };
 
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers",
-              requestOptions
-            )
+            fetch(apiUrlGroupMembers, requestOptions)
               .then((response) => response.text())
               .then((result) => {
                 let url =
-                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/new_group_invite.html";
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/new_group_invite.html";
                 url += "?Id=" + $("input.mems:checked").val();
                 url += "&gpName=" + encodedStr;
                 location.href = url;
@@ -258,7 +264,8 @@
               };
 
               fetch(
-                "http://localhost:8080/lazy-trip-back/groupmembers?action=deleteInvite&gp_member=" +
+                apiUrlGroupMembers +
+                  "?action=deleteInvite&gp_member=" +
                   $("input.mems:checked").val(),
                 requestOptions
               )
