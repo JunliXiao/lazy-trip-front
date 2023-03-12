@@ -75,46 +75,9 @@
               style="display: flex; flex-wrap: wrap"
               id="trips"
             >
-              <!-- 第一個card -->
-              <div class="column item">
-                <div class="card card1">
-                  <div class="card-image">
-                    <figure class="image is-2by1" style="overflow: hidden">
-                      <img class="trip_item_img" src="./01.jpg" alt="" />
-                    </figure>
-                  </div>
-                  <div class="card-content" style="padding: 10px">
-                    <div class="trip_item_block">
-                      <h2 class="title is-4" style="margin: 0px">台北七日遊</h2>
-                      <time datetime="2023-1-1">2023-1-1 ~ 2023-1-7</time>
-                      <div class="trip_tag_place">
-                        <ul style="display: flex"></ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div id="my-div" class="loading">
+                <div class="spinner"></div>
               </div>
-              <!---->
-              <!-- 第一個card -->
-              <div class="column item">
-                <div class="card card1">
-                  <div class="card-image">
-                    <figure class="image is-2by1" style="overflow: hidden">
-                      <img class="trip_item_img" src="./01.jpg" alt="" />
-                    </figure>
-                  </div>
-                  <div class="card-content" style="padding: 10px">
-                    <div class="trip_item_block">
-                      <h2 class="title is-4" style="margin: 0px">台北七日遊</h2>
-                      <time datetime="2023-1-1">2023-1-1 ~ 2023-1-7</time>
-                      <div class="trip_tag_place">
-                        <ul style="display: flex"></ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!---->
             </div>
             <div class="column is-1"></div>
           </div>
@@ -229,7 +192,12 @@
             maxlength="20"
           />
         </div>
-        <button name="" id="new_content_btn">提交</button>
+        <button
+          class="button is-small is-info is-outlined"
+          id="new_content_btn"
+        >
+          提交
+        </button>
       </div>
     </div>
 
@@ -237,6 +205,19 @@
     <footer-component></footer-component>
     <script>
       window.addEventListener("load", function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+        const apiUrlFriend = baseUrl + contextPath + "/api/friend";
+        const apiUrltourQueryOne = baseUrl + contextPath + "/tourQueryOne";
+
         let invite_fd_el = document.getElementById("invite_fd");
         let group_mem_total;
         let member_limit;
@@ -245,11 +226,11 @@
         let close_alert = document.getElementById("alert_ok");
         let gp_id_list = []; //for friend use
         let user_id;
-        //----------旅程ok
-        $("#alert_ok2").click(function () {
-          show_alert2.style.display = "none";
-        });
-        //----------
+        let tour_to_do_id = 0;
+        let tour_to_do_name = "";
+        let tour_to_do_startdate = "";
+        let tour_to_do_enddate = "";
+
         //提交內容
         $("#new_content_btn").click(function () {
           var value = $("#new_content_input").val();
@@ -281,10 +262,7 @@
               redirect: "follow",
             };
 
-            fetch(
-              "http://localhost:8080/lazy-trip-back/discussion",
-              requestOptions
-            )
+            fetch(apiUrlDiscussion, requestOptions)
               .then((response) => response.text())
               .then((result) => {
                 //重整留言內容
@@ -325,8 +303,7 @@
         //   body: urlencoded,
         //   redirect: "follow",
         // };
-        let url1 =
-          "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
+        let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
         // console.log(url1 + gpid);
         let group_manager_id;
         fetch(url1 + gpid)
@@ -348,8 +325,7 @@
               };
 
               fetch(
-                "http://localhost:8080/lazy-trip-back/group?action=getTourInfo&tourid=" +
-                  data[0].tourid,
+                apiUrlGroup + "?action=getTourInfo&tourid=" + data[0].tourid,
                 requestOptions
               )
                 .then((response) => response.json())
@@ -362,10 +338,7 @@
                 .catch((error) => console.log("error", error));
             }
             //載入成員列表
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers?action=getGroupMems&groupid=" +
-                gpid
-            )
+            fetch(apiUrlGroupMembers + "?action=getGroupMems&groupid=" + gpid)
               .then((response) => response.json())
               .then((data) => {
                 console.log(data);
@@ -432,10 +405,112 @@
         $(".trip_name").click(function () {
           if (group_manager_id == user_id) {
             show_alert2.style.display = "block";
+            $(".wrapper")
+              .html(`<div id="my-div" class="loading" style="display: none;">
+                <div class="spinner"></div>
+              </div>`);
+            var tour_list_html;
+            var tour_img;
+            $(".loading").css("display", "flex");
+            var requestOptions = {
+              method: "GET",
+              redirect: "follow",
+            };
+
+            fetch(
+              apiUrltourQueryOne + "?memberId=" + group_manager_id,
+              requestOptions
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                $(".loading").css("display", "none");
+                $.each(result, function (index, item) {
+                  if (item.tourImg != null) {
+                    // console.log("有喔");
+                    tour_img = "data:image/*;base64," + item.tourImg;
+                  } else {
+                    tour_img = "./01.jpg";
+                  }
+                  tour_list_html = `<div class="column item item1" id="${item.tourId}">
+                    <input type="hidden" name="tour_id" value="${item.tourId}">
+                    <input type="hidden" name="tour_name" value="${item.tourTitle}">
+                    <input type="hidden" name="tour_start" value="${item.startDate}">
+                    <input type="hidden" name="tour_end" value="${item.endDate}">                   
+                <div class="card card1">
+                  <div class="card-image">
+                    <figure class="image is-2by1" style="overflow: hidden">
+                      <img class="trip_item_img" src=${tour_img} alt="" />
+                    </figure>
+                  </div>
+                  <div class="card-content tour" style="padding: 10px">
+                    <div class="trip_item_block">
+                      <h2 class="title is-4" style="margin: 0px">${item.tourTitle}</h2>
+                      <time datetime="2023-1-1">${item.startDate} ~ ${item.endDate}</time>
+                      <div class="trip_tag_place">
+                        <ul style="display: flex"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+                  $(".wrapper").append(tour_list_html);
+                });
+              })
+              .then(() => {
+                $(".item1").click(function (e) {
+                  if ($(this).find(".card-content").hasClass("tourChosen")) {
+                    $(".tour").removeClass("tourChosen");
+                    tour_to_do_id = 0;
+                  } else {
+                    $(".tour").removeClass("tourChosen");
+                    $(this).find(".card-content").toggleClass("tourChosen");
+                    tour_to_do_id = $(this).find("input[name='tour_id']").val();
+                    tour_to_do_name = $(this)
+                      .find("input[name='tour_name']")
+                      .val();
+                    tour_to_do_startdate = $(this)
+                      .find("input[name='tour_start']")
+                      .val();
+                    tour_to_do_enddate = $(this)
+                      .find("input[name='tour_end']")
+                      .val();
+                    console.log(tour_to_do_id);
+                  }
+                });
+              })
+              .catch((error) => console.log("error", error));
           } else {
             alert("沒有權限!");
           }
         });
+        //----------旅程ok
+        $("#alert_ok2").click(function () {
+          if (tour_to_do_id != 0) {
+            var requestOptions = {
+              method: "PUT",
+              redirect: "follow",
+            };
+
+            fetch(
+              apiUrlGroup +
+                "?action=groupSetTour&groupId=" +
+                gpid +
+                "&tourId=" +
+                tour_to_do_id,
+              requestOptions
+            )
+              .then((response) => response.text())
+              .then((result) => {
+                $(".trip_name").html(tour_to_do_name);
+                $("#group_start_date").html(tour_to_do_startdate + " ->");
+                $("#group_end_date").html(tour_to_do_enddate);
+              })
+              .catch((error) => console.log("error", error));
+          }
+          show_alert2.style.display = "none";
+        });
+        //----------
         //點擊設定:
         $("#group_setting").click(function () {
           // console.log(group_manager_id);
@@ -448,7 +523,9 @@
                 $("#gp_main_gpname").html(data.groupname);
                 group_manager_id = data.memberid;
                 let a1 =
-                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_setting.html?groupid=";
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/group_setting.html?groupid=";
                 location.href = a1 + data[0].groupid;
               })
               .catch((error) => console.log("error", error));
@@ -483,10 +560,7 @@
               redirect: "follow",
             };
 
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers",
-              requestOptions
-            )
+            fetch(apiUrlGroupMembers, requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 console.log(result);
@@ -496,9 +570,7 @@
               })
               .then(() => {
                 //get好友
-                fetch(
-                  `http://localhost:8080/lazy-trip-back/api/friend?member_id=${user_id}&query_type=friend`
-                )
+                fetch(`${apiUrlFriend}?member_id=${user_id}&query_type=friend`)
                   .then((response) => response.json())
                   .then((result) => {
                     console.log(result);
@@ -577,10 +649,7 @@
               redirect: "follow",
             };
 
-            fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers",
-              requestOptions
-            )
+            fetch(apiUrlGroupMembers, requestOptions)
               .then((response) => response.text())
               .then((result) => {
                 $("#fr_list").html("");
@@ -603,10 +672,7 @@
         limitTestFunc();
         //顯示群組留言func()
         var showContents = function () {
-          fetch(
-            "http://localhost:8080/lazy-trip-back/discussion?action=getGroupCons&groupid=" +
-              gpid
-          )
+          fetch(apiUrlDiscussion + "?action=getGroupCons&groupid=" + gpid)
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
@@ -699,7 +765,8 @@
                     };
 
                     fetch(
-                      "http://localhost:8080/lazy-trip-back/discussion?action=delDiscussion&discussionId=" +
+                      apiUrlDiscussion +
+                        "?action=delDiscussion&discussionId=" +
                         item.discussion,
                       requestOptions
                     )

@@ -1,16 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.util.*"%>
-<%@ page import="com.article.model.*"%>
-
-
-<%
-    ArticleService articleSvc = new ArticleService();
-    List<ArticleVO> list = articleSvc.getAll();
-    pageContext.setAttribute("list",list);
-%>
-
 <!DOCTYPE html>
 <html lang="zh-TW">
   <head>
@@ -118,37 +108,9 @@
     新增
     </button></a>
     </div>
-    
-    
+
 <section class="section">
-
-		<div class="container">
-			<div class="columns is-centered">
-				<div class="column is-half">
-					<form method="post"
-						action="<%=request.getContextPath()%>/article/ArticleServlet2">
-						<div class="field has-addons">
-							<div class="control is-expanded">
-								<input class="input is-rounded" type="text" placeholder="輸入關鍵字"
-									name="select">
-							</div>
-							<div class="control">
-								<button class="button is-link is-outlined">搜尋</button>
-							</div>
-						</div>
-						<input type="hidden" name="action" value="search">
-					</form>
-				</div>
-			</div>
-		</div>
-
-
-
-
-
-
-
-		<table
+  <table
       class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth "
     >
 		<tr>
@@ -162,7 +124,7 @@
 		<th class="has-background-primary-light has-text-primary">行程編號</th>
 		<th class="has-background-primary-light has-text-primary">查看文章</th>
 	</tr>
-	<c:forEach var="articleVO" items="${list}" >
+	<c:forEach var="articleVO" items="${Msgs}" >
 		<tr>
 			<td>${articleVO.articleId}</td>
 			<td>${articleVO.articleTitle}</td>
@@ -183,13 +145,10 @@
 
     </table>
 </section>
-    
-    
-    
-    
-    
 
-    <footer class="footer">
+
+
+   <footer class="footer">
       <div class="columns">
         <div class="column">
           <div class="content">
@@ -210,5 +169,6 @@
     </footer>
 
     <script src="../../asset/js/bulma-init.js"></script>
-  </body>
+
+</body>
 </html>

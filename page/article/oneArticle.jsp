@@ -6,17 +6,16 @@
 <%@ page import="java.util.*"%>
 
 
-${articleVO.articleId}
-${articleVO.articleDate}
+<%-- ${articleVO.articleId} --%>
+<%-- ${articleVO.articleDate} --%>
+<%-- ${articleImageVO.image} --%>
 <%
-  ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServlet.java(Concroller), 存入req的empVO物件
+ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServlet.java(Concroller), 存入req的empVO物件
+
 
   
-  ArticleImageVO articleImageVO = (ArticleImageVO)request.getAttribute("articleImageVO");
-  
-  
+//   ArticleImageVO articleImageVO = (ArticleImageVO)request.getAttribute("articleImageVO");
 %>
-${articleImageVO.image}
 
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -108,6 +107,7 @@ ${articleImageVO.image}
 		<button class="button is-link is-outlined " style="margin-left: 990px">新增</button>
 
 	</div>
+	<section class="section">
        <table
       class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth "
     >
@@ -126,13 +126,16 @@ ${articleImageVO.image}
     </table>
     
 
-
     <div class="columns" style="margin-left: 5px;">
       <div class="column is-three-fifths">
         <div>文章內容 ${articleVO.articleContent}</div>
-        <div>圖片 ${articleImageVO.image}</div>
+        <div>圖片 
+        <img src="<%=request.getContextPath()%>/article/ArticleServlet2?articleId=${articleVO.articleId}" 
+        alt="" width="200" height="200">
+        </div>
       </div>
     </div>
+    </section>
 
 
 
@@ -141,7 +144,7 @@ ${articleImageVO.image}
 
 
 
-<span style="font-size: 24px; color:red;">Test123</span>
+<!-- <span style="font-size: 24px; color:red;">Test123</span> -->
 <hr>
 
 

@@ -126,12 +126,22 @@
     <footer-component></footer-component>
     <script>
       window.onload = function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         let gp_amend_el = document.getElementById("btn_gp_amend");
         let set_check_join = document.getElementById("check_join");
         let set_any_join = document.getElementById("any_join");
         let btn_amend = document.getElementById("btn_uncheckmem");
-        let url1 =
-          "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
+        let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
         // console.log(url1 + gpid);
         let group_manager_id;
         let getUrlString = location.href;
@@ -141,9 +151,7 @@
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
 
         //加載時的fetch，得到使用者
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
-        )
+        fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
@@ -179,7 +187,8 @@
                   "JSESSIONID=31AC4F68B68FCD3E277BEFD31DF0A5E3"
                 );
                 fetch(
-                  "http://localhost:8080/lazy-trip-back/groupmembers?action=getGroupMemsInList&groupid=" +
+                  apiUrlGroupMembers +
+                    "?action=getGroupMemsInList&groupid=" +
                     gpid
                 )
                   .then((response) => response.json())
@@ -273,8 +282,7 @@
                   .catch((error) => console.log("error", error));
               })
               .then(() => {
-                let url_del_mems =
-                  "http://localhost:8080/lazy-trip-back/groupmembers?action=opGroupMember";
+                let url_del_mems = apiUrlGroupMembers + "?action=opGroupMember";
                 gp_amend_el.onclick = (e) => {
                   e.preventDefault();
                   var to_del_mems = $("input.mems:checked");
@@ -307,10 +315,7 @@
                         redirect: "follow",
                       };
 
-                      fetch(
-                        "http://localhost:8080/lazy-trip-back/groupmembers",
-                        requestOptions
-                      )
+                      fetch(apiUrlGroupMembers, requestOptions)
                         .then((response) => response.text())
                         .then((result) => {
                           alert("新增成功!");
@@ -360,10 +365,7 @@
                         redirect: "follow",
                       };
 
-                      fetch(
-                        "http://localhost:8080/lazy-trip-back/groupmembers",
-                        requestOptions
-                      )
+                      fetch(apiUrlGroupMembers, requestOptions)
                         .then((response) => response.text())
                         .then((result) => {
                           alert("拒絕成功!");
@@ -393,7 +395,9 @@
         });
         $("#back").click(() => {
           location.href =
-            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=" +
+            baseUrl +
+            contextPath +
+            "/page/group/group_htmls/group_main.html?groupid=" +
             gpid;
         });
       };

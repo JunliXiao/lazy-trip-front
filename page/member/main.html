@@ -143,7 +143,7 @@
             <div class="tile is-child"></div>
             <div class="tile is-child is-2">
               <button
-                class="button js-modal-trigger mt-3"
+                class="button js-modal-trigger mt-3 mb-4"
                 data-target="modal-self-edit"
               >
                 <span class="icon">
@@ -151,6 +151,12 @@
                 </span>
                 <span>編輯個人資料</span>
               </button>
+              <a class="button mt-4" href="forgetps.html">
+                <span class="icon">
+                  <i class="fa-solid fa-key"></i>
+                </span>
+                <span>修改密碼</span>
+              </a>
             </div>
           </div>
         </div>
@@ -360,6 +366,7 @@
               class="textarea is-medium"
               placeholder="個人簡介"
               id="input-intro"
+              style="resize: none"
             >
             </textarea>
           </div>
@@ -396,6 +403,7 @@
 
               <nav class="level">
                 <div class="level-left">
+                  <div class="oldImgInfo" style="width: 200px"></div>
                   <div class="ml-4" id="oldImg" style="display: none"></div>
                   <div class="level-item">
                     <div id="newImgInfo"></div>
@@ -405,8 +413,8 @@
               </nav>
               <div id="oldImg" style="display: none"></div>
 
-              <div id="newImgInfo"></div>
-              <div id="newImg"></div>
+              <!-- <div id="newImgInfo"></div>
+              <div id="newImg"></div> -->
             </div>
           </div>
         </section>
@@ -970,8 +978,6 @@
           // location.href = "main.html";
         });
 
-        $("");
-
         updateCount();
         getData();
         listPosts();
@@ -1045,12 +1051,12 @@
               height = this.height,
               fileSize = Math.round(file.size / 1000),
               html = "";
-            html += "<div style='width:200px'>";
+            // html += "<div class='oldImgInfo' style='width:200px'>";
             html += "<p>原始圖片尺寸 " + width + "x" + height + "</p>";
             html += "<p>檔案大小約 " + fileSize + "k</p>";
-            html += "</div>";
+            // html += "</div>";
 
-            $("#oldImg").before(html);
+            $(".oldImgInfo").html(html);
           };
 
           function displayNewImgInfo(src) {

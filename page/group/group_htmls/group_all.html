@@ -39,9 +39,7 @@
     <section class="section" id="gps" style="margin: auto; text-align: center">
       <ul class="group_list">
         <li>
-          <a
-            href="http://localhost:8080/lazy-trip-back/page/group/group_htmls/new_group.html"
-          >
+          <a href="#">
             <div class="one_gp card">
               <p class="title" style="font-size: 30px; text-align: center">
                 建立揪團
@@ -58,6 +56,17 @@
       $(function () {
         // console.log($(".group_list").html);
 
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -73,10 +82,7 @@
           redirect: "follow",
         };
 
-        fetch(
-          "http://localhost:8080/lazy-trip-back/groupmembers",
-          requestOptions
-        )
+        fetch(apiUrlGroupMembers, requestOptions)
           .then((response) => response.json())
           .then((result) => {
             console.log(result);
@@ -84,7 +90,9 @@
             if (result.length != 0) {
               $.each(result, function (index, item) {
                 let a =
-                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=";
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/group_main.html?groupid=";
 
                 list_html += '<li><a href="';
                 list_html += a + item.groupid;

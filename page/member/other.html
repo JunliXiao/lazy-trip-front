@@ -108,8 +108,13 @@
                 <span class="icon">
                   <i class="fa-solid fa-gear"></i>
                 </span>
-                <span>編輯個人資料</span>
-              </button> -->
+                <span>編輯個人資料</span> -->
+              <button class="button mt-3 add-friend">
+                <span class="icon">
+                  <i class="fa-solid fa-user-group"></i>
+                </span>
+                <span class="text">加為好友</span>
+              </button>
             </div>
           </div>
         </div>
@@ -174,6 +179,11 @@
         let lookForMemberId = new URLSearchParams(location.search);
         let otherMemId = lookForMemberId.get("member_id");
 
+        const ROOT = "http://localhost:8080/lazy-trip-back";
+        const LOGIN = "/page/login.html";
+        const API_RELATION = "/api/relation";
+        const API_FRIEND_REQUEST = "/api/friend/request";
+
         // ------------------------------
 
         function getCookie(name) {
@@ -211,6 +221,53 @@
             }
           }
         });
+
+        $("button.add-friend").on("click", function () {
+          if (getCookie("memId") == null) {
+            let loc = location.href;
+            sessionStorage.setItem("loc", loc);
+            location.href = ROOT + LOGIN;
+          } else {
+            fetch(
+              ROOT +
+                API_FRIEND_REQUEST +
+                `?addressee_id=${otherMemId}&requester_id=${getCookie(
+                  "memId"
+                )}`,
+              {
+                method: "POST",
+              }
+            )
+              .then(function (resp) {
+                if (resp.ok) {
+                  alert("好友邀請成功");
+                  getRelationShip();
+                }
+              })
+              .catch(function (error) {
+                // 發生任何錯誤，就會執行 catch 裡的程式
+                console.log("錯誤資訊");
+                console.log(error); // 這裡取得錯誤資訊：error
+              });
+          }
+        });
+
+        function getRelationShip() {
+          if (getCookie("memId") != null) {
+            fetch(
+              ROOT +
+                API_RELATION +
+                `?specifier_id=${otherMemId}&other_id=${getCookie("memId")}`
+            )
+              .then((resp) => resp.json())
+              .then((relation) => {
+                if (relation.isRelated == "true") {
+                  $("button.add-friend").attr("disabled", true);
+                  $("button.add-friend span.text").text(relation.type);
+                }
+              });
+          }
+        }
 
         function getData() {
           let mem_username = $(document).find("span.mem_username");
@@ -467,8 +524,9 @@
 
         getData();
         listPosts();
+        getRelationShip();
 
-        // 圖片輪播
+        // 圖片輪播-----------------------
         // 選取輪播圖片容器
         var $slideshow = $(".slideshow");
 

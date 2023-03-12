@@ -2,8 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="com.article.model.*"%>
+<%@ page import="com.articleImage.model.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
+
 
 <%
 // String adminId = "1";
@@ -55,7 +57,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 							class="fas fa-plus"></i></span>
 					</a>
 					<div class="navbar-dropdown">
-						<a class="navbar-item"> 新的行程 </a> <a class="navbar-item"> 新的揪團
+						<a class="navbar-item"> 新的行程 </a> <a class="navbar-item"> 新的揪 團
 						</a>
 					</div>
 				</div>
@@ -96,7 +98,8 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 		</ul>
 	</c:if>
 
-	<FORM METHOD="post" ACTION="ArticleServlet2" name="form1">
+	<section class="section">
+	<FORM METHOD="post" ACTION="ArticleServlet2" name="form1" enctype="multipart/form-data">
 		<table style="margin-left: 10px">
 			<tr>
 				<td>文章標題:</td>
@@ -115,51 +118,42 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 				</td>
 			</tr>
 
-<!-- 			<tr> -->
-<!-- 				<td>新增圖片：</td> -->
-<!-- 				<td> -->
-<!-- 					<div id="file-js-example" class="file has-name"> -->
-<!-- 						<label class="file-label"> <input class="file-input" -->
-<!-- 							type="file" name="resume" multiple="multiple"> <span class="file-cta"> -->
-<!-- 								<span class="file-icon"> <i class="fas fa-upload"></i> -->
-<!-- 							</span> <span class="file-label"> 選擇圖片 </span> -->
-<!-- 						</span> <span class="file-name"> 未選擇圖片 </span> -->
-<!-- 						</label> -->
-<!-- 					</div> -->
-<!-- 				<script> -->
-// 				  const fileInput = document.querySelector('#file-js-example input[type=file]');
-// 				  fileInput.onchange = () => {
-// 				    if (fileInput.files.length > 0) {
-// 				      const fileName = document.querySelector('#file-js-example .file-name');
-// 				      fileName.textContent = fileInput.files[0].name;
-// 				    }
-// 				  }
-<!-- 				</script> -->
-<!-- 				</td> -->
-
-<!-- 			</tr> -->
-
 			<tr>
 				<td>新增圖片：</td>
-				<td><input type="file" name="image" multiple="multiple"></td>
-
+				<td>
+					<div id="file-js-example" class="file has-name">
+						<label class="file-label">
+						 <input class="file-input"
+							type="file" name="articleImage"  value="<%=(articleVO == null) ? "" : articleVO.getArticleImage()%>">
+							 <span class="file-cta">
+								<span class="file-icon"> <i class="fas fa-upload"></i>
+							</span> <span class="file-label"> 選擇圖片 </span>
+						</span> <span class="file-name"> 未選擇圖片 </span>
+						</label>
+					</div>
+				</td>
 			</tr>
+			
 
+<!-- 			<tr> -->
+<!-- 				<td>新增圖片：</td> -->
+<%-- 				<td><input type="file" name="articleImage" value="<%=(articleVO == null) ? "" : articleVO.getArticleImage()%>"></td> --%>
+<!-- 			</tr> -->
 
 			<tr>
 				<td>日期:</td>
 				<td><input name="articleDate" id="f_date1" type="text"
-					readonly="readonly"></td>
+					readonly="readonly" style="border: none"></td>
 			</tr>
 
 			<tr>
 				<td>行程編號:</td>
 				<td><input type="TEXT" name="tourId" size="45"
-					readonly="readonly"
+					readonly="readonly" style="border: none"
 					value="<%=(articleVO == null) ? "1" : articleVO.getTourId()%>" /></td>
 			</tr>
 
-
+			
 		</table>
 		<br> <input type="hidden" name="action" value="insert">
 		<button class="button is-link is-outlined" style="margin-left: 10px">送出新增
@@ -167,7 +161,18 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 
 
 	</FORM>
-
+	</section>
+	
+	
+<script>
+  const fileInput = document.querySelector('#file-js-example input[type=file]');
+  fileInput.onchange = () => {
+    if (fileInput.files.length > 0) {
+      const fileName = document.querySelector('#file-js-example .file-name');
+      fileName.textContent = fileInput.files[0].name;
+    }
+  }
+</script>
 
 
 

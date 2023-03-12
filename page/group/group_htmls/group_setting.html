@@ -42,7 +42,12 @@
             <div class="field">
               <label class="label" for="gp_name">揪團名稱</label>
               <div class="control">
-                <input class="input" type="text" name="gp_name" id="gp_name" />
+                <input
+                  class="input input1"
+                  type="text"
+                  name="gp_name"
+                  id="gp_name"
+                />
               </div>
             </div>
 
@@ -141,6 +146,17 @@
     <footer-component></footer-component>
     <script>
       window.onload = function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         let gp_amend_el = document.getElementById("btn_gp_amend");
         let gp_name_el = document.getElementById("gp_name");
         let gp_mem_num_el = document.getElementById("gp_mem_num");
@@ -161,17 +177,13 @@
           "Cookie",
           "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
         );
-        let url1 =
-          "http://localhost:8080/lazy-trip-back/group?action=getOneGroup&groupid=";
+        let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
         // console.log(url1 + gpid);
         let group_manager_id;
 
         //得到群組目前人數
         let getGpMemFunc = function () {
-          fetch(
-            "http://localhost:8080/lazy-trip-back/groupmembers?action=getGroupMems&groupid=" +
-              gpid
-          )
+          fetch(apiUrlGroupMembers + "?action=getGroupMems&groupid=" + gpid)
             .then((response) => response.json())
             .then((data) => {
               console.log(data);
@@ -229,9 +241,7 @@
         };
 
         //加載時的fetch，得到使用者
-        fetch(
-          "http://localhost:8080/lazy-trip-back/group?action=getUsingMember"
-        )
+        fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
@@ -295,8 +305,7 @@
             };
 
             fetch(
-              "http://localhost:8080/lazy-trip-back/groupmembers?action=delAllGroupMember&groupid=" +
-                gpid,
+              apiUrlGroupMembers + "?action=delAllGroupMember&groupid=" + gpid,
               requestOptions
             )
               .then((response) => response.text())
@@ -315,8 +324,7 @@
                 };
 
                 fetch(
-                  "http://localhost:8080/lazy-trip-back/discussion?action=delAllDis&groupid=" +
-                    gpid,
+                  apiUrlDiscussion + "?action=delAllDis&groupid=" + gpid,
                   requestOptions
                 )
                   .then((response) => response.text())
@@ -334,15 +342,16 @@
                       redirect: "follow",
                     };
                     fetch(
-                      "http://localhost:8080/lazy-trip-back/group?action=delOneGroup&groupid=" +
-                        gpid,
+                      apiUrlGroup + "?action=delOneGroup&groupid=" + gpid,
                       requestOptions
                     )
                       .then((response) => response.text())
                       .then((result) => {
                         alert("刪除成功!");
                         location.href =
-                          "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_all.html";
+                          baseUrl +
+                          contextPath +
+                          "/page/group/group_htmls/group_all.html";
                       })
                       .catch((error) => {
                         alert("請稍後再試");
@@ -371,8 +380,7 @@
             //刪除成員
             var to_del_mems = $(".to_del_mems:checked");
 
-            let url_del_mems =
-              "http://localhost:8080/lazy-trip-back/groupmembers?action=delGroupMember";
+            let url_del_mems = apiUrlGroupMembers + "?action=delGroupMember";
             if (to_del_mems.length > 0) {
               console.log("被勾選人數:" + to_del_mems.length);
 
@@ -411,8 +419,7 @@
               redirect: "follow",
             };
             var url_set = "";
-            url_set +=
-              "http://localhost:8080/lazy-trip-back/group?action=groupSetting&groupid=";
+            url_set += apiUrlGroup + "?action=groupSetting&groupid=";
             url_set += gpid;
             url_set += "&groupmembercount=";
             url_set += $("#gp_mem_num").val();
@@ -427,7 +434,9 @@
                 console.log(data.groupid);
                 alert("修改成功!");
                 let a =
-                  "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=";
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/group_main.html?groupid=";
                 location.href = a + data.groupid;
               })
               .catch((error) => console.log("error", error));
@@ -441,14 +450,31 @@
         $(btn_uncheckmem).click(function (e) {
           e.preventDefault();
           let a =
-            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_applying.html?groupid=";
+            baseUrl +
+            contextPath +
+            "/page/group/group_htmls/group_applying.html?groupid=";
           location.href = a + gpid;
         });
         $("#back").click(() => {
           location.href =
-            "http://localhost:8080/lazy-trip-back/page/group/group_htmls/group_main.html?groupid=" +
+            baseUrl +
+            contextPath +
+            "/page/group/group_htmls/group_main.html?groupid=" +
             gpid;
         });
+
+        //限制字數
+        var maxLength = 20;
+        var limitTestFunc = function () {
+          $(".input1").keyup(function () {
+            var length = $(this).val().length;
+            if (length >= maxLength) {
+              // 截取超出的字符
+              $(this).val($(this).val().substring(0, maxLength));
+            }
+          });
+        };
+        limitTestFunc();
       };
     </script>
   </body>

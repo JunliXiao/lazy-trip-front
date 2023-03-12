@@ -273,3 +273,46 @@ div.wrapper {
   display: flex;
   flex-wrap: wrap;
 }
+div.item1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+div.tourChosen{
+  background-color: #4fccfd;
+}
+.loading {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 30px;
+}
+
+.loading p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.spinner {
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #333;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0);
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
