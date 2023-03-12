@@ -30,6 +30,91 @@
     ></script>
     <!-- 初始化 Bulma -->
     <script defer src="../asset/js/bulma-init.js"></script>
+    <style>
+      .onoffswitch {
+        position: relative;
+        width: 90px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+      .onoffswitch-checkbox {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .onoffswitch-label {
+        display: block;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid #b5b5b5;
+        border-radius: 20px;
+      }
+      .onoffswitch-inner {
+        display: block;
+        width: 200%;
+        margin-left: -100%;
+        transition: margin 0.3s ease-in 0s;
+      }
+      .onoffswitch-inner:before,
+      .onoffswitch-inner:after {
+        display: block;
+        float: left;
+        width: 50%;
+        height: 30px;
+        padding: 0;
+        line-height: 30px;
+        font-size: 14px;
+        color: white;
+
+        font-weight: bold;
+        box-sizing: border-box;
+      }
+      .onoffswitch-inner:before {
+        content: "會員";
+        padding-left: 10px;
+        background-color: hsl(197, 85%, 53%);
+        color: #ffffff;
+      }
+      .onoffswitch-inner:after {
+        content: "廠商";
+        padding-right: 10px;
+        background-color: #f2a142;
+        color: #595454;
+        text-align: right;
+      }
+      .onoffswitch-switch {
+        display: block;
+        width: 23px;
+        margin: 3.5px;
+        background: #ffffff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 56px;
+        border: 2px solid #999999;
+        border-radius: 25px;
+        transition: all 0.3s ease-in 0s;
+      }
+      .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+      }
+      .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 3px;
+      }
+      .content-company {
+        display: none;
+      }
+      .content-company.-on {
+        display: block;
+      }
+      .content-member {
+        display: none;
+      }
+      .content-member.-on {
+        display: block;
+      }
+    </style>
   </head>
   <body>
     <header-component></header-component>
@@ -38,7 +123,28 @@
       <div class="column is-half">
         <section class="section">
           <!-- 標題 -->
-          <div class="content has-text-centered"><h1>登入</h1></div>
+          <div class="content has-text-centered content-member -on">
+            <h1>會員登入</h1>
+          </div>
+          <div class="content has-text-centered content-company">
+            <h1>廠商登入</h1>
+          </div>
+          <div class="field">
+            <div class="onoffswitch">
+              <input
+                type="checkbox"
+                name="onoffswitch"
+                class="onoffswitch-checkbox"
+                id="myonoffswitch"
+                tabindex="0"
+                checked
+              />
+              <label class="onoffswitch-label" for="myonoffswitch">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
           <!-- 表單 -->
           <form class="box" action="" method="post" id="form-login">
             <p class="msg"></p>
@@ -68,24 +174,19 @@
               </div>
             </div>
 
+            <section class="control">
+              <a href="member/forgetps.html">忘記您的密碼嗎?</a>
+            </section>
             <!-- 表單按鈕 -->
-            <div class="field is-grouped">
+            <div class="field is-grouped is-grouped-centered">
               <div class="control">
                 <button
                   class="button is-primary has-text-centered"
                   type="button"
                   id="btn-login"
+                  style="width: 100px"
                 >
                   登入
-                </button>
-              </div>
-              <div class="control">
-                <button
-                  class="button is-info is-light has-text-centered"
-                  type="button"
-                  id="btn-signup"
-                >
-                  註冊
                 </button>
               </div>
             </div>
@@ -99,35 +200,6 @@
 
     <script src="../asset/js/checkLogin.js?ver=1"></script>
     <script src="member/js/login.js?ver=1"></script>
-    <script>
-      // const account = $("input#input-username");
-      // const password = $("input#input-password");
-
-      // $("button#btn-login").on("click", function () {
-      //   fetch("login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       account: account.val(),
-      //       password: password.val(),
-      //     }),
-      //   })
-      //     .then((resp) => {
-      //       if (resp.redirected) {
-      //         location.href = resp.url;
-      //         alert("success");
-      //       } else {
-      //         resp.json().then((body) => {
-      //           alert(`errorMsg: ${body.errorMessage}`);
-      //         });
-      //       }
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     });
-      // });
-    </script>
+    <script></script>
   </body>
 </html>
