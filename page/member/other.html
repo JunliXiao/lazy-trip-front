@@ -180,6 +180,7 @@
         let otherMemId = lookForMemberId.get("member_id");
 
         const ROOT = "http://localhost:8080/lazy-trip-back";
+        const LOGIN = "/page/login.html";
         const API_RELATION = "/api/relation";
         const API_FRIEND_REQUEST = "/api/friend/request";
 
@@ -221,7 +222,35 @@
           }
         });
 
-        $("button.add-friend").on("click");
+        $("button.add-friend").on("click", function () {
+          if (getCookie("memId") == null) {
+            let loc = location.href;
+            sessionStorage.setItem("loc", loc);
+            location.href = ROOT + LOGIN;
+          } else {
+            fetch(
+              ROOT +
+                API_FRIEND_REQUEST +
+                `?addressee_id=${otherMemId}&requester_id=${getCookie(
+                  "memId"
+                )}`,
+              {
+                method: "POST",
+              }
+            )
+              .then(function (resp) {
+                if (resp.ok) {
+                  alert("好友邀請成功");
+                  getRelationShip();
+                }
+              })
+              .catch(function (error) {
+                // 發生任何錯誤，就會執行 catch 裡的程式
+                console.log("錯誤資訊");
+                console.log(error); // 這裡取得錯誤資訊：error
+              });
+          }
+        });
 
         function getRelationShip() {
           if (getCookie("memId") != null) {
