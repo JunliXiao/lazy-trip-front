@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io</title>
+    <!-- Bulma 原廠 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <!-- 另外找的網址 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <!-- 俊立的網址 -->
+    <!-- <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script> -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      main {
+        width: 65%;
+      }
+      aside {
+        width: 35%;
+      }
+      .redstar {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 導覽列 -->
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+            src="https://bulma.io/images/bulma-logo.png"
+            width="112"
+            height="28"
+          /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+
+          <a href="#" class="navbar-item"> 揪團 </a>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 內容 -->
+
+    <!-- 內容跟導航列間距 高度長20px -->
+    <div style="height: 20px"></div>
+
+    <!-- 飯店資料結構 欄位寬度佔畫面8/12 欄位居中 -->
+    <div
+      class="columns is-mobile is-centered"
+      style="background-color: #f3f4f5"
+    >
+      <div id="bookingChildrenStart" class="column is-8">
+        <!-- 填寫訂單開始 -->
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            height: 500px;
+            border: 1px solid white;
+          "
+        >
+          <!-- 左邊主要旅客資訊 -->
+          <div
+            style="
+              height: 100%;
+              flex-basis: 55%;
+              background-color: white;
+              border-radius: 15px 15px 15px 15px;
+              box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
+            "
+          >
+            <div style="height: 20px"></div>
+            <div style="height: 50px">
+              <span class="is-size-3" style="padding-left: 5%"
+                >主要旅客資訊</span
+              >
+            </div>
+            <div style="height: 40px; margin-top: 10px">
+              <span class="is-size-6" style="padding-left: 5%"
+                >請填寫以下資訊(參與住宿的旅客其中一人資料):</span
+              >
+            </div>
+            <div style="height: 90px; padding-left: 5%">
+              <label class="label is-size-6"
+                >姓名<span class="is-size-5" style="color: red"
+                  >&nbsp;*</span
+                ></label
+              >
+              <input
+                type="input"
+                id="travelerName"
+                class="input is-info is-outlined"
+                style="width: 30%"
+              />
+            </div>
+            <div style="height: 90px; padding-left: 5%">
+              <label class="label is-size-6"
+                >身分證號碼<span class="is-size-5" style="color: red"
+                  >&nbsp;*</span
+                ></label
+              >
+              <input
+                type="input"
+                id="travelerIDNumber"
+                class="input is-info is-outlined"
+                style="width: 50%"
+              />
+            </div>
+            <div style="height: 90px; padding-left: 5%">
+              <label class="label is-size-6"
+                >電子信箱<span class="is-size-5" style="color: red"
+                  >&nbsp;*</span
+                ></label
+              >
+              <input
+                type="input"
+                id="travelerEmail"
+                class="input is-info is-outlined"
+                style="width: 65%"
+              />
+            </div>
+            <div style="height: 90px; padding-left: 5%">
+              <label class="label is-size-6"
+                >手機號碼<span class="is-size-5" style="color: red"
+                  >&nbsp;*</span
+                ></label
+              >
+              <input
+                type="input"
+                id="travelerPhone"
+                class="input is-info is-outlined"
+                style="width: 40%"
+              />
+            </div>
+          </div>
+          <!-- 中間行距 -->
+          <div style="flex-basis: 2%"></div>
+          <!-- 右邊訂房資訊總覽 -->
+          <div style="height: 100%; flex-basis: 43%; border: 1px solid white">
+            <!-- 飯店資訊 -->
+            <div
+              style="
+                height: 32%;
+                background-color: white;
+                border-radius: 15px 15px 15px 15px;
+                box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
+                border: 1px solid white;
+              "
+            >
+              <!-- 日期 -->
+              <!-- 間距 -->
+              <div style="height: 7%"></div>
+              <div style="height: 19%; display: flex; justify-content: center">
+                <span class="is-size-5">日期:&nbsp;</span>
+                <span id="orderCheckInDate" class="is-size-5">2023/05/01</span>
+                <span class="is-size-5">&nbsp;~&nbsp;</span>
+                <span id="orderCheckOutDate" class="is-size-5">2023/05/02</span>
+              </div>
+              <div style="height: 5%; display: flex; justify-content: center">
+                <div
+                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+                ></div>
+              </div>
+              <div
+                style="
+                  height: 60%;
+                  display: flex;
+                  flex-direction: row;
+                  border: 1px solid white;
+                "
+              >
+                <!-- 飯店照片 -->
+                <div style="flex-basis: 7%"></div>
+                <div style="flex-basis: 32%">
+                  <img
+                    id="companyImg"
+                    src=""
+                    style="
+                      height: 100%;
+                      width: 100%;
+                      border-radius: 5px 5px 5px 5px;
+                    "
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                  />
+                </div>
+                <!-- 飯店地址 -->
+                <div style="flex-basis: 3%"></div>
+                <div style="flex-basis: 52%">
+                  <div stlye="height:50%">
+                    <span id="companyName" class="is-size-5"></span>
+                  </div>
+                  <div stlye="height:50%">
+                    <span id="address" class="is-size-6"></span>
+                  </div>
+                </div>
+                <div style="flex-basis: 6%"></div>
+              </div>
+              <!-- 間距 -->
+              <div style="height: 7%"></div>
+            </div>
+            <!-- 中間間距 -->
+            <div style="height: 3%"></div>
+            <!-- 價格明細 -->
+            <div
+              style="
+                overflow: auto;
+                height: 65%;
+                background-color: white;
+                border-radius: 15px 15px 15px 15px;
+                box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
+                border: 1px solid white;
+              "
+            >
+              <div style="height: 65px; display: flex; align-items: center">
+                <span class="is-size-4" style="padding-left: 7%">價格明細</span>
+              </div>
+              <div style="height: 5px; display: flex; justify-content: center">
+                <div
+                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+                ></div>
+              </div>
+              <!-- 房型明細 -->
+              <div id="orderDetailChild">
+                <!-- <div
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    height: 80px;
+                    align-items: center;
+                  "
+                >
+                  <div style="flex-basis: 40%">
+                    <span
+                      class="is-size-5 roomTypeName"
+                      style="padding-left: 18%"
+                    ></span>
+                  </div>
+                  <div style="flex-basis: 35%">
+                    <span class="is-size-5" style="padding-left: 5%">$</span>
+                    <span class="is-size-5 roomTypePrice"></span>
+                  </div>
+                  <div style="flex-basis: 25%">
+                    <span class="is-size-5 roomTypeQuantity"></span>
+                    <span class="is-size-5">間</span>
+                  </div>
+                </div>
+                <div
+                  style="height: 5px; display: flex; justify-content: center"
+                >
+                  <div
+                    style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+                  ></div>
+                </div> -->
+              </div>
+              <!-- 應付總額 -->
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  height: 80px;
+                  align-items: center;
+                "
+              >
+                <div style="flex-basis: 50%">
+                  <span class="is-size-5" style="padding-left: 15%"
+                    >應付總額:</span
+                  >
+                </div>
+                <div style="flex-basis: 50%; text-align: right">
+                  <strong
+                    class="is-size-4"
+                    style="padding-right: 25%; color: #3bc0e8"
+                    >$<span id="orderTotalPrice"></span
+                  ></strong>
+                </div>
+              </div>
+              <div style="height: 5px; display: flex; justify-content: center">
+                <div
+                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+                ></div>
+              </div>
+              <!-- 按鈕 -->
+              <div
+                id="sendOrder"
+                style="
+                  height: 80px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <button class="button is-info">
+                  &emsp;&emsp;&emsp;送出訂單&emsp;&emsp;&emsp;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 填寫訂單結束 -->
+      </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+      <div class="columns is-mobile">
+        <!--這行常富多加了is-mobile 因為頁腳要響應式-->
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../../asset/js/bulma-init.js"></script>
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
+
+    <script>
+      let orderID = sessionStorage.getItem("showPayTableFromTheOrderID");
+    </script>
+  </body>
+</html>

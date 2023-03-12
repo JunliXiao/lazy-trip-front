@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTrip.io</title>
+    <!-- Bulma 原廠 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <!-- Bulma 自訂 -->
+    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <!-- 自定義 CSS -->
+    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <!-- Font Awesome -->
+    <!-- 另外找的網址 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <!-- 俊立的網址 -->
+    <!-- <script
+      src="https://kit.fontawesome.com/0548105e54.js"
+      crossorigin="anonymous"
+    ></script> -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      main {
+        width: 65%;
+      }
+      aside {
+        width: 35%;
+      }
+      .redstar {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 導覽列 -->
+    <nav
+      class="navbar has-shadow"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <!-- Logo -->
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <!-- <img
+            src="https://bulma.io/images/bulma-logo.png"
+            width="112"
+            height="28"
+          /> -->
+          <strong>LazyTrip.io</strong>
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <!-- 靠左 -->
+        <div class="navbar-start"></div>
+
+        <!-- 靠右 -->
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon"><i class="fas fa-plus"></i></span>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 新的行程 </a>
+              <a class="navbar-item"> 新的揪團 </a>
+            </div>
+          </div>
+
+          <a href="#" class="navbar-item"> 揪團 </a>
+
+          <a href="#" class="navbar-item"> 行程 </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-item">
+              <span class="icon-text"
+                ><span class="icon"><i class="fas fa-user"></i></span
+                ><span>周杰倫</span></span
+              >
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item"> 我的頁面 </a>
+              <a class="navbar-item"> 我的訂單 </a>
+              <a class="navbar-item"> 我的好友 </a>
+              <a class="navbar-item"> 我的文章 </a>
+              <hr class="navbar-divider" />
+              <a href="./index_not_in.html" class="navbar-item"> 登出 </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 內容 -->
+
+    <!-- 內容跟導航列間距 高度長20px -->
+    <div style="height: 20px"></div>
+
+    <!-- 飯店資料結構 欄位寬度佔畫面8/12 欄位居中 -->
+    <div
+      class="columns is-mobile is-centered"
+      style="background-color: #f3f4f5"
+    >
+      <div id="companyChildrenStart" class="column is-8">
+        <!-- 飯店介紹開始 -->
+        <!-- 與功能列略拉開一點間距 -->
+        <div style="height: 15px"></div>
+        <!-- 飯店圖片 -->
+        <div
+          class="columns"
+          style="height: 270px; display: flex; flex-direction: row"
+        >
+          <!-- 左邊大圖片 -->
+          <div style="flex-basis: 50%">
+            <img
+              class="companyImg"
+              src=""
+              alt="無圖片"
+              onerror="this.src='../../asset/img/noPicture.png'"
+              style="
+                width: 100%;
+                height: 267px;
+                border-radius: 15px 0px 0px 15px;
+              "
+            />
+          </div>
+          <!-- 右邊大圖分割四張圖片 -->
+          <div style="flex-basis: 50%">
+            <div style="display: flex; flex-direction: row">
+              <div style="flex-basis: 2%"></div>
+              <!-- 左邊欄位 -->
+              <div style="flex-basis: 48%">
+                <div>
+                  <img
+                    src=""
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="width: 100%; height: 130px"
+                  />
+                </div>
+                <div>
+                  <img
+                    src=""
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="width: 100%; height: 130px"
+                  />
+                </div>
+              </div>
+              <div style="flex-basis: 2%"></div>
+              <!-- 右邊欄位 -->
+              <div style="flex-basis: 48%">
+                <div>
+                  <img
+                    src=""
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="
+                      width: 100%;
+                      height: 130px;
+                      border-radius: 0px 15px 0px 0px;
+                    "
+                  />
+                </div>
+                <div>
+                  <img
+                    src=""
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="
+                      width: 100%;
+                      height: 130px;
+                      border-radius: 0px 0px 15px 0px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 間距 -->
+        <div style="height: 10px"></div>
+        <!-- 飯店簡介與地圖與房型資料 -->
+        <div
+          class="columns"
+          style="display: flex; flex-direction: row; min-height: 230px"
+        >
+          <!-- 飯店簡介 -->
+          <div
+            style="
+              flex-basis: 55%;
+              background-color: #ffffff;
+              box-shadow: 0px 0px 5px 1px rgba(137, 200, 232, 0.5);
+              border-radius: 15px 15px 15px 15px;
+            "
+          >
+            <!-- 簡介裡飯店名稱 -->
+            <div style="height: 65px; padding-top: 15px; padding-left: 20px">
+              <span class="is-size-2" id="companyName"></span>
+            </div>
+            <!-- 簡介裡飯店地址 -->
+            <div style="height: 30px; padding-left: 20px; padding-top: 5px">
+              <span class="is-size-6" id="companyAddress"></span>
+            </div>
+            <!-- 水平線 -->
+            <div style="height: 5px"></div>
+            <div
+              style="
+                height: 0.5px;
+                border: 1px solid #ffffff;
+                margin-left: 20px;
+                margin-right: 20px;
+              "
+            ></div>
+            <!-- 簡介裡飯店簡介 -->
+            <div>
+              <span
+                class="is-size-7"
+                id="companyIntroduction"
+                style="display: block; padding: 10px 20px 20px 20px"
+              ></span>
+            </div>
+          </div>
+          <div style="flex-basis: 2%"></div>
+          <!-- 飯店地圖 -->
+          <div
+            id="companyMap"
+            style="
+              background-color: #ffffff;
+              box-shadow: 0px 0px 5px 1px rgba(137, 200, 232, 0.5);
+              flex-basis: 43%;
+              border-radius: 15px 15px 15px 15px;
+              height: auto;
+            "
+          ></div>
+        </div>
+        <!-- 飯店與房型間距 -->
+        <div style="height: 15px"></div>
+        <!-- 房型資料表格開始 -->
+        <div
+          id="id_table"
+          class="columns"
+          style="
+            height: 380px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 5px 1px rgba(137, 200, 232, 0.5);
+            border-radius: 15px 15px 15px 15px;
+          "
+        >
+          <!-- 表格欄 -->
+          <table
+            class="table is-fullwidth is-bordered"
+            style="height: 100%; border-radius: 15px 15px 15px 15px"
+          >
+            <thead>
+              <tr style="height: 42px">
+                <th style="width: 25%; text-align: center">
+                  <span>客房預覽</span>
+                </th>
+                <th style="text-align: center">
+                  <span class="is-size-6">客房類型</span>
+                </th>
+                <th style="width: 11%; text-align: center">
+                  <span class="is-size-6">適合人數</span>
+                </th>
+                <th style="text-align: center">
+                  <span class="is-size-6">每晚價格</span>
+                </th>
+                <th style="width: 11%; text-align: center">
+                  <span class="is-size-6">房間數量</span>
+                </th>
+                <th style="width: 20%; text-align: center"></th>
+              </tr>
+            </thead>
+            <tbody id="id_tbody"></tbody>
+          </table>
+        </div>
+        <!-- 房型資料表格結束 -->
+        <div style="height: 5px"></div>
+      </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+      <div class="columns is-mobile">
+        <!--這行常富多加了is-mobile 因為頁腳要響應式-->
+        <div class="column">
+          <div class="content">
+            <h4>關於</h4>
+            <p>
+              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
+              TGA105 梯第三組所製作之結訓專題。
+            </p>
+          </div>
+        </div>
+        <div class="column">
+          <div class="content">
+            <h4>合作廠商</h4>
+            <a href="#">後台登入</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../../asset/js/bulma-init.js"></script>
+    <script src="../../asset/js/jquery-3.6.3.min.js"></script>
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB75Ia4BV0cZ_y1mqYUR6j7H7q3KJliMF8&libraries=places&callback=initMap"
+    ></script>
+    <script>
+      let id_table = document.querySelector("#id_table");
+      let id_tbody = $("#id_tbody");
+      let map;
+      let marker;
+      // 預訂資料會存進cmBookingList
+      let cmBookingList;
+
+      $(function () {
+        init();
+        bookingBtn();
+      });
+
+      // 取得sessionStorage並傳送companyID
+      function init() {
+        let companyID = sessionStorage.getItem("showCompanyInformation");
+        fetch(
+          "http://localhost:8080/lazy-trip-back/Company.do?type=showCompanyInformation&companyID=" +
+            companyID
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (cmList) {
+            // 把資料存在變數
+            cmBookingList = cmList;
+            // 物件有幾列資料
+            let cmListLen = cmList.length;
+
+            try {
+              for (let i = 0; i < cmList.length; i++) {
+                // 設置google地圖
+                map = new google.maps.Map(
+                  document.querySelector("#companyMap"),
+                  {
+                    center: {
+                      lng: cmList[0].longitude,
+                      lat: cmList[0].latitude,
+                    },
+                    zoom: 14,
+                    // disableDefaultUI: false,
+                    mapTypeControl: false, // 顯示地圖類型控制項
+                    streetViewControl: true, // 顯示街景控制項
+                  }
+                );
+                marker = new google.maps.Marker({
+                  position: {
+                    lng: cmList[0].longitude,
+                    lat: cmList[0].latitude,
+                  },
+                  map: map,
+                  title: cmList[0].companyName,
+                });
+
+                // 飯店簡介與飯店圖片相關
+                $("#companyName").text(cmList[0].companyName);
+                $("#companyIntroduction").text(cmList[0].introduction);
+                $("#companyAddress").text(
+                  cmList[0].addressCounty +
+                    ", " +
+                    cmList[0].addressArea +
+                    ", " +
+                    cmList[0].addressStreet
+                );
+                $(".companyImg").eq(i).attr("src", cmList[i].companyImg);
+                $(".roomTypeImg")
+                  .eq(i)
+                  .attr("src", cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg);
+
+                // 飯店房型表格相關
+                if (i === 0) {
+                  // 表格的高度依房型種類數目決定
+                  id_table.style.height = cmListLen * 169 + 42 + "px";
+                  // select的option數量依飯店房間數目決定
+                  let selectZeroHtml = "";
+                  for (
+                    let j = 0;
+                    j <= cmList[0].roomTypeVO.roomTypeQuantity;
+                    j++
+                  ) {
+                    selectZeroHtml += `<option value="${j}">${j}</option>`;
+                  }
+                  // 第一間房型的表格資料(含按鈕)
+                  let trZeroHtml = `
+                  <tr class="has-text-centered" style="height: 169px">
+                <td>
+                  <img
+                    src="${cmList[0].roomTypeVO.roomTypeImgVO.roomTypeImg}"
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="
+                      height: 140px;
+                      margin-top: 5px;
+                      border-radius: 10px 10px 10px 10px;
+                    "
+                  />
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypeName">${cmList[0].roomTypeVO.roomTypeName}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypePerson">${cmList[0].roomTypeVO.roomTypePerson}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypePrice">${cmList[0].roomTypeVO.roomTypePrice}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <select
+                    data-roomtype-id="${cmList[0].roomTypeVO.roomTypeID}"
+                    class="select is-normal is-hovered is-info is-outlined is-size-5 roomTypeQuantity"
+                  >
+                    ${selectZeroHtml}
+                  </select>
+                </td>
+                <!-- 按鈕欄 -->
+                <!-- rowspan依回傳資料筆數而定 -->
+                <td rowspan="${cmListLen}" style="vertical-align: middle">
+                  <div class="control">
+                    <button id="bookingBtn" data-company-id="${cmList[0].companyID}" class="button is-info">
+                      &nbsp;&nbsp;&nbsp;&nbsp;現在預訂&nbsp;&nbsp;&nbsp;&nbsp;
+                    </button>
+                  </div>
+                </td>
+              </tr>`;
+
+                  id_tbody.append(trZeroHtml);
+                } else if (i > 0) {
+                  // select的option數量依飯店房間數目決定
+                  let selectsHtml = "";
+                  for (
+                    let j = 0;
+                    j <= cmList[i].roomTypeVO.roomTypeQuantity;
+                    j++
+                  ) {
+                    selectsHtml += `<option value="${j}">${j}</option>`;
+                  }
+                  // 不含第一種房型的表格資料(不含按鈕)
+                  let trsHtml = `
+                  <!-- 房型不是第一種的表格資料 -->
+              <tr class="has-text-centered" style="height: 169px">
+                <td>
+                  <img
+                    src="${cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg}"
+                    alt="無圖片"
+                    onerror="this.src='../../asset/img/noPicture.png'"
+                    class="roomTypeImg"
+                    style="
+                      height: 140px;
+                      margin-top: 5px;
+                      border-radius: 10px 10px 10px 10px;
+                    "
+                  />
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypeName">${cmList[i].roomTypeVO.roomTypeName}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypePerson">${cmList[i].roomTypeVO.roomTypePerson}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <div class="control">
+                    <span class="is-size-5 roomTypePrice">${cmList[i].roomTypeVO.roomTypePrice}</span>
+                  </div>
+                </td>
+                <td style="vertical-align: middle">
+                  <select
+                    data-roomtype-id="${cmList[i].roomTypeVO.roomTypeID}"
+                    class="select is-normal is-hovered is-info is-outlined is-size-5 roomTypeQuantity"
+                  >
+                  ${selectsHtml}
+                  </select>
+                </td>
+              </tr>
+              `;
+
+                  id_tbody.append(trsHtml);
+                }
+              }
+
+              console.log("get company資料成功");
+            } catch (e) {
+              console.log(e);
+            }
+          })
+          .catch(function (error) {
+            console.log("get company資料失敗");
+          });
+      }
+
+      // google地圖
+      function initMap() {
+        map = new google.maps.Map(document.querySelector("#companyMap"), {
+          center: { lng: 121.0211024, lat: 23.553118 },
+          zoom: 7,
+        });
+        marker = new google.maps.Marker({
+          position: { lng: 121.0211024, lat: 23.553118 },
+          map: map,
+          title: "台灣",
+        });
+      }
+
+      // 預訂按鈕事件綁定
+      function bookingBtn() {
+        $(document).on("click", "button#bookingBtn", function () {
+          // 抓取旅客選定的各個房型數量
+          let selectRtQuan = $("select[class*='roomTypeQuantity']");
+
+          for (let i = 0; i < cmBookingList.length; i++) {
+            // 確定抓取的房型ID陣列位置跟cmBookingList的陣列位置一樣再存進房型數量
+            if (
+              cmBookingList[i].roomTypeVO.roomTypeID ==
+              selectRtQuan.eq(i).data("roomtype-id")
+            ) {
+              cmBookingList[i].roomTypeVO.roomTypeQuantity = selectRtQuan
+                .eq(i)
+                .val();
+            }
+          }
+          for (let i = 0; i < cmBookingList.length; i++) {
+            if (cmBookingList[i].roomTypeVO.roomTypeQuantity > 0) {
+              // 有決定房型數量就存進sessionStorage
+              sessionStorage.setItem(
+                "cmBookingList",
+                JSON.stringify(cmBookingList)
+              );
+              location.href = "./填寫訂單.html";
+              // window.open("./company頁面.html", "_blank");
+              break;
+            }
+            // 都沒有提醒使用者再次選擇
+            alert("目前無任何選擇房型，請再次選擇!");
+            break;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
