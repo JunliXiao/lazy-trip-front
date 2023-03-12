@@ -68,23 +68,23 @@ class ControlPanel extends HTMLElement {
     switch (attr) {
       case "control-target":
         switch (curr) {
-          case "suggestions":
+          case "suggestion":
             updateSearchButton("搜尋感興趣的會員"); 
             if (prev == "chatrooms") node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
             break;
-          case "friends":
+          case "friend":
             updateSearchButton("搜尋好友");
             if (prev == "chatrooms") node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
             break;
-          case "sent-requests":
+          case "sent-request":
             updateSearchButton("搜尋送出邀請");
             if (prev == "chatrooms") node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
             break;
-          case "received-requests":
+          case "received-request":
             updateSearchButton("搜尋收到邀請");
             if (prev == "chatrooms") node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
             break;
-          case "chatrooms":
+          case "chatroom":
             updateSearchButton("搜尋聊天室");
             document.querySelector("control-panel-component div.level-right div.level-item").innerHTML = this.CHAT_CONTROL_HTML;
             const $trigger = document.querySelector(`button[data-target="modal-new-chatroom"]`);

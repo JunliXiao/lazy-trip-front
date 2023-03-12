@@ -72,7 +72,7 @@ class Chatroom extends HTMLElement {
 
     this.addEventListener("click", (event) => {
 
-      toggleActiveMenuListItem(event);
+      selectFromMenu(event);
       let newItem = document.createElement("chatlog-area-component");
       newItem.setAttribute("chatroom-id", this.CHATROOM_ID);
       newItem.setAttribute("chatroom-name", this.CHATROOM_NAME);
@@ -497,7 +497,7 @@ class ChatLogArea extends HTMLElement {
     }
     .floating-chat .chat .footer .text-box {
       border-radius: 3px;
-      background: rgb(235, 235, 235);
+      background: rgb(237, 237, 237);
       min-height: 100%;
       min-width: 80%;
       margin: 0 5px;     
@@ -519,7 +519,7 @@ class ChatLogArea extends HTMLElement {
       font-size: 20px;
     }
     button:hover {
-      background-color: rgb(231, 231, 231);
+      background-color: rgb(237, 237, 237);
     }
     `;
     
@@ -545,6 +545,7 @@ class ChatLogArea extends HTMLElement {
     
     let messageList = this.shadowRoot.querySelector("ul._msg_list");
 
+    // 發送聊天訊息
     this.shadowRoot.querySelector("button.send").addEventListener("click", () => {
       let input_div = this.shadowRoot.querySelector("div.text-box");
       let msg = input_div.textContent.trim();
@@ -557,10 +558,13 @@ class ChatLogArea extends HTMLElement {
       input_div.focus();
     });
 
+    // 建立聊天室的 WebSocket 連線
     const webSocket = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
 
+    // 連線成功時
     webSocket.onopen = (event) => {
       console.log("成功連線到 chat-ws");
+      // 請求歷史聊天訊息
       let wrapper = new Object();
       wrapper.messageType = "retrieve-history";
       wrapper.memberId = specifier_id;
@@ -568,21 +572,26 @@ class ChatLogArea extends HTMLElement {
       webSocket.send(JSON.stringify(wrapper));
     };
 
+    // 收到伺服器端的訊息時
     webSocket.onmessage = (event) => {
-      console.log(event);
       let wrapper = JSON.parse(event.data);
       
+      // 處理歷史聊天訊息
       if (wrapper.messageType == "reload-history") {
 
         let messages = wrapper.messageContent;
+        console.log(messages);
         if(messages.length == 0) return;
         messages.forEach(m => {
           let newItem =  m.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
           newItem.textContent = m.message;
+          newItem.setAttribute("sender-id", m.senderId);
+          newItem.setAttribute("sender-nickname", m.senderNickname);
           messageList.appendChild(newItem);
         });
         messageList.scrollTop = messageList.scrollHeight;
 
+        // 處理新的聊天訊息
       } else if (wrapper.messageType == "new-message") {
 
         let msg = wrapper.messageContent;
@@ -618,6 +627,8 @@ class ChatLogArea extends HTMLElement {
 class ChatMessageTemplate extends HTMLElement {
 
   style;
+  SELF_MSG_BG_COLOR = 'hsl(197, 47%, 93%)';
+  OTHER_MSG_BG_COLOR = 'rgb(243, 243, 243)';
 
   constructor() {
     super();
@@ -644,7 +655,6 @@ class ChatMessageTemplate extends HTMLElement {
       margin: 0 0 20px 0;
       font: 12px/16px;
       border-radius: 10px;
-      background-color: rgb(241, 241, 241);
       word-wrap: break-word;
       max-width: 81%;
     }
@@ -663,7 +673,6 @@ class ChatMessageTemplate extends HTMLElement {
       content: "";
       width: 0;
       height: 0;
-      border-top: 10px solid rgba(195, 195, 195, 0.2);
     } 
     `;
   }
@@ -679,17 +688,12 @@ class SelfMessage extends ChatMessageTemplate {
     let moreStyle = 
     `
     li.self {
-      animation: show-chat-odd 0.15s 1 ease-in;
-      -moz-animation: show-chat-odd 0.15s 1 ease-in;
-      -webkit-animation: show-chat-odd 0.15s 1 ease-in;
+      background-color: ${this.SELF_MSG_BG_COLOR};
       float: right;
       margin-right: 45px;
     }
-    li.self:before {
-      right: -45px;
-      background-image: url(https://github.com/Thatkookooguy.png);
-    }
     li.self:after {
+      border-top: 10px solid ${this.SELF_MSG_BG_COLOR};
       border-right: 10px solid transparent;
       right: -10px;
     }
@@ -700,6 +704,19 @@ class SelfMessage extends ChatMessageTemplate {
   }
 
   connectedCallback() {
+    let moreStyle = 
+    `
+    li.self:before {
+      right: -45px;
+      // background-image: url(https://github.com/Thatkookooguy.png);
+      background-image: url(${API_ROOT}${API_IMG_AVATAR}?member_id=${this.getAttribute("sender-id")});
+    }
+    `;
+
+    let styleTag = document.createElement("style");
+    styleTag.textContent = moreStyle;
+    this.shadowRoot.appendChild(styleTag);
+
     let newItem = document.createElement("li");
     newItem.setAttribute("class","self");
     newItem.textContent = this.textContent;
@@ -718,17 +735,12 @@ class OtherMessage extends ChatMessageTemplate {
     let moreStyle = 
     `
     li.other {
-      animation: show-chat-even 0.15s 1 ease-in;
-      -moz-animation: show-chat-even 0.15s 1 ease-in;
-      -webkit-animation: show-chat-even 0.15s 1 ease-in;
+      background-color: ${this.OTHER_MSG_BG_COLOR};
       float: left;
       margin-left: 45px;
     }
-    li.other:before {
-      left: -45px;
-      background-image: url(https://github.com/ortichon.png);
-    }
     li.other:after {
+      border-top: 10px solid ${this.OTHER_MSG_BG_COLOR};
       border-left: 10px solid transparent;
       left: -10px;
     }
@@ -739,9 +751,21 @@ class OtherMessage extends ChatMessageTemplate {
   }
 
   connectedCallback() {
+    let moreStyle = 
+    `
+    li.other:before {
+      left: -45px;
+      // background-image: url(https://github.com/Thatkookooguy.png);
+      background-image: url(${API_ROOT}${API_IMG_AVATAR}?member_id=${this.getAttribute("sender-id")});
+    }
+    `;
+    let styleTag = document.createElement("style");
+    styleTag.textContent = moreStyle;
+    this.shadowRoot.appendChild(styleTag);
+
     let newItem = document.createElement("li");
     newItem.setAttribute("class","other");
-    newItem.textContent = this.textContent;
+    newItem.textContent = `${this.getAttribute("sender-nickname")}：${this.textContent}`;
     this.shadowRoot.appendChild(newItem);
   }
 
@@ -925,10 +949,6 @@ class CreateChatroomModal extends HTMLElement {
       .then(response => response.json())
       .then(result => {
         let resultText = result == true ? "成功建立聊天室" : "成員間已有共同的聊天室";
-        
-        console.log(`${typeof result}: ${result}`);
-        // console.log(result == true);
-        console.log(result === "true");
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
         confirm(resultText);
       })
