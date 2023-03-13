@@ -8,7 +8,7 @@ div.hero-body > * {
             rgba(255, 255, 255, 0.85) 30%,
             rgba(255, 255, 255, 0.8) 80%
         ),
-        url('../img/blossom.jpg');
+        url("../../asset/img/blossom.jpg");
 }
 
 a.hot {

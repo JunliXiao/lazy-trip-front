@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LazyTrip.io | 揪團</title>
     <!-- Bulma 自訂 -->
-    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link rel="stylesheet" href="../../../asset/css/my-bulma.css" />
     <!-- 自定義 CSS -->
-    <link rel="stylesheet" href="../../asset/css/index-style.css" />
+    <link rel="stylesheet" href="../../../asset/css/index-style.css" />
     <!-- Font Awesome -->
     <script
       src="https://kit.fontawesome.com/0548105e54.js"
@@ -18,14 +18,14 @@
     <!-- 共用元件 -->
     <script
       defer
-      src="../../asset/js/components.js"
+      src="../../../asset/js/components.js"
       type="text/javascript"
     ></script>
 
     <!-- 初始化 Bulma -->
-    <script defer src="../../asset/js/bulma-init.js"></script>
+    <script defer src="../../../asset/js/bulma-init.js"></script>
     <!--GroupCss-->
-    <link rel="stylesheet" href="./css/group.css" />
+    <link rel="stylesheet" href=".././css/group.css" />
   </head>
   <body>
     <!-- 導覽列 -->
@@ -43,7 +43,7 @@
               <label class="label" for="gp_name">揪團名稱</label>
               <div class="control">
                 <input
-                  class="input"
+                  class="input input1"
                   type="text"
                   name="groupname"
                   id="gp_name"
@@ -59,13 +59,6 @@
                   type="number"
                   name="groupmembercount"
                   id="gp_mem_num"
-                />
-                <input
-                  class="input"
-                  type="hidden"
-                  name="memberid"
-                  id="memberidtest"
-                  value="1"
                 />
               </div>
             </div>
@@ -105,6 +98,17 @@
     <footer-component></footer-component>
     <script>
       window.addEventListener("load", function () {
+        //相對路徑宣告
+        var baseUrl = window.location.protocol + "//" + window.location.host;
+        var contextPath = window.location.pathname.substring(
+          0,
+          window.location.pathname.indexOf("/", 1)
+        );
+        //api
+        const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
+        const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
+
         let gp_create_el = document.getElementById("gp_create");
         let gp_name_el = document.getElementById("gp_name");
         let gp_mem_num_el = document.getElementById("gp_mem_num");
@@ -131,7 +135,6 @@
             urlencoded.append("action", "addOneGroup");
             urlencoded.append("groupname", gp_name_el.value);
             urlencoded.append("groupmembercount", gp_mem_num_el.value);
-            urlencoded.append("memberid", "1");
             urlencoded.append(
               "how_2_join",
               $("input[name=how_2_join]:checked").val()
@@ -143,10 +146,7 @@
               body: urlencoded,
               redirect: "follow",
             };
-            fetch(
-              "http://localhost:8080/lazy-trip-back/group",
-              requestOptions
-            )
+            fetch(apiUrlGroup, requestOptions)
               .then((response) => response.json())
               .then(function (data) {
                 // console.log("成功取得資料");
@@ -155,7 +155,9 @@
                 alert("創建成功");
 
                 let a =
-                  "http://localhost:8080/lazy-trip-back/group/group_main.html?groupid=";
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/group_main.html?groupid=";
                 location.href = a + data.groupid;
               })
               .catch((error) => console.log("error", error));
@@ -166,6 +168,18 @@
             e.preventDefault();
           }
         };
+        //限制字數
+        var maxLength = 20;
+        var limitTestFunc = function () {
+          $(".input1").keyup(function () {
+            var length = $(this).val().length;
+            if (length >= maxLength) {
+              // 截取超出的字符
+              $(this).val($(this).val().substring(0, maxLength));
+            }
+          });
+        };
+        limitTestFunc();
       });
     </script>
   </body>
