@@ -4,53 +4,62 @@ const node_show_friends = document.getElementById("li-friends");
 const node_show_sent_requests = document.getElementById("li-sent-requests");
 const node_show_received_requests = document.getElementById("li-received-requests");
 const node_show_chatrooms = document.getElementById("li-chatrooms");
-const node_add_request = document.getElementById("btn-add-request");
-const node_submit_request = document.getElementById("btn-submit-request");
-const node_summary = document.getElementById("div-no-result");
+const node_no_result = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
+
+const TYPE_SUGGESTION = "suggestion";
+const TYPE_FRIEND = "friend";
+const TYPE_SENT_REQUEST = "sent-request";
+const TYPE_RECEIVED_REQUEST = "received-request";
+const TYPE_CHATROOM = "chatroom";
 
 // ======= 使用者資訊 =======
 let params = new URLSearchParams(window.location.search);
 const specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
 
 // const specifier_id = parseCookieTokens(document.cookie).get("memId");
+let loc = window.location;
 
 // ======= API 路徑 =======
-const API_ROOT = "http://127.0.0.1:8080/lazy-trip-back";
+const PROT_HTTP = "http:";
+const PROT_WS = "ws:";
+const HOSTNAME = loc.hostname;
+const PORT = loc.port == "80" ? '' : ':8080';
+const API_ROOT = `${PROT_HTTP}//${HOSTNAME}${PORT}/lazy-trip-back`;
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
 const API_CHAT_MEMBER = "/api/chat/member";
 const API_IMG_AVATAR = "/img/avatar.png";
 
-const WS_ROOT = "ws://localhost:8080/lazy-trip-back";
+const WS_ROOT = `${PROT_WS}//${HOSTNAME}${PORT}/lazy-trip-back`;
 let webSocket;
 
 // ======= 頁面初始化 =======
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
       selectFromMenu(event);
-      showContent("suggestion");
+      showContent(TYPE_SUGGESTION);
     });
     node_show_friends.addEventListener("click",(event) => {
       selectFromMenu(event);
-      showContent("friend");
+      showContent(TYPE_FRIEND);
     });
     node_show_sent_requests.addEventListener("click", (event) => {
       selectFromMenu(event);
-      showContent("sent-request");
+      showContent(TYPE_SENT_REQUEST);
     });
     node_show_received_requests.addEventListener("click", (event) => {
       selectFromMenu(event);
-      showContent("received-request");
+      showContent(TYPE_RECEIVED_REQUEST);
     });
     node_show_chatrooms.addEventListener("click", (event) => {
       selectFromMenu(event);
-      showContent("chatroom");
+      showContent(TYPE_CHATROOM);
     });
    
     setBulmaModal();
-    showContent("suggestion");
+    showContent(TYPE_SUGGESTION);
   }
 );
 
@@ -79,18 +88,18 @@ function showContent(type) {
   let node_to_append = node_results;
 
   switch (type) {
-    case "suggestion":
-    case "friend":
+    case TYPE_SUGGESTION:
+    case TYPE_FRIEND:
       ajax_call_url = `${API_ROOT}${API_FRIEND}?member_id=${specifier_id}&query_type=${type}`;
       fetchDataToAppend(ajax_call_url, component_type, node_to_append);
       break;
-    case "sent-request":
-    case "received-request":
+    case TYPE_SENT_REQUEST:
+    case TYPE_RECEIVED_REQUEST:
       const direction = type.split("-")[0];
       ajax_call_url = `${API_ROOT}${API_FRIEND_REQUEST}?member_id=${specifier_id}&direction=${direction}`;
       fetchDataToAppend(ajax_call_url, component_type, node_to_append);
       break;
-    case "chatroom":
+    case TYPE_CHATROOM:
       createChatLayout();
       node_to_append = document.querySelector("ul._chatroom_list");
       ajax_call_url = `${API_ROOT}${API_CHAT}?member_id=${specifier_id}`;
@@ -120,10 +129,10 @@ function showContent(type) {
           .then((res) => res.json())
           .then((body) => {
             if(body.dataList.length == 0) {
-              node_summary.style.display = "block";
+              node_no_result.style.display = "block";
               return;
             } else {
-              node_summary.style.display = "none";
+              node_no_result.style.display = "none";
             }
             
             body.dataList.forEach(data => {

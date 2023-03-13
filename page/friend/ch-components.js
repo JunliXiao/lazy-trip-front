@@ -597,6 +597,8 @@ class ChatLogArea extends HTMLElement {
         let msg = wrapper.messageContent;
         let newItem = msg.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
         newItem.textContent = msg.message;
+        newItem.setAttribute("sender-id", specifier_id);
+        newItem.setAttribute("sender-nickname", "(施工中)");
         messageList.appendChild(newItem);
         messageList.scrollTop = messageList.scrollHeight;
 
@@ -661,9 +663,9 @@ class ChatMessageTemplate extends HTMLElement {
     li:before {
       position: absolute;
       top: 0;
-      width: 25px;
-      height: 25px;
-      border-radius: 25px;
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
       content: "";
       background-size: cover;
     }
@@ -815,7 +817,14 @@ class CreateChatroomModal extends HTMLElement {
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-info _create_chatroom">建立</button>
+          <button class="button is-info _create_chatroom">
+          <span class="icon is-small">
+            <i class="fas fa-check"></i>
+          </span>
+          <span>
+            建立
+          </span>
+          </button>
           <button class="button _modal_cancel">取消</button>
         </footer>
       </div>
