@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.*"%>
 <%@ page import="article.model.*"%>
+<%@ page import="article.service.*"%>
 
 
 <%
@@ -162,7 +163,8 @@
 		<th class="has-background-primary-light has-text-primary">行程編號</th>
 		<th class="has-background-primary-light has-text-primary">查看文章</th>
 	</tr>
-	<c:forEach var="articleVO" items="${list}" >
+	<%@ include file="page1.file" %> 
+	<c:forEach var="articleVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 		<tr>
 			<td>${articleVO.articleId}</td>
 			<td>${articleVO.articleTitle}</td>
@@ -182,6 +184,7 @@
 	</c:forEach>
 
     </table>
+    <%@ include file="page2.file" %>
 </section>
     
     
