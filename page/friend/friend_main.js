@@ -1,4 +1,4 @@
-// 事件觸發 UI 常數
+// ======= 事件觸發 UI 常數 =======
 const node_show_suggestions = document.getElementById("li-suggestions");
 const node_show_friends = document.getElementById("li-friends");
 const node_show_sent_requests = document.getElementById("li-sent-requests");
@@ -9,52 +9,53 @@ const node_submit_request = document.getElementById("btn-submit-request");
 const node_summary = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
 
-// Requester, Addressee / Specifier, Other
+// ======= 使用者資訊 =======
 let params = new URLSearchParams(window.location.search);
 const specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
 
 // const specifier_id = parseCookieTokens(document.cookie).get("memId");
 
-// API 路徑
+// ======= API 路徑 =======
 const API_ROOT = "http://127.0.0.1:8080/lazy-trip-back";
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
 const API_CHAT_MEMBER = "/api/chat/member";
+const API_IMG_AVATAR = "/img/avatar.png";
 
 const WS_ROOT = "ws://localhost:8080/lazy-trip-back";
 let webSocket;
 
-// 頁面初始化
+// ======= 頁面初始化 =======
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
-        toggleActiveMenuListItem(event);
-        showSuggestions();
+      selectFromMenu(event);
+      showContent("suggestion");
     });
     node_show_friends.addEventListener("click",(event) => {
-        toggleActiveMenuListItem(event);
-        showFriends();
+      selectFromMenu(event);
+      showContent("friend");
     });
     node_show_sent_requests.addEventListener("click", (event) => {
-        toggleActiveMenuListItem(event);
-        showRequests("sent");
+      selectFromMenu(event);
+      showContent("sent-request");
     });
     node_show_received_requests.addEventListener("click", (event) => {
-        toggleActiveMenuListItem(event);
-        showRequests("received");
+      selectFromMenu(event);
+      showContent("received-request");
     });
     node_show_chatrooms.addEventListener("click", (event) => {
-        toggleActiveMenuListItem(event);
-        showChatrooms();
-  });
+      selectFromMenu(event);
+      showContent("chatroom");
+    });
    
     setBulmaModal();
-    showSuggestions();
+    showContent("suggestion");
+  }
+);
 
-});
-
-// 使用之函數
-function toggleActiveMenuListItem(event) {
+// ======= 版面內容控制 =======
+function selectFromMenu(event) {
     event.target.closest("ul.menu-list").childNodes.forEach(node => {
       if (node.nodeName == "LI") {
         let a = node.firstElementChild;
@@ -67,128 +68,100 @@ function toggleActiveMenuListItem(event) {
     event.target.classList.add("is-active");
 }
 
-function showSuggestions() {
-    clearResults();
-    document.querySelector("control-panel-component").setAttribute("control-target", "suggestions");
+function showContent(type) {
+  // type: suggestion, friend, sent-request, received-request, chatroom, blocklist
 
-    fetch(API_ROOT + API_FRIEND + `?member_id=${specifier_id}&query_type=suggestion`)
-        .then((res) => res.json())
-        .then((friends) => {
-          if(friends.length == 0) {
-            node_summary.style.display = "block";
-            return;
-          } else {
-            node_summary.style.display = "none";
-          }
+  node_results.innerHTML = '';
+  document.querySelector("control-panel-component").setAttribute("control-target", type);
 
-          friends.forEach(fr => {
-            let newItem = document.createElement("suggestion-component");
-            newItem.setAttribute("member-id", fr["id"]);
-            newItem.setAttribute("member-name", fr["name"]);
-            newItem.setAttribute("member-account", fr["account"]); 
-            node_results.appendChild(newItem);
-        }); 
-      })
-        .catch((err) => console.log(err));
-}
+  const component_type = type + "-component";
+  let ajax_call_url;
+  let node_to_append = node_results;
 
-function showFriends() {
-    clearResults();
-    document.querySelector("control-panel-component").setAttribute("control-target", "friends");
+  switch (type) {
+    case "suggestion":
+    case "friend":
+      ajax_call_url = `${API_ROOT}${API_FRIEND}?member_id=${specifier_id}&query_type=${type}`;
+      fetchDataToAppend(ajax_call_url, component_type, node_to_append);
+      break;
+    case "sent-request":
+    case "received-request":
+      const direction = type.split("-")[0];
+      ajax_call_url = `${API_ROOT}${API_FRIEND_REQUEST}?member_id=${specifier_id}&direction=${direction}`;
+      fetchDataToAppend(ajax_call_url, component_type, node_to_append);
+      break;
+    case "chatroom":
+      createChatLayout();
+      node_to_append = document.querySelector("ul._chatroom_list");
+      ajax_call_url = `${API_ROOT}${API_CHAT}?member_id=${specifier_id}`;
+      fetch(ajax_call_url)
+            .then((res) => res.json())
+            .then((body) => {
+              if(body.dataList.length == 0) {
+                node_summary.style.display = "block";
+                return;
+              } else {
+                node_summary.style.display = "none";
+              }
+              
+              body.dataList.forEach(data => {
+                let newItem = document.createElement(component_type);
+                newItem = prepareAttributes(newItem, data, body.dataType)
+                newItem.setAttribute("chatroom-active", chatMembersObservable.activeChatrooms.has(data["id"]));
+                node_to_append.appendChild(newItem);
+                });
+              })
+            .catch((err) => console.log(err));
+      break;
+  }
 
-    fetch(API_ROOT + API_FRIEND + `?member_id=${specifier_id}&query_type=friend`)
-        .then((res) => res.json())
-        .then((friends) => {
-          if(friends.length == 0) {
-            node_summary.style.display = "block";
-            return;
-          } else {
-            node_summary.style.display = "none";
-          }
-          
-          friends.forEach(fr => {
-            let newItem = document.createElement("friend-component");
-            newItem.setAttribute("member-id", fr["id"]);
-            newItem.setAttribute("member-name", fr["name"]);
-            newItem.setAttribute("member-account", fr["account"]); 
-            node_results.appendChild(newItem);
-        });
-      })
-        .catch((err) => console.log(err));
-}
+  function fetchDataToAppend(ajax_call_url, component_type, node_to_append) {
+    fetch(ajax_call_url)
+          .then((res) => res.json())
+          .then((body) => {
+            if(body.dataList.length == 0) {
+              node_summary.style.display = "block";
+              return;
+            } else {
+              node_summary.style.display = "none";
+            }
+            
+            body.dataList.forEach(data => {
+              let newItem = document.createElement(component_type);
+              node_to_append.appendChild(prepareAttributes(newItem, data, body.dataType));
+          });
+        })
+          .catch((err) => console.log(err));
+  }
 
-function showRequests(direction) {
-    clearResults();
-    document.querySelector("control-panel-component").setAttribute("control-target", direction + "-requests");
-
-    fetch(API_ROOT + API_FRIEND_REQUEST + `?member_id=${specifier_id}&direction=${direction}`)
-        .then((res) => res.json())
-        .then((friends) => {
-          if(friends.length == 0) {
-            node_summary.style.display = "block";
-            return;
-          } else {
-            node_summary.style.display = "none";
-          }
-          
-          friends.forEach(fr => {
-            let newItem = direction == "sent" 
-                ? document.createElement("sent-request-component") 
-                : document.createElement("received-request-component");
-            newItem.setAttribute("member-id", fr["id"]);    
-            newItem.setAttribute("member-name", fr["name"]);
-            newItem.setAttribute("member-account", fr["account"]);
-            node_results.appendChild(newItem);
-        });
-      })
-        .catch((err) => console.log(err));
-}
-
-function showChatrooms() {
-  clearResults();
-  document.querySelector("control-panel-component").setAttribute("control-target", "chatrooms");
-  createChatLayout();
-  let node_chatroom_list = document.querySelector("ul._chatroom_list");
-
-  fetch(API_ROOT + API_CHAT + `?member_id=${specifier_id}`)
-  .then((res) => res.json())
-  .then((chatrooms) => {
-    if(chatrooms.length == 0) {
-      node_summary.style.display = "block";
-      return;
-    } else {
-      node_summary.style.display = "none";
+  function prepareAttributes(element, data, affix) {
+    // DOM element, object, string
+    for (const [key, value] of Object.entries(data)) {
+      const suffix = key.replace(/[A-Z]/g, s => '-' + s.toLowerCase()); // 例：createdAt -> created-at
+      element.setAttribute(`${affix}-${suffix}`, value);
     }
-    
-    chatrooms.forEach(ch => {
-      let newItem = document.createElement("chatroom-component");
-      newItem.setAttribute("chatroom-id", ch["id"]);
-      newItem.setAttribute("chatroom-name", ch["name"]);
-      newItem.setAttribute("chatroom-created-at", ch["createdAtUnix"]);
-      newItem.setAttribute("chatroom-active", chatMembersObservable.activeChatrooms.has(ch["id"]));
-      node_chatroom_list.appendChild(newItem);
-      });
-    })
-  .catch((err) => console.log(err));
+    return element;
+  }
 
-    function createChatLayout() {
-      let layout = `
-        <div class="columns _chat_layout p-0 m-0">
-          <div class="column is-one-third _chatroom_container p-0 m-0">
-            <aside class="menu" style="width: 100%">
-              <ul
-                class="menu-list _chatroom_list has-text-left"
-              ></ul>
-            </aside>
-          </div>
-          <div class="column _chat_log m-0 p-0"></div>
+  function createChatLayout() {
+    let layout = `
+      <div class="columns _chat_layout p-0 m-0">
+        <div class="column is-one-third _chatroom_container p-0 m-0">
+          <aside class="menu" style="width: 100%">
+            <ul
+              class="menu-list _chatroom_list has-text-left"
+            ></ul>
+          </aside>
         </div>
-      `;
-      node_results.innerHTML = layout;
-    }
+        <div class="column _chat_log m-0 p-0"></div>
+      </div>
+    `;
+    node_results.innerHTML = layout;
+  }
 
 }
 
+// ======= 好友邀請控制 =======
 function addRequest(requesterId, addresseeId) {
     var requestOptions = {
       method: 'POST',
@@ -243,40 +216,7 @@ function declineRequest(other_id) {
       .catch(error => console.log('error', error));  
 }
 
-function setBulmaModal() {
-      // Add a click event on buttons to open a specific modal
-      (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
-        const modal = $trigger.dataset.target;
-        const $target = document.getElementById(modal);
-    
-        $trigger.addEventListener('click', () => {
-          openModal($target);
-        });
-      });
-    
-      // Add a click event on various child elements to close the parent modal, excluding accept button
-      (document.querySelectorAll('.modal-background, .modal-close, .delete, ._modal_cancel') || []).forEach(($close) => {
-        const $target = $close.closest('.modal');
-    
-        $close.addEventListener('click', () => {
-          closeModal($target);
-        });
-      });
-    
-      // Add a keyboard event to close all modals
-      document.addEventListener('keydown', (event) => {
-        const e = event || window.event;
-    
-        if (e.keyCode === 27) { // Escape key
-          closeAllModals();
-        }
-      });
-}
-
-function clearResults() {
-  node_results.innerHTML = '';
-}
-
+// ======= 輔助功能 =======
 function parseCookieTokens(cookie) {
   let tokens = cookie.split("; ");
   let map = new Map();
@@ -301,7 +241,37 @@ function debounce(debouncedFunction, duration) {
   }
 }
 
-// Functions to open and close a modal
+// ======= Modal 控制 =======
+function setBulmaModal() {
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal, excluding accept button
+  (document.querySelectorAll('.modal-background, .modal-close, .delete, ._modal_cancel') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+}
+
 function openModal($el) {
   $el.classList.add('is-active');
 }

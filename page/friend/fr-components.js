@@ -8,6 +8,7 @@ class ResultCard extends HTMLElement {
   }
 
   buildCard(button_html) {
+    // src="https://bulma.io/images/placeholders/96x96.png"
     this.card_html = `
     <div class="card mb-6 mx-6">
       <div class="card-content">
@@ -16,7 +17,7 @@ class ResultCard extends HTMLElement {
           <div class="media-left">
             <figure class="image is-48x48">
               <img
-                src="https://bulma.io/images/placeholders/96x96.png"
+                src="${API_ROOT}${API_IMG_AVATAR}?member_id=${this.getAttribute("member-id")}"
                 alt="Placeholder image"
               />
             </figure>
@@ -26,7 +27,7 @@ class ResultCard extends HTMLElement {
             <div class="columns">
               <div class="column is-one-third">
                 <div class="content">
-                  <p class="title is-4">${this.getAttribute("member-name")}</p>
+                  <span class="title is-4">${this.getAttribute("member-name")}</span><span class="is-6">&nbsp;&nbsp;&nbsp;&nbsp;TEST</span><br>
                   <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
                 </div>
               </div>              
