@@ -390,7 +390,7 @@ $(document).on("click", "button.edit_attraction", function () {
 // ===================回到行程總表頁面======================== //
 $(document).on("click", ".return_tripList", function () {
   console.log(222);
-  location = "http://localhost:8080/lazy-trip-back/tour/tour.html";
+  location = "http://localhost:8080/lazy-trip-back/page/tour/tour.html";
 });
 
 // =========================崁入google地圖============================== //
@@ -572,7 +572,6 @@ function attractionAction(stay_time, start_time, endTime) {
           stayTime: stay_time,
           endTime: endTime,
           tourId: tourId,
-          memberId: 2,
           attraction_info: {
             attractionTitle: attraction_arr[i - 1].attractionTitle,
             location: attraction_arr[i - 1].location,

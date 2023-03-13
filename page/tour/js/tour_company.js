@@ -177,9 +177,9 @@ function renderToManageTour(tourCom_arr) {
               tourCom_arr[i - 1].tourImg
             }" style="width: 50px; height: 50px"/>
           </td>
-          <td><button class="trip_detail">明細</button></td>
-          <td><button class="edit_tour_btn">修改</button></td>
-          <td><button class="delete_tour_btn">刪除</button></td>
+          <td><button class="button is-primary is-outlined trip_detail">明細</button></td>
+          <td><button class="button is-warning is-outlined edit_tour_btn">修改</button></td>
+          <td><button class="button is-danger is-outlined delete_tour_btn">刪除</button></td>
       </tr>
         `;
   }
@@ -267,9 +267,9 @@ function initRenderToManageTour() {
           <td class="-none">
             <img class="update_tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="width: 50px; height: 50px"/>
           </td>
-          <td><button class="trip_detail">明細</button></td>
-          <td><button class="edit_tour_btn">修改</button></td>
-          <td><button class="delete_tour_btn">刪除</button></td>
+          <td><button class="button is-primary is-outlined trip_detail">明細</button></td>
+          <td><button class="button is-warning is-outlined edit_tour_btn">修改</button></td>
+          <td><button class="button is-danger is-outlined delete_tour_btn">刪除</button></td>
       </tr>
         `;
       }
@@ -622,7 +622,7 @@ function initRenderScheduleToManageTour(targetTourId) {
             <td>${tourTotalInfo_arr[i].stayTime}</td>
             <td>${tourTotalInfo_arr[i].attractionVO.attractionTitle}</td>
             <td>${tourTotalInfo_arr[i].attractionVO.location}</td>
-            <td><button class="delete_tour_sche_btn">刪除</button></td>
+            <td><button class="button is-danger is-outlined delete_tour_sche_btn">刪除</button></td>
           </tr>
         `;
       }

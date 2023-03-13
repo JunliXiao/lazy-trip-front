@@ -435,7 +435,7 @@ $(document).on("click", "i.fa-tag", function () {
   }
 });
 // 產生新tag
-$(".contents > .trip_tag_create").on("click", function createNewTag() {
+$(".trip_tag_create").on("click", function createNewTag() {
   let inputText = $(".trip_tag_input").val();
   $.ajax({
     url: `http://localhost:8080/lazy-trip-back/tourTagCreate`,
@@ -464,7 +464,7 @@ function renderTagToEachTour(tag_obj) {
     let elem = $(`div[data-card="${key}"] div.trip_tag_place ul`);
     let str = "";
     for (let i = 0; i < value.length; i++) {
-      str += `<li data-tag=${value[i]}>${value[i]}</li>`;
+      str += `<li class="tag is-link is-light is-medium" data-tag=${value[i]}>${value[i]}</li>`;
     }
     elem.html(str);
   }
@@ -518,18 +518,14 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
         // 更新tag_obj
         for (let i = 0; i < Object.keys(tag_obj).length; i++) {
           if (parseInt(Object.keys(tag_obj)[i]) != targetTourId) {
-            // 創立新的key(tourId)
-            console.log(111);
           } else {
-            console.log(222);
             tag_obj[targetTourId].push(textContent);
-            console.log(333);
           }
         }
         // 渲染到tourTagMessageBox管理頁面上
-        $(`<li data-tag=${textContent}>${textContent}</li>`).prependTo(
-          targetTagPlace
-        );
+        $(
+          `<li data-tag=${textContent} class="tag is-link is-light is-medium">${textContent}</li>`
+        ).prependTo(targetTagPlace);
       },
       error: function (xhr) {
         console.log("error");
@@ -682,6 +678,25 @@ $(document).on("click", "a.trip_edit", function (e) {
   targetDataCard_id = targetCard.attr("data-card");
   targetStartDate = targetCard.find("time.startDate").text();
   targetEndDate = targetCard.find("time.endDate").text();
-  location = `http://localhost:8080/lazy-trip-back/tour/tourSchedule.html?tourId=${targetDataCard_id}&memberId=${2}&startDate=${targetStartDate}&endDate=${targetEndDate}`;
+  location = `http://localhost:8080/lazy-trip-back/page/tour/tourSchedule.html?tourId=${targetDataCard_id}&memberId=${2}&startDate=${targetStartDate}&endDate=${targetEndDate}`;
   e.preventdefault();
 });
+
+// ======= 使用者資訊 =======
+let params = new URLSearchParams(window.location.search);
+const specifier_id = params.has("specifier_id")
+  ? params.get("specifier_id")
+  : 2;
+
+// const specifier_id = parseCookieTokens(document.cookie).get("memId");
+
+// ======= 輔助功能 =======
+function parseCookieTokens(cookie) {
+  let tokens = cookie.split("; ");
+  let map = new Map();
+  for (let token of tokens) {
+    let keyValue = token.split("=");
+    map.set(keyValue[0], keyValue[1]);
+  }
+  return map;
+}
