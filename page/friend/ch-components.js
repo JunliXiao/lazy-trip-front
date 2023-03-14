@@ -381,11 +381,11 @@ class ChatLogSide extends HTMLElement {
       messageList.appendChild(newItem);
     });
 
-    const webSocket = new WebSocket(WS_ROOT + `/chat-ws/${specifier_id}`);
+    const chat_ws = new WebSocket(WS_ROOT + `/chat-ws/${specifier_id}`);
 
-    webSocket.onopen = (event) => console.log("Connect Success!");
+    chat_ws.onopen = (event) => console.log("Connect Success!");
 
-    webSocket.onmessage = (event) => {
+    chat_ws.onmessage = (event) => {
       let messages = JSON.parse(event.data);
       messages.forEach(m => {
         let newItem = document.createElement("li");
@@ -552,28 +552,28 @@ class ChatLogArea extends HTMLElement {
       if(msg == "") {
         alert("聊天訊息內容不能空白");
       } else {
-        this.sendMessage(webSocket, msg);
+        this.sendMessage(chat_ws, msg);
       }
       input_div.textContent = '';
       input_div.focus();
     });
 
     // 建立聊天室的 WebSocket 連線
-    const webSocket = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
+    const chat_ws = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
 
     // 連線成功時
-    webSocket.onopen = (event) => {
+    chat_ws.onopen = (event) => {
       console.log("成功連線到 chat-ws");
       // 請求歷史聊天訊息
       let wrapper = new Object();
       wrapper.messageType = "retrieve-history";
       wrapper.memberId = specifier_id;
       wrapper.chatroomId = this.getAttribute("chatroom-id");
-      webSocket.send(JSON.stringify(wrapper));
+      chat_ws.send(JSON.stringify(wrapper));
     };
 
     // 收到伺服器端的訊息時
-    webSocket.onmessage = (event) => {
+    chat_ws.onmessage = (event) => {
       let wrapper = JSON.parse(event.data);
       
       // 處理歷史聊天訊息
@@ -773,6 +773,7 @@ class OtherMessage extends ChatMessageTemplate {
 
 }
 
+// 建立聊天室的 Modal
 class CreateChatroomModal extends HTMLElement {
 
   NODE_DIV_MEMBERS;

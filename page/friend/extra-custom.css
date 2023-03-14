@@ -32,10 +32,10 @@ div#div-results received-request-component:first-child div.card {
   margin-top: 48px !important;
 }
 
-friend-component .icon .fas:hover{
+/* friend-component .icon .fas:hover{
   font-size: 1.4em;
   transition: 0.2s ease-out-elastic;
-} 
+}  */
 
 #navbar-logo-area:hover {
   background-color: hsl(197deg, 47%, 98%) !important;

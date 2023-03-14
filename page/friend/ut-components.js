@@ -84,6 +84,10 @@ class ControlPanel extends HTMLElement {
             updateSearchButton("搜尋收到邀請");
             if (prev == TYPE_CHATROOM) node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
             break;
+          case TYPE_BLOCKLIST:
+            updateSearchButton("搜尋封鎖名單");
+            if (prev == TYPE_CHATROOM) node_right_part.innerHTML = this.RESULTS_FILTER_HTML;
+            break;
           case TYPE_CHATROOM:
             updateSearchButton("搜尋聊天室");
             document.querySelector("control-panel-component div.level-right div.level-item").innerHTML = this.CHAT_CONTROL_HTML;
