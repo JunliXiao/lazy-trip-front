@@ -36,6 +36,19 @@
       <div class="group_main_fs_alert_bg"></div>
       <div class="group_main_fs_alert_show">
         <div class="group_main_fs_alert_title">請選擇想邀請的朋友</div>
+        <div class="group_main_fs_alert_title" style="font-size: 16px">
+          邀請連結:
+          <input
+            type="text"
+            id="invite_link"
+            readonly
+            value=""
+            style="cursor: pointer"
+          />
+          <span class="icon_setting" id="create_link"
+            ><i class="fa-solid fa-link"></i>
+          </span>
+        </div>
         <div id="fr_list">
           <!-- <div class="field">
             <label>
@@ -213,6 +226,7 @@
         );
         //api
         const apiUrlGroup = baseUrl + contextPath + "/group";
+        const apiUrlInvite = baseUrl + contextPath + "/group/join";
         const apiUrlGroupMembers = baseUrl + contextPath + "/groupmembers";
         const apiUrlDiscussion = baseUrl + contextPath + "/discussion";
         const apiUrlFriend = baseUrl + contextPath + "/api/friend";
@@ -285,7 +299,6 @@
         let getUrlString = location.href;
         var url = new URL(getUrlString);
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
-        // console.log("gpid=" + gpid);
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -304,18 +317,14 @@
         //   redirect: "follow",
         // };
         let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
-        // console.log(url1 + gpid);
         let group_manager_id;
         fetch(url1 + gpid)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             $("#gp_main_gpname").html(data[0].groupname);
             group_manager_id = data[0].memberid;
             member_limit = data[0].groupmembercount;
             user_id = data[1].id;
-            console.log("管理者為" + group_manager_id);
-            console.log("使用者為" + user_id);
             //首次載入時顯示留言內容
             showContents();
             if (data[0].tourid != 0) {
@@ -330,7 +339,6 @@
               )
                 .then((response) => response.json())
                 .then((result) => {
-                  console.log(result);
                   $(".trip_name").html(result.tourTitle);
                   $("#group_start_date").html(result.startDate + " ->");
                   $("#group_end_date").html(result.endDate);
@@ -341,28 +349,22 @@
             fetch(apiUrlGroupMembers + "?action=getGroupMems&groupid=" + gpid)
               .then((response) => response.json())
               .then((data) => {
-                console.log(data);
                 group_mem_total = data.length;
-                console.log("群組共有" + group_mem_total);
                 $.each(data, function (index, item) {
-                  // console.log(item.username);
                   var list_html = "";
                   var mem_name = "";
                   var mem_pic = "";
                   var img_src = "";
 
                   if (item.imgBase64Str != null) {
-                    // console.log("有喔");
                     img_src = "data:image/*;base64," + item.imgBase64Str;
                   } else {
                     img_src = "./test.png";
                   }
 
                   if (item.username != null) {
-                    // console.log(item.username);
                     mem_name = item.username;
                   } else if (item.name != null) {
-                    // console.log(item.name);
                     mem_name = item.name;
                   } else {
                     mem_name = "暫無會員名";
@@ -390,7 +392,6 @@
                   $(".group_member_list").append(list_html);
                   gp_id_list.push(item.id);
                 });
-                // console.log("gp_id_list:" + gp_id_list);
                 //驗證使用者是否為群組成員;
                 if (!gp_id_list.includes(user_id)) {
                   alert("非本群組成員!");
@@ -423,11 +424,9 @@
             )
               .then((response) => response.json())
               .then((result) => {
-                console.log(result);
                 $(".loading").css("display", "none");
                 $.each(result, function (index, item) {
                   if (item.tourImg != null) {
-                    // console.log("有喔");
                     tour_img = "data:image/*;base64," + item.tourImg;
                   } else {
                     tour_img = "./01.jpg";
@@ -475,7 +474,6 @@
                     tour_to_do_enddate = $(this)
                       .find("input[name='tour_end']")
                       .val();
-                    console.log(tour_to_do_id);
                   }
                 });
               })
@@ -513,13 +511,10 @@
         //----------
         //點擊設定:
         $("#group_setting").click(function () {
-          // console.log(group_manager_id);
           if (group_manager_id == user_id) {
-            // console.log("gpid" + gpid);
             fetch(url1 + gpid)
               .then((response) => response.json())
               .then((data) => {
-                console.log(data);
                 $("#gp_main_gpname").html(data.groupname);
                 group_manager_id = data.memberid;
                 let a1 =
@@ -563,7 +558,6 @@
             fetch(apiUrlGroupMembers, requestOptions)
               .then((response) => response.json())
               .then((result) => {
-                console.log(result);
                 $.each(result, function (index, item) {
                   gp_id_list.push(item.memberid);
                 });
@@ -573,17 +567,14 @@
                 fetch(`${apiUrlFriend}?member_id=${user_id}&query_type=friend`)
                   .then((response) => response.json())
                   .then((result) => {
-                    console.log(result);
                     $("#fr_list").html("");
                     $.each(result, function (index, item) {
                       if (!gp_id_list.includes(item.id)) {
                         var fr_list_html;
                         var mem_name = "";
                         if (item.username != null) {
-                          // console.log(item.username);
                           mem_name = item.username;
                         } else if (item.name != null) {
-                          // console.log(item.name);
                           mem_name = item.name;
                         } else {
                           mem_name = "暫無會員名";
@@ -607,13 +598,6 @@
             show_alert.style.display = "none";
           }
 
-          // let checked = document.querySelector("[name=to_invite_frds]:checked");
-          // if (checked) {
-          //   console.log("有選取");
-          //   console.log(checked);
-          // } else {
-          //   console.log("未選取");
-          // }
         };
         //邀請OK按鈕
         close_alert.addEventListener("click", function () {
@@ -675,7 +659,6 @@
           fetch(apiUrlDiscussion + "?action=getGroupCons&groupid=" + gpid)
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
               $.each(data, function (index, item) {
                 var list_html = "";
                 var mem_name = "";
@@ -685,7 +668,6 @@
                 var amend_btn_str = "";
                 var if_mem = "";
                 if (item.member.imgBase64Str != null) {
-                  // console.log("有喔");
                   img_src = "data:image/*;base64," + item.member.imgBase64Str;
                 } else {
                   img_src = "./test.png";
@@ -699,10 +681,8 @@
                 }
 
                 if (item.member.username != null) {
-                  // console.log(item.member.username);
                   mem_name = item.member.username;
                 } else if (item.member.name != null) {
-                  // console.log(item.member.name);
                   mem_name = item.member.name;
                 } else {
                   mem_name = "暫無會員名";
@@ -738,9 +718,7 @@
                 var span_del = "#span_del" + item.discussion;
                 $(span_del).click(function (e) {
                   e.stopPropagation();
-                  // console.log("!!");
                   var that = this;
-                  console.log($(that).closest("div").attr("id"));
                   var r = confirm("確定要刪除此筆留言嗎?");
                   if (r == true) {
                     //放入fetch delete 以及alert放在成功後
@@ -786,6 +764,42 @@
             })
             .catch((error) => console.log("error", error));
         };
+        //邀請連結
+        $("#create_link").click(function () {
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+          myHeaders.append(
+            "Cookie",
+            "JSESSIONID=F8305B8BF20B474C339C372DA0982511"
+          );
+
+          var urlencoded = new URLSearchParams();
+          urlencoded.append("action", "generateLink");
+          urlencoded.append("groupId", gpid);
+
+          var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: urlencoded,
+            redirect: "follow",
+          };
+
+          fetch("http://localhost:8080/lazy-trip-back/group", requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+              $("#invite_link").val(apiUrlInvite + "?UID=" + result);
+            })
+            .catch((error) => console.log("error", error));
+        });
+        //點擊複製邀請連結
+        $("#invite_link").click(function () {
+          var toInviteLink = document.getElementById("invite_link");
+          toInviteLink.select();
+          document.execCommand("Copy");
+          if (toInviteLink.value != "") {
+            alert("複製成功!");
+          }
+        });
       });
     </script>
   </body>

@@ -169,7 +169,6 @@
         let getUrlString = location.href;
         var url = new URL(getUrlString);
         let gpid = url.searchParams.get("groupid"); // 回傳 groupid
-        //console.log(gpid);
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -178,7 +177,6 @@
           "JSESSIONID=079AEC6D76AA16D5891CFD9E68BAAFDB"
         );
         let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
-        // console.log(url1 + gpid);
         let group_manager_id;
 
         //得到群組目前人數
@@ -186,9 +184,7 @@
           fetch(apiUrlGroupMembers + "?action=getGroupMems&groupid=" + gpid)
             .then((response) => response.json())
             .then((data) => {
-              console.log(data);
               group_mem_total = data.length;
-              console.log("目前群組人數 : " + group_mem_total);
               $.each(data, function (index, item) {
                 gp_id_list.push(item.id);
                 if (item.id != group_manager_id) {
@@ -198,17 +194,14 @@
                   var img_src = "";
 
                   if (item.imgBase64Str != null) {
-                    // console.log("有喔");
                     img_src = "data:image/*;base64," + item.imgBase64Str;
                   } else {
                     img_src = "./test.png";
                   }
 
                   if (item.username != null) {
-                    // console.log(item.username);
                     mem_name = item.username;
                   } else if (item.name != null) {
-                    // console.log(item.name);
                     mem_name = item.name;
                   } else {
                     mem_name = "暫無會員名";
@@ -244,7 +237,6 @@
         fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             user_id = data.id;
           })
           .then(
@@ -252,19 +244,14 @@
             fetch(url1 + gpid)
               .then((response) => response.json())
               .then((data) => {
-                console.log(data);
-                //$("#gp_main_gpname").html(data[0].groupname);
                 group_manager_id = data[0].memberid;
                 $("#gp_name").val(data[0].groupname);
                 $("#gp_mem_num").val(data[0].groupmembercount);
-                // console.log(data.ifjoingroupdirectly);
                 if (data[0].ifjoingroupdirectly == "1") {
                   $("#check_join").attr("checked", true);
                 } else if (data[0].ifjoingroupdirectly == "2") {
                   $("#any_join").attr("checked", true);
                 }
-                console.log("權限:" + group_manager_id);
-                console.log("使用者" + user_id);
 
                 //驗證使用者權限
                 if (!(user_id === group_manager_id)) {
@@ -284,7 +271,6 @@
               })
           );
 
-        console.log(gp_id_list);
         //刪除揪團
         //要記得除了刪除揪團還要刪除揪團成員表
         //先多再一(先gp_mem再gp)
@@ -382,15 +368,12 @@
 
             let url_del_mems = apiUrlGroupMembers + "?action=delGroupMember";
             if (to_del_mems.length > 0) {
-              console.log("被勾選人數:" + to_del_mems.length);
 
               url_del_mems += "&groupid=" + gpid;
               $.each(to_del_mems, function (index, item) {
-                console.log($(item).attr("id"));
                 var mem = "&mem" + index + "=" + $(item).attr("id");
                 url_del_mems += mem;
               });
-              console.log(url_del_mems);
 
               //fetch
               var myHeaders = new Headers();
@@ -409,7 +392,7 @@
 
               fetch(url_del_mems, requestOptions)
                 .then((response) => response.text())
-                .then((result) => console.log("!!"))
+                .then((result) => console.log(""))
                 .catch((error) => console.log("error", error));
 
               //修改資訊
@@ -431,7 +414,6 @@
             fetch(url_set, requestOptions)
               .then((response) => response.json())
               .then((data) => {
-                console.log(data.groupid);
                 alert("修改成功!");
                 let a =
                   baseUrl +

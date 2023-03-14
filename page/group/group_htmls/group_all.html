@@ -39,7 +39,7 @@
     <section class="section" id="gps" style="margin: auto; text-align: center">
       <ul class="group_list">
         <li>
-          <a href="#">
+          <a href="./new_group.html">
             <div class="one_gp card">
               <p class="title" style="font-size: 30px; text-align: center">
                 建立揪團
@@ -54,8 +54,6 @@
     <footer-component></footer-component>
     <script>
       $(function () {
-        // console.log($(".group_list").html);
-
         //相對路徑宣告
         var baseUrl = window.location.protocol + "//" + window.location.host;
         var contextPath = window.location.pathname.substring(
@@ -85,7 +83,6 @@
         fetch(apiUrlGroupMembers, requestOptions)
           .then((response) => response.json())
           .then((result) => {
-            console.log(result);
             let list_html = "";
             if (result.length != 0) {
               $.each(result, function (index, item) {

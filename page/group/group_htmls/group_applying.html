@@ -142,7 +142,6 @@
         let set_any_join = document.getElementById("any_join");
         let btn_amend = document.getElementById("btn_uncheckmem");
         let url1 = apiUrlGroup + "?action=getOneGroup&groupid=";
-        // console.log(url1 + gpid);
         let group_manager_id;
         let getUrlString = location.href;
         var url = new URL(getUrlString);
@@ -154,7 +153,6 @@
         fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
             user_id = data.id;
           })
           .then(
@@ -163,15 +161,11 @@
               .then((response) => response.json())
               .then((data) => {
                 limit = data[0].groupmembercount;
-                console.log(data);
                 $("#h3_gp_name").html(data[0].groupname);
                 //$("#gp_main_gpname").html(data[0].groupname);
                 group_manager_id = data[0].memberid;
                 $("#gp_name").val(data[0].groupname);
                 $("#gp_mem_num").val(data[0].groupmembercount);
-                // console.log(data.ifjoingroupdirectly);
-                console.log("權限:" + group_manager_id);
-                console.log("使用者" + user_id);
                 //驗證使用者權限
                 if (!(user_id === group_manager_id)) {
                   alert("沒有權限!");
@@ -193,7 +187,6 @@
                 )
                   .then((response) => response.json())
                   .then((result) => {
-                    console.log(result);
                     $.each(result, function (index, item) {
                       //取得群組人數
                       if (item.gmstatus == 1) {
@@ -201,7 +194,6 @@
                       }
                       //渲染
                       if (item.gmstatus == 2) {
-                        console.log(item.member.name);
                         var list_html = "";
                         var mem_name = "";
                         var mem_pic = "";
@@ -220,17 +212,14 @@
                           need = "無";
                         }
                         if (item.member.imgBase64Str != null) {
-                          // console.log("有喔");
                           img_src =
                             "data:image/*;base64," + item.member.imgBase64Str;
                         } else {
                           img_src = "./test.png";
                         }
                         if (item.member.username != null) {
-                          // console.log(item.member.username);
                           mem_name = item.member.username;
                         } else if (item.member.name != null) {
-                          // console.log(item.member.name);
                           mem_name = item.member.name;
                         } else {
                           mem_name = "暫無會員名";
@@ -286,7 +275,6 @@
                 gp_amend_el.onclick = (e) => {
                   e.preventDefault();
                   var to_del_mems = $("input.mems:checked");
-                  console.log(to_del_mems);
                   if ($("input.mems:checked").length != 0) {
                     if ($("input.mems:checked").length + mem_count <= limit) {
                       //fetch

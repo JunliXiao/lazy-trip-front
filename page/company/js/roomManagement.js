@@ -8,7 +8,7 @@ $(function () {
   $(".trans-right-orderData").addClass("none")
 });
 let roomList = [];
-let compaynID;
+let companyID;
 let roomTypeID=null;
 
 function init() {
@@ -101,14 +101,14 @@ left_show_orderShow.addEventListener("click",(event) => {
   $(".trans-right-orderData").addClass("none")
 });
 
-//房型總覽介面搜尋按鈕                                              哭阿
+//房型總覽介面搜尋按鈕
 $("button.roomTypeIDSearch").on("click",(event) => {
   let searchValue = $("#searchRoomTypeID").val();
   let newRoomList = []
   console.log(roomList.length);
   for (let i = 0; i < roomList.length; i++) {
     console.log(roomList[i].roomTypeID);
-    if(roomList[i].roomTypeID == roomTypeID){
+    if(roomList[i].roomTypeID == searchValue){
       newRoomList.push({
         roomTypeID: roomList[i].roomTypeID,
         companyID: roomList[i].companyID,
@@ -297,7 +297,7 @@ if(newRoomTypeName.trim()== ''){
   });
 });
 //修改按鈕送出修改資料
-$("#roomAddUpdate").on("click",(event) => {
+$("#roomAddUpdateSubmit").on("click",(event) => {
   let newUpdateRoomTypeID = $("#roomTypeID").val();
   console.log(newUpdateRoomTypeID);
   let newRoomTypeName = $("#roomTypeName").val();
@@ -329,15 +329,16 @@ $("#roomAddUpdate").on("click",(event) => {
       error: function (xhr) {
         console.log("error");
       },
-    })
-  }
-
-//房型修改if判斷式
+    });
+  };
 };
-if(newRoomTypeName.trim()== ''){    
-  alert('請輸入房型名稱');console.log(newRoomTypeName);
-  return;
-}
+
+  //房型修改if判斷式
+
+  if(newRoomTypeName.trim()== ''){    
+    alert('請輸入房型名稱');console.log(newRoomTypeName);
+    return;
+  }
   if(newRoomTypePerson.trim()== ''){
     alert('請輸入房間人數');
     return;
@@ -367,20 +368,21 @@ if(newRoomTypeName.trim()== ''){
 
     success: function (data) {
       //顯示成功提示      
+      console.log('successBtn55555555555555');
       $("#ligthtboxText").text('修改成功');
       $(".trip_delete_lightbox").removeClass("none");
       
       //點擊確認按鈕
       $("#ligthtboxSuccess").on("click",(event) => {
         console.log('successBtn');
-        location.reload();
+        // location.reload();
       });
-      console.log(data);
+      // console.log(data);
     },
     error: function (xhr) {
       console.log("error");
     },
-  })
+  });
     
 });
 
@@ -415,6 +417,8 @@ function renderRoomData(roomList) {
     }
     $("tbody.roomList").html(newList);
   }
+
+  //日期選擇器
   $("tbody.roomList").on("click","button.roomAddDate",function(index) {
     console.log(8888888888);
      console.log(index.target.id);
@@ -449,11 +453,104 @@ function renderRoomData(roomList) {
     reader.readAsDataURL(file);
 }
 
+//ordershow抓取ordertable資料function
+// let orderShowList = [];
+// let orderID;
+// $(tbody.orderShowList).ready(function orderShow() {
+//   orderShowList = [];
+//     $.ajax({
+//     url: "http://localhost:8080/lazy-trip-back/Order.do",
+//     type: "GET",
+//     data: {
+//       action:'type',
+//       memberID:'168'
+//     }, // 將物件資料(不用雙引號) 傳送到指定的 url
 
+//     success: function (data) {
+//         console.log(data);
+//       for (let i = 0; i < data.length; i++) {
+//         orderShowList.push({
+//           roomTypeID: data[i].roomTypeID,
+//           companyID: data[i].companyID,
+//           roomTypeName: data[i].roomTypeName,
+//           roomTypePerson: data[i].roomTypePerson,
+//           roomTypeQuantity: data[i].roomTypeQuantity,
+//           roomTypePrice: data[i].roomTypePrice,
+//           roomTypeImgVO: data[i].roomTypeImgVO,
+//           orderCheckInDate: data[i].orderCheckInDate,
+//           orderCheckOutDate: data[i].orderCheckOutDate
 
+//         });
+//       } 
+//       document.querySelector("tbody.orderShowList").innerHTML = "";
+//       renderRoomData(orderShowList);
+//       console.log(orderShowList);
+//     },
+//     error: function (xhr) {
+//       console.log("error");
+//     },
+//   });
+// }
 
+//將資料渲染到orderShow
 
+// function renderOrderShow(orderShowList) {
+//   let newList = "";
+//         newList+=`<tr data-card=${orderShowList[i].orderID} class="orderShowList" id="orderShowList">
+//                 <td >${orderShowList[i].couponID}</td>  
+//                 <td>${orderShowList[i].memberID}</td>
+//                 <td>${orderShowList[i].orderCheckInDate}</td>
+//                 <td>${orderShowList[i].orderCheckOutDate}</td>
+//                 <td>${orderShowList[i].orderTotalPrice}</td>  
+//                 <td>${orderShowList[i].orderStatus}</td>
+//                 <td>${orderShowList[i].orderCreateDatetime}</td>
+//                 <td>${orderShowList[i].orderPayDeadline}</td>
+//                 <td>${orderShowList[i].orderPayDatetime}</td>  
+//                 <td>${orderShowList[i].orderPayCardName}</td>
+//                 <td>${orderShowList[i].orderPayCardYear}</td>
+//                 <td>${orderShowList[i].orderPayCardMonth}</td>
+//                 <td>${orderShowList[i].travelerName}</td>  
+//                 <td>${orderShowList[i].travelerEmail}</td>
+//                 <td>${orderShowList[i].travelerPhone}</td>
+//                 <td>${orderShowList[i].orderPayCardMonth}</td>
+//                 <td> <button class="button is-primary" id="orderdetailbutton">訂單明細</button></td>
+//               </tr>`;
+//   }
+//   $("tbody.orderShowList").html(newList);
 
-
-
-
+//訂單明細按鈕
+// $("tbody.orderDataList").on("click","button#orderDetail",function() {
+//   let neworderDetailID = $(this).closest("tr").attr("data-card");
+//   console.log(neworderDetailID);
+//   $.ajax({
+//     url: "http://localhost:8080/lazy-trip-back/Order.do",
+//     type: "POST",
+//     data: {
+//       action:'',
+//            orderDetailID: neworderDetailID,
+//           }, 
+//           success: function (data) {
+//             console.log(data);
+//           for (let i = 0; i < data.length; i++) {
+//             orderDataList.push({
+//               orderDetailID: data[i].orderDetailID,
+//               orderID: data[i].orderID,
+//               roomTypeID: data[i].roomTypeID,
+//               roomTypeName: data[i].roomTypeName,
+//               roomTypePerson: data[i].roomTypePerson,
+//               orderDetailRoomPrice: data[i].orderDetailRoomPrice,
+//               orderDetailRoomQuantity: data[i].orderDetailRoomQuantity,
+//               orderDetailCouponDiscountPrice: data[i].orderDetailCouponDiscountPrice,
+//               orderCheckOutDate: data[i].orderCheckOutDate
+    
+//             });
+//           } 
+//           document.querySelector("tbody.orderDataList").innerHTML = "";
+//           renderRoomData(orderDataList);
+//           console.log(orderDataList);
+//         },
+//         error: function (xhr) {
+//           console.log("error");
+//         },
+//       });
+//     })

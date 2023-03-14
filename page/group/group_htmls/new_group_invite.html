@@ -111,7 +111,7 @@
         var url = new URL(getUrlString);
         let gpmid = url.searchParams.get("Id"); //
         let decodedStr = decodeURIComponent(url.searchParams.get("gpName"));
-        if (decodedStr != null) {
+        if (!(decodedStr === "null")) {
           $("#name_title").html("歡迎加入 " + decodedStr);
         }
         var maxLength = 20;
@@ -139,7 +139,6 @@
           .then((response) => response.json())
           .then((data) => {
             user_id = data.id;
-            console.log(user_id);
             var myHeaders = new Headers();
             myHeaders.append(
               "Content-Type",
@@ -171,18 +170,14 @@
                     contextPath +
                     "/page/group/group_htmls/all_invite.html";
                 } else {
-                  console.log(result.selfintro);
                   $("#gp_name").val(result.selfintro);
                   $("#gp_mem_num").val(result.specialneed);
                   gm_id = result.groupmember;
                 }
-                console.log(result);
               })
               .then(() => {
                 gp_create_el.onclick = (e) => {
                   e.preventDefault();
-                  // console.log($("#gp_name").val());
-                  // console.log($("#gp_mem_num").val());
                   //修改自介
                   var myHeaders = new Headers();
                   myHeaders.append(

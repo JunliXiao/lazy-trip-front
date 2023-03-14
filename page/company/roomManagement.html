@@ -130,7 +130,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                  <th colspan="8"></th>
+                  <th colspan="9"></th>
                 </tr>
                 <tr class="roomInfo">
                   <th><abbr title="roomTypeID" class= "roomTypeID" >房型編號</abbr></th>
@@ -254,7 +254,7 @@
         </div>
 
         <td><button class="button is-primary " id="roomAddInsert">新增</button></td>
-        <td><button class="button is-primary updateBtn -none" id="roomAddUpdate">修改</button></td>
+        <td><button class="button is-primary updateBtn -none" id="roomAddUpdateSubmit">修改</button></td>
       </div>
       <!-- 包裝轉換orderShow頁面 -->
       <div class="trans-right-orderShow">
@@ -265,29 +265,33 @@
       <table class="table">
        <thead>
          <tr>
-           <th colspan="6"></th>
+           <th colspan="20"></th>
           </tr>
-          <tr class="roomInfo">
-            <th><abbr title="roomtype" >訂單編號</abbr></th>
-            <th><abbr title="img" class="roomInfo">房型編號</abbr></th>
-            <th style="text-align: center"><abbr title="price" class="roomInfo">訂單明細房間數量</abbr></th>
-            <th><abbr title="date" class="roomInfo">入住日期</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo">退房日期</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo"></abbr></th>
+          <tr class="orderShow">
+            <th><abbr title="order_id" >訂單編號</abbr></th>
+            <th><abbr title="company_id" class="companyID -none">廠商編號</abbr></th>
+            <th><abbr title="coupon_id" class="couponID -none">優惠券編號</abbr></th>
+            <th><abbr title="member_id" class="memberID -none">會員編號</abbr></th>
+            <th><abbr title="order_check_in_date" class="orderCheckInDate">入住日期</abbr></th>
+            <th><abbr title="order_check_out_date" class="orderCheckOutDate">退房日期</abbr></th>
+            <th><abbr title="order_total_price" class="orderTotalPrice">訂單總金額</abbr></th>
+            <th><abbr title="order_status" class="orderStatus">訂單狀態</abbr></th>
+            <th><abbr title="order_create_datetime" class="orderCreateDatetime">訂單成立日期時間</abbr></th>
+            <th><abbr title="order_pay_deadline" class="orderPayDeadline">訂單付款截止日期</abbr></th>
+            <th><abbr title="order_pay_datetime" class="orderPayDatetime">訂單付款時間</abbr></th>
+            <th><abbr title="order_pay_card_name" class="orderPayCardName -none">付款信用卡姓名</abbr></th>
+            <th><abbr title="order_pay_card_number" class="orderPatCardNumber -none">付款信用卡卡號</abbr></th>
+            <th><abbr title="order_pay_card_year" class="orderPayCardYear -none">信用卡有效年分</abbr></th>
+            <th><abbr title="order_pay_card_month" class="orderPayCardMonth -none">信用卡有效月份</abbr></th>
+            <th><abbr title="traveler_name" class="travelerName">旅客姓名</abbr></th>
+            <th><abbr title="traveler_id_number" class="travelerIDNumber">旅客身分證號碼</abbr></th>
+            <th><abbr title="traveler_email" class="travelerEmail">旅客電子信箱</abbr></th>
+            <th><abbr title="traveler_phone" class="travelerPhone">旅客手機號碼</abbr></th>
+            <th><abbr title="orderdetailbutton"></abbr></th>
           </tr>
         </thead>
-        <tbody class="tbody1">
-          <tr class="this">
-            <th>1</th>
-            <td>38</td>
-            <td>23</td>
-              <td>2</td>
-              <td>照片</td>
-              <td>NT$ 2,000</td>
-              <td> <button class="button is-primary" id="orderDelete">刪除</button></td>
-              
-            </tr>
-            
+          <tbody class="orderShowList">
+            <td> <button class="button is-primary" id="orderDetail">訂單明細</button></td>
           </tbody>
         </table>
       </div>
@@ -302,42 +306,22 @@
           <table class="table">
             <thead>
               <tr>
-            <th colspan="11"></th>
+            <th colspan="8"></th>
           </tr>
-          <tr class="roomInfo">
-            <th><abbr title="roomtype" >訂單編號</abbr></th>
+          <tr class="orderData">
+            <th><abbr title="order_detail_id" >訂單明細編號</abbr></th>
+            <th><abbr title="order_id" class="orderID">訂單編號</abbr></th>
+            <th><abbr title="roomtype_id" class="roomTypeID">房型編號</abbr></th>
+            <th><abbr title="roomtype_name" class="roomTypeName">房型名稱</abbr></th>
+            <th><abbr title="roomtype_person" class="roomTypePerson">房型人數</abbr></th>
+            <th><abbr title="order_detail_room_price" class="orderCheckOutDate">訂單明細房間價格</abbr></th>
+            <th><abbr title="order_detail_room_quantity" class="orderTotalPrice">訂單明細房間數量</abbr></th>
+            <th><abbr title="order_detail_coupon_discount_price" class="orderStatus">訂單明細總折扣金額</abbr></th>
            
-            <th><abbr title="img" class="roomInfo">房型編號</abbr></th>
-            <th style="text-align: center"><abbr title="price" class="roomInfo">訂單明細房間數量</abbr></th>
-            <th><abbr title="date" class="roomInfo">入住日期</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo">退房日期</abbr></th>
-            <th><abbr title="roomtype" >旅客姓名</abbr></th>
-            <th><abbr title="roomtypeid" class="roomInfo">旅客身分證字號</abbr></th>
-            <th><abbr title="date" class="roomInfo">旅客電子信箱</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo">旅客手機號碼</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo">訂單明細房間價格</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo">訂單明細總折扣金額</abbr></th>
-            <th><abbr title="幾晚" class="roomInfo"></abbr></th>
-
           </tr>
         </thead>
-        <tbody class="tbody1">
-          <tr class="this">
-            <th>1</th>
-            <td>38</td>
-            <td>23</td>
-            <td>2</td>
-            <td>照片</td>
-            <td>NT$ 2,000</td>
-            <td>38</td>
-            <td>23</td>
-            <td>2</td>
-            <td>照片</td>
-            <td> <button class="button is-primary" id="orderDetail">訂單明細</button></td>
-            
-             
-            </tr>
-            
+          <tbody class="orderDataList">
+           
           </tbody>
           </div>
       </div>
@@ -361,8 +345,7 @@
       </div>
     </div>
   </div>        
-          <!-- 頁尾 -->
-          <footer-component></footer-component>
+          
           <script>
     //   document.querySelector("button#btn").addEventListener("click", function(){
     //     console.log(111);
@@ -415,6 +398,8 @@
 
     //   })
     </script>
+     <!-- 頁尾 -->
+          <footer-component></footer-component>
         <!-- 引入js檔 -->
         <script src="../../asset/js/jquery-3.6.3.min.js"></script>
         <script src="js/roomManagement.js"></script>
