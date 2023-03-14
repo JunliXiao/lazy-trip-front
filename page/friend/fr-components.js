@@ -2,6 +2,8 @@
 class ResultCard extends HTMLElement {
 
   card_html;
+  name;
+  username;
 
   constructor() {
     super();
@@ -27,7 +29,7 @@ class ResultCard extends HTMLElement {
             <div class="columns">
               <div class="column is-one-third">
                 <div class="content">
-                  <span class="title is-4">${this.getAttribute("member-name")}</span><span class="is-6">&nbsp;&nbsp;&nbsp;&nbsp;TEST</span><br>
+                  <span class="title is-4">${this.username}</span><span class="is-6">&nbsp;&nbsp;&nbsp;&nbsp;${this.name}</span><br>
                   <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
                 </div>
               </div>              
@@ -43,6 +45,11 @@ class ResultCard extends HTMLElement {
   `;
   }
 
+  setNameAndUsername() {
+    this.name = this.getAttribute("member-name");
+    this.username = this.getAttribute("member-username") == undefined ? this.getAttribute("member-name") : this.getAttribute("member-username");
+  }
+
 }
 
 // 你可能感興趣 Suggestion
@@ -53,11 +60,20 @@ class Suggestion extends ResultCard {
   }
 
   connectedCallback() {
+    this.setNameAndUsername();
     this.buildCard(
       `
-        <button class="_add_friend button is-primary is-light is-medium has-text-weight-bold">
-        加好友
+      <div class="buttons are-medium">
+        <button class="_add_friend button is-primary is-light has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-plus"></i></span>
+          <span>加好友</span>
         </button> 
+        </button>
+        <button class="_block button is-danger is-light has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-ban"></i></span>
+          <span>封鎖</span> 
+        </button> 
+      </div>  
       `
     );
 
@@ -81,17 +97,15 @@ class Friend extends ResultCard {
   }
 
   connectedCallback() {
+    this.setNameAndUsername();
     this.buildCard(
       `
-        <span class="icon is-large is-clickable">
-          <i class="fas fa-lg fa-message"></i>
-        </span>
-        <span class="icon is-large is-clickable">
-          <i class="fas fa-lg fa-people-group"></i>
-        </span>              
-        <span class="icon is-large is-clickable">
-          <i class="fas fa-lg fa-user-xmark"></i>
-        </span> 
+      <div class="buttons are-medium">
+        <button class="_unfriend button is-info is-light has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-minus"></i></span>
+          <span>解除</span> 
+        </button> 
+      </div> 
       `
     );
 
@@ -110,9 +124,15 @@ class SentRequest extends ResultCard {
   }
 
   connectedCallback() {
+    this.setNameAndUsername();
     this.buildCard(
       `
-        <button class="_cancel button is-warning is-light is-medium has-text-weight-bold">取消</button>
+      <div class="buttons are-medium">
+        <button class="_cancel button is-warning is-light has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-xmark"></i></span>
+          <span>取消</span>
+        </button>
+      <div>
       `
     );
 
@@ -134,11 +154,22 @@ class ReceivedRequest extends ResultCard {
     super();
   }
   connectedCallback() {
+    this.setNameAndUsername();
     this.buildCard(
       `
-        <div class="buttons">
-          <button class="_accept button is-success is-light is-medium has-text-weight-bold">接受</button>
-          <button class="_decline button is-warning is-light is-medium has-text-weight-bold">婉拒</button>  
+        <div class="buttons are-medium">
+          <button class="_accept button is-success is-light has-text-weight-bold">
+            <span class="icon is-small"><i class="fas fa-check"></i></span>
+            <span>接受</span>
+          </button>
+          <button class="_decline button is-warning is-light has-text-weight-bold">
+            <span class="icon is-small"><i class="fas fa-xmark"></i></span>
+            <span>婉拒</span>
+          </button>
+          <button class="_block button is-danger is-light has-text-weight-bold">
+            <span class="icon is-small"><i class="fas fa-ban"></i></span>
+            <span>封鎖</span>
+          </button>   
         </div>     
       `
     )

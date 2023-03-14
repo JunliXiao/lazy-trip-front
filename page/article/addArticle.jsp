@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="com.article.model.*"%>
-<%@ page import="com.articleImage.model.*"%>
+<%@ page import="article.model.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
 

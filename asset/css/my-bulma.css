@@ -358,7 +358,7 @@ a:hover {
 
 code {
   background-color: hsl(197deg, 47%, 96%);
-  color: #da1039;
+  color: #1f0a0d;
   font-size: 0.875em;
   font-weight: normal;
   padding: 0.25em 0.5em 0.25em;
@@ -1349,12 +1349,12 @@ a.box:active {
   color: #946c00;
 }
 .button.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   border-color: transparent;
   color: #fff;
 }
 .button.is-danger:hover, .button.is-danger.is-hovered {
-  background-color: #f03a5f;
+  background-color: #501921;
   border-color: transparent;
   color: #fff;
 }
@@ -1363,21 +1363,21 @@ a.box:active {
   color: #fff;
 }
 .button.is-danger:focus:not(:active), .button.is-danger.is-focused:not(:active) {
-  box-shadow: 0 0 0 0.125em rgba(241, 70, 104, 0.25);
+  box-shadow: 0 0 0 0.125em rgba(90, 28, 37, 0.25);
 }
 .button.is-danger:active, .button.is-danger.is-active {
-  background-color: #ef2e55;
+  background-color: #46161d;
   border-color: transparent;
   color: #fff;
 }
 .button.is-danger[disabled], fieldset[disabled] .button.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
-  border-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
+  border-color: hsl(351deg, 53%, 23%);
   box-shadow: none;
 }
 .button.is-danger.is-inverted {
   background-color: #fff;
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 .button.is-danger.is-inverted:hover, .button.is-danger.is-inverted.is-hovered {
   background-color: #f2f2f2;
@@ -1386,32 +1386,32 @@ a.box:active {
   background-color: #fff;
   border-color: transparent;
   box-shadow: none;
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 .button.is-danger.is-loading::after {
   border-color: transparent transparent #fff #fff !important;
 }
 .button.is-danger.is-outlined {
   background-color: transparent;
-  border-color: hsl(348deg, 86%, 61%);
-  color: hsl(348deg, 86%, 61%);
+  border-color: hsl(351deg, 53%, 23%);
+  color: hsl(351deg, 53%, 23%);
 }
 .button.is-danger.is-outlined:hover, .button.is-danger.is-outlined.is-hovered, .button.is-danger.is-outlined:focus, .button.is-danger.is-outlined.is-focused {
-  background-color: hsl(348deg, 86%, 61%);
-  border-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
+  border-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .button.is-danger.is-outlined.is-loading::after {
-  border-color: transparent transparent hsl(348deg, 86%, 61%) hsl(348deg, 86%, 61%) !important;
+  border-color: transparent transparent hsl(351deg, 53%, 23%) hsl(351deg, 53%, 23%) !important;
 }
 .button.is-danger.is-outlined.is-loading:hover::after, .button.is-danger.is-outlined.is-loading.is-hovered::after, .button.is-danger.is-outlined.is-loading:focus::after, .button.is-danger.is-outlined.is-loading.is-focused::after {
   border-color: transparent transparent #fff #fff !important;
 }
 .button.is-danger.is-outlined[disabled], fieldset[disabled] .button.is-danger.is-outlined {
   background-color: transparent;
-  border-color: hsl(348deg, 86%, 61%);
+  border-color: hsl(351deg, 53%, 23%);
   box-shadow: none;
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 .button.is-danger.is-inverted.is-outlined {
   background-color: transparent;
@@ -1420,10 +1420,10 @@ a.box:active {
 }
 .button.is-danger.is-inverted.is-outlined:hover, .button.is-danger.is-inverted.is-outlined.is-hovered, .button.is-danger.is-inverted.is-outlined:focus, .button.is-danger.is-inverted.is-outlined.is-focused {
   background-color: #fff;
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 .button.is-danger.is-inverted.is-outlined.is-loading:hover::after, .button.is-danger.is-inverted.is-outlined.is-loading.is-hovered::after, .button.is-danger.is-inverted.is-outlined.is-loading:focus::after, .button.is-danger.is-inverted.is-outlined.is-loading.is-focused::after {
-  border-color: transparent transparent hsl(348deg, 86%, 61%) hsl(348deg, 86%, 61%) !important;
+  border-color: transparent transparent hsl(351deg, 53%, 23%) hsl(351deg, 53%, 23%) !important;
 }
 .button.is-danger.is-inverted.is-outlined[disabled], fieldset[disabled] .button.is-danger.is-inverted.is-outlined {
   background-color: transparent;
@@ -1432,18 +1432,18 @@ a.box:active {
   color: #fff;
 }
 .button.is-danger.is-light {
-  background-color: #feecf0;
-  color: #cc0f35;
+  background-color: #faeff1;
+  color: #c84c5e;
 }
 .button.is-danger.is-light:hover, .button.is-danger.is-light.is-hovered {
-  background-color: #fde0e6;
+  background-color: #f7e6e8;
   border-color: transparent;
-  color: #cc0f35;
+  color: #c84c5e;
 }
 .button.is-danger.is-light:active, .button.is-danger.is-light.is-active {
-  background-color: #fcd4dc;
+  background-color: #f4dce0;
   border-color: transparent;
-  color: #cc0f35;
+  color: #c84c5e;
 }
 .button.is-small {
   font-size: 0.75rem;
@@ -2039,12 +2039,12 @@ div.icon-text {
   color: #946c00;
 }
 .notification.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .notification.is-danger.is-light {
-  background-color: #feecf0;
-  color: #cc0f35;
+  background-color: #faeff1;
+  color: #c84c5e;
 }
 
 .progress {
@@ -2180,16 +2180,16 @@ div.icon-text {
   background-image: linear-gradient(to right, hsl(44deg, 100%, 77%) 30%, hsl(197deg, 47%, 93%) 30%);
 }
 .progress.is-danger::-webkit-progress-value {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
 }
 .progress.is-danger::-moz-progress-bar {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
 }
 .progress.is-danger::-ms-fill {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
 }
 .progress.is-danger:indeterminate {
-  background-image: linear-gradient(to right, hsl(348deg, 86%, 61%) 30%, hsl(197deg, 47%, 93%) 30%);
+  background-image: linear-gradient(to right, hsl(351deg, 53%, 23%) 30%, hsl(197deg, 47%, 93%) 30%);
 }
 .progress:indeterminate {
   animation-duration: 1.5s;
@@ -2296,8 +2296,8 @@ div.icon-text {
 }
 .table td.is-danger,
 .table th.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
-  border-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
+  border-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .table td.is-narrow,
@@ -2525,12 +2525,12 @@ div.icon-text {
   color: #946c00;
 }
 .tag:not(body).is-danger {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .tag:not(body).is-danger.is-light {
-  background-color: #feecf0;
-  color: #cc0f35;
+  background-color: #faeff1;
+  color: #c84c5e;
 }
 .tag:not(body).is-normal {
   font-size: 0.75rem;
@@ -2815,10 +2815,10 @@ a.tag:hover {
   box-shadow: 0 0 0 0.125em rgba(255, 224, 138, 0.25);
 }
 .is-danger.textarea, .is-danger.input {
-  border-color: hsl(348deg, 86%, 61%);
+  border-color: hsl(351deg, 53%, 23%);
 }
 .is-danger.textarea:focus, .is-danger.input:focus, .is-danger.is-focused.textarea, .is-danger.is-focused.input, .is-danger.textarea:active, .is-danger.input:active, .is-danger.is-active.textarea, .is-danger.is-active.input {
-  box-shadow: 0 0 0 0.125em rgba(241, 70, 104, 0.25);
+  box-shadow: 0 0 0 0.125em rgba(90, 28, 37, 0.25);
 }
 .is-small.textarea, .is-small.input {
   border-radius: 2px;
@@ -3046,16 +3046,16 @@ a.tag:hover {
   box-shadow: 0 0 0 0.125em rgba(255, 224, 138, 0.25);
 }
 .select.is-danger:not(:hover)::after {
-  border-color: hsl(348deg, 86%, 61%);
+  border-color: hsl(351deg, 53%, 23%);
 }
 .select.is-danger select {
-  border-color: hsl(348deg, 86%, 61%);
+  border-color: hsl(351deg, 53%, 23%);
 }
 .select.is-danger select:hover, .select.is-danger select.is-hovered {
-  border-color: #ef2e55;
+  border-color: #46161d;
 }
 .select.is-danger select:focus, .select.is-danger select.is-focused, .select.is-danger select:active, .select.is-danger select.is-active {
-  box-shadow: 0 0 0 0.125em rgba(241, 70, 104, 0.25);
+  box-shadow: 0 0 0 0.125em rgba(90, 28, 37, 0.25);
 }
 .select.is-small {
   border-radius: 2px;
@@ -3281,22 +3281,22 @@ a.tag:hover {
   color: rgba(0, 0, 0, 0.7);
 }
 .file.is-danger .file-cta {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   border-color: transparent;
   color: #fff;
 }
 .file.is-danger:hover .file-cta, .file.is-danger.is-hovered .file-cta {
-  background-color: #f03a5f;
+  background-color: #501921;
   border-color: transparent;
   color: #fff;
 }
 .file.is-danger:focus .file-cta, .file.is-danger.is-focused .file-cta {
   border-color: transparent;
-  box-shadow: 0 0 0.5em rgba(241, 70, 104, 0.25);
+  box-shadow: 0 0 0.5em rgba(90, 28, 37, 0.25);
   color: #fff;
 }
 .file.is-danger:active .file-cta, .file.is-danger.is-active .file-cta {
-  background-color: #ef2e55;
+  background-color: #46161d;
   border-color: transparent;
   color: #fff;
 }
@@ -3511,7 +3511,7 @@ a.tag:hover {
   color: hsl(44deg, 100%, 77%);
 }
 .help.is-danger {
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 
 .field:not(:last-child) {
@@ -4312,15 +4312,15 @@ button.dropdown-item.is-active {
   color: #946c00;
 }
 .message.is-danger {
-  background-color: #feecf0;
+  background-color: #faeff1;
 }
 .message.is-danger .message-header {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .message.is-danger .message-body {
-  border-color: hsl(348deg, 86%, 61%);
-  color: #cc0f35;
+  border-color: hsl(351deg, 53%, 23%);
+  color: #c84c5e;
 }
 
 .message-header {
@@ -4967,7 +4967,7 @@ button.dropdown-item.is-active {
   }
 }
 .navbar.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .navbar.is-danger .navbar-brand > .navbar-item,
@@ -4978,7 +4978,7 @@ button.dropdown-item.is-active {
 .navbar.is-danger .navbar-brand .navbar-link:focus,
 .navbar.is-danger .navbar-brand .navbar-link:hover,
 .navbar.is-danger .navbar-brand .navbar-link.is-active {
-  background-color: #ef2e55;
+  background-color: #46161d;
   color: #fff;
 }
 .navbar.is-danger .navbar-brand .navbar-link::after {
@@ -5004,7 +5004,7 @@ button.dropdown-item.is-active {
   .navbar.is-danger .navbar-end .navbar-link:focus,
   .navbar.is-danger .navbar-end .navbar-link:hover,
   .navbar.is-danger .navbar-end .navbar-link.is-active {
-    background-color: #ef2e55;
+    background-color: #46161d;
     color: #fff;
   }
   .navbar.is-danger .navbar-start .navbar-link::after,
@@ -5014,11 +5014,11 @@ button.dropdown-item.is-active {
   .navbar.is-danger .navbar-item.has-dropdown:focus .navbar-link,
   .navbar.is-danger .navbar-item.has-dropdown:hover .navbar-link,
   .navbar.is-danger .navbar-item.has-dropdown.is-active .navbar-link {
-    background-color: #ef2e55;
+    background-color: #46161d;
     color: #fff;
   }
   .navbar.is-danger .navbar-dropdown a.navbar-item.is-active {
-    background-color: hsl(348deg, 86%, 61%);
+    background-color: hsl(351deg, 53%, 23%);
     color: #fff;
   }
 }
@@ -5713,14 +5713,14 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   color: hsl(44deg, 100%, 77%);
 }
 .panel.is-danger .panel-heading {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .panel.is-danger .panel-tabs a.is-active {
-  border-bottom-color: hsl(348deg, 86%, 61%);
+  border-bottom-color: hsl(351deg, 53%, 23%);
 }
 .panel.is-danger .panel-block.is-active .panel-icon {
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 
 .panel-tabs:not(:last-child),
@@ -7914,39 +7914,39 @@ a.has-text-warning-dark:hover, a.has-text-warning-dark:focus {
 }
 
 .has-text-danger {
-  color: hsl(348deg, 86%, 61%) !important;
+  color: hsl(351deg, 53%, 23%) !important;
 }
 
 a.has-text-danger:hover, a.has-text-danger:focus {
-  color: #ee1742 !important;
+  color: #331015 !important;
 }
 
 .has-background-danger {
-  background-color: hsl(348deg, 86%, 61%) !important;
+  background-color: hsl(351deg, 53%, 23%) !important;
 }
 
 .has-text-danger-light {
-  color: #feecf0 !important;
+  color: #faeff1 !important;
 }
 
 a.has-text-danger-light:hover, a.has-text-danger-light:focus {
-  color: #fabdc9 !important;
+  color: #eec8ce !important;
 }
 
 .has-background-danger-light {
-  background-color: #feecf0 !important;
+  background-color: #faeff1 !important;
 }
 
 .has-text-danger-dark {
-  color: #cc0f35 !important;
+  color: #c84c5e !important;
 }
 
 a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
-  color: #ee2049 !important;
+  color: #d47381 !important;
 }
 
 .has-background-danger-dark {
-  background-color: #cc0f35 !important;
+  background-color: #c84c5e !important;
 }
 
 .has-text-black-bis {
@@ -10117,7 +10117,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   }
 }
 .hero.is-danger {
-  background-color: hsl(348deg, 86%, 61%);
+  background-color: hsl(351deg, 53%, 23%);
   color: #fff;
 }
 .hero.is-danger a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current),
@@ -10136,7 +10136,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 @media screen and (max-width: 1023px) {
   .hero.is-danger .navbar-menu {
-    background-color: hsl(348deg, 86%, 61%);
+    background-color: hsl(351deg, 53%, 23%);
   }
 }
 .hero.is-danger .navbar-item,
@@ -10146,7 +10146,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .hero.is-danger a.navbar-item:hover, .hero.is-danger a.navbar-item.is-active,
 .hero.is-danger .navbar-link:hover,
 .hero.is-danger .navbar-link.is-active {
-  background-color: #ef2e55;
+  background-color: #46161d;
   color: #fff;
 }
 .hero.is-danger .tabs a {
@@ -10157,7 +10157,7 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   opacity: 1;
 }
 .hero.is-danger .tabs li.is-active a {
-  color: hsl(348deg, 86%, 61%) !important;
+  color: hsl(351deg, 53%, 23%) !important;
   opacity: 1;
 }
 .hero.is-danger .tabs.is-boxed a, .hero.is-danger .tabs.is-toggle a {
@@ -10169,14 +10169,14 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .hero.is-danger .tabs.is-boxed li.is-active a, .hero.is-danger .tabs.is-boxed li.is-active a:hover, .hero.is-danger .tabs.is-toggle li.is-active a, .hero.is-danger .tabs.is-toggle li.is-active a:hover {
   background-color: #fff;
   border-color: #fff;
-  color: hsl(348deg, 86%, 61%);
+  color: hsl(351deg, 53%, 23%);
 }
 .hero.is-danger.is-bold {
-  background-image: linear-gradient(141deg, #fa0a62 0%, hsl(348deg, 86%, 61%) 71%, #f7595f 100%);
+  background-image: linear-gradient(141deg, #360c19 0%, hsl(351deg, 53%, 23%) 71%, #711f1e 100%);
 }
 @media screen and (max-width: 768px) {
   .hero.is-danger.is-bold .navbar-menu {
-    background-image: linear-gradient(141deg, #fa0a62 0%, hsl(348deg, 86%, 61%) 71%, #f7595f 100%);
+    background-image: linear-gradient(141deg, #360c19 0%, hsl(351deg, 53%, 23%) 71%, #711f1e 100%);
   }
 }
 .hero.is-small .hero-body {

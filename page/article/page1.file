@@ -1,8 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
-<%  int rowsPerPage = 10;  //®C≠∂™∫µßº∆    
-    int rowNumber=0;      //¡`µßº∆
-    int pageNumber=0;     //¡`≠∂º∆      
-    int whichPage=1;      //≤ƒ¥X≠∂
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%  int rowsPerPage = 5;  //ÊØèÈ†ÅÁöÑÁ≠ÜÊï∏    
+    int rowNumber=0;      //Á∏ΩÁ≠ÜÊï∏
+    int pageNumber=0;     //Á∏ΩÈ†ÅÊï∏      
+    int whichPage=1;      //Á¨¨ÂπæÈ†Å
     int pageIndexArray[]=null;
     int pageIndex=0; 
 %>
@@ -21,10 +21,10 @@
 <%  try {
        whichPage = Integer.parseInt(request.getParameter("whichPage"));
        pageIndex=pageIndexArray[whichPage-1];
-    } catch (NumberFormatException e) { //≤ƒ§@¶∏∞ı¶Ê™∫Æ…≠‘
+    } catch (NumberFormatException e) { //Á¨¨‰∏ÄÊ¨°Âü∑Ë°åÁöÑÊôÇÂÄô
        whichPage=1;
        pageIndex=0;
-    } catch (ArrayIndexOutOfBoundsException e) { //¡`≠∂º∆§ß•~™∫ø˘ª~≠∂º∆
+    } catch (ArrayIndexOutOfBoundsException e) { //Á∏ΩÈ†ÅÊï∏‰πãÂ§ñÁöÑÈåØË™§È†ÅÊï∏
          if (pageNumber>0){
               whichPage=pageNumber;
               pageIndex=pageIndexArray[pageNumber-1];
@@ -33,7 +33,6 @@
 %>
 
 <%if (pageNumber>0){%>
-  <b><font color=red>≤ƒ<%=whichPage%>/<%=pageNumber%>≠∂</font></b>
+  <b><font color=red>Á¨¨<%=whichPage%>/<%=pageNumber%>È†Å</font></b>
 <%}%>
 
-<b>°¥≤≈ ¶X ¨d ∏ﬂ ±¯ •Û ¶p §U ©“ •‹: ¶@<font color=red><%=rowNumber%></font>µß</b>
