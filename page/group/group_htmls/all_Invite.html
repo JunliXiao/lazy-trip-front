@@ -117,17 +117,14 @@
         fetch(apiUrlGroup + "?action=getUsingMember")
           .then((response) => response.json())
           .then((data) => {
-            // console.log(data);
             user_id = data.id;
 
             //取得資料
             fetch(apiUrlGroupMembers + "?action=getAllInvite")
               .then((response) => response.json())
               .then((result) => {
-                console.log(result);
                 $("#mem_to_add").html("");
                 $.each(result, function (index, item) {
-                  console.log(item.groupVO);
                   status = item.gmstatus;
                   if (item.groupVO.ifjoingroupdirectly == 1) {
                     join_how_html = '<span class="need_approve">需審核</span>';
@@ -189,8 +186,6 @@
         gp_amend_el.onclick = (e) => {
           if ($("input.mems:checked").length != 0) {
             e.preventDefault();
-            //  console.log($("input.mems:checked").val());
-            // console.log($("input.mems:checked")[0].parent());
             let input_el = $("input.mems:checked")[0];
             let span_el = $(input_el).parent().parent().find("span")[0];
             let gp_p = $(input_el).parent().parent().find("p")[0];
