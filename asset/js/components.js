@@ -93,14 +93,14 @@ class Header extends HTMLElement {
             </span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/page/member/main.html"> 我的頁面 </a>
+            <a class="navbar-item mem_main"> 我的頁面 </a>
             <a class="navbar-item"> 我的訂單 </a>
             <a href="page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
             <a class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="http://localhost:8080/lazy-trip-back/page/logout.html" class="navbar-item"> 登出 </a>
+            <a class="navbar-item mem_logout"> 登出 </a>
           </div>
         </div>
       </div>
@@ -116,6 +116,10 @@ class Header extends HTMLElement {
     $(document).on("click", "a.mem_main", function () {
       let ori = location.origin;
       location.href = ori + "/lazy-trip-back/page/member/main.html";
+    });
+    $(document).on("click", "a.mem_logout", function () {
+      let ori = location.origin;
+      location.href = ori + "/lazy-trip-back/page/logout.html";
     });
     $(function () {
       // Function-----------------
@@ -163,7 +167,7 @@ class Footer extends HTMLElement {
         <div class="column">
           <div class="content">
             <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
+            <a class="admin_login">後台登入</a>
           </div>
         </div>
       </div>
@@ -175,6 +179,10 @@ class Footer extends HTMLElement {
 
   connectedCallback() {
     this.innerHTML = this.footer_html;
+    $(document).on("click", "a.admin_login", function () {
+      let ori = location.origin;
+      location.href = ori + "/lazy-trip-back/page/admin/login.html";
+    });
   }
 }
 

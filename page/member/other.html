@@ -179,7 +179,8 @@
         let lookForMemberId = new URLSearchParams(location.search);
         let otherMemId = lookForMemberId.get("member_id");
 
-        const ROOT = "http://localhost:8080/lazy-trip-back";
+        const ROOT = location.origin;
+        const ROOT_PROJ = "/lazy-trip-back";
         const LOGIN = "/page/login.html";
         const API_RELATION = "/api/relation";
         const API_FRIEND_REQUEST = "/api/friend/request";
@@ -226,10 +227,11 @@
           if (getCookie("memId") == null) {
             let loc = location.href;
             sessionStorage.setItem("loc", loc);
-            location.href = ROOT + LOGIN;
+            location.href = ROOT + ROOT_PROJ + LOGIN;
           } else {
             fetch(
               ROOT +
+                ROOT_PROJ +
                 API_FRIEND_REQUEST +
                 `?addressee_id=${otherMemId}&requester_id=${getCookie(
                   "memId"
@@ -256,6 +258,7 @@
           if (getCookie("memId") != null) {
             fetch(
               ROOT +
+                ROOT_PROJ +
                 API_RELATION +
                 `?specifier_id=${otherMemId}&other_id=${getCookie("memId")}`
             )
