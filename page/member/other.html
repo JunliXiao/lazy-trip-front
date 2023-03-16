@@ -95,7 +95,7 @@
                   </li>
                   <li><a class="tabs" data-id="comment">評論</a></li>
                   <li><a class="tabs" data-id="img">相片</a></li>
-                  <li><a class="tabs" data-id="tour">旅程</a></li>
+                  <!-- <li><a class="tabs" data-id="tour">旅程</a></li> -->
                 </ul>
               </div>
             </div>
@@ -178,6 +178,8 @@
         const intro = $("textarea#input-intro");
         let lookForMemberId = new URLSearchParams(location.search);
         let otherMemId = lookForMemberId.get("member_id");
+        let memUsername;
+        let memBase64;
 
         const ROOT = location.origin;
         const ROOT_PROJ = "/lazy-trip-back";
@@ -275,6 +277,8 @@
                   } else {
                     listPosts();
                   }
+                } else {
+                  listPosts();
                 }
               });
           }
@@ -310,6 +314,7 @@
               img_upload.prepend(mem_img_upload);
               mem_username.text(member.username);
               memUsername = member.username;
+              memBase64 = `data:image/*;base64,${member.imgBase64Str}`;
 
               $("input[name=gender][value=" + member.gender + "]").prop(
                 "checked",
@@ -355,38 +360,51 @@
                 });
                 if (check) {
                   $(document)
-                    .find(`card-component#${body[key].id}`)
+                    .find("div#dynamic_msg")
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.is-4by3")
                     .append(
                       `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
                     );
                 } else {
                   $("div#dynamic_msg").append(
-                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                    `<card-component class="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
                   );
                   if (body[key].hasOwnProperty("imgbase64Str")) {
                     $(document)
-                      .find(`card-component#${body[key].id}`)
+                      .find("div#dynamic_msg")
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .append(
                         `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
                       );
                   } else {
                     $(document)
-                      .find(`card-component#${body[key].id}`)
+                      .find("div#dynamic_msg")
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .remove();
                   }
                   $(document)
-                    .find(`card-component#${body[key].id}`)
+                    .find("div#dynamic_msg")
+                    .find(`card-component.${body[key].id}`)
+                    .find("span.mem_username.is-5")
+                    .html(
+                      `${memUsername}<p class="mt-3 is-size-6 post-time" style="color: #949494;"></p>`
+                    );
+                  $(document)
+                    .find("div#dynamic_msg")
+                    .find(`card-component.${body[key].id}`)
                     .find("div.content")
                     .text(body[key].text);
                   $(document)
-                    .find(`card-component#${body[key].id}`)
+                    .find("div#dynamic_msg")
+                    .find(`card-component.${body[key].id}`)
                     .find("p.post-time")
                     .text(body[key].time);
                   $(document)
-                    .find(`card-component#${body[key].id}`)
+                    .find("div#dynamic_msg")
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.image.is-48x48")
                     .prepend(`<img src="${src}" alt="Placeholder image"
             class="is-rounded">`);
@@ -417,19 +435,19 @@
                 if (check) {
                   $(document)
                     .find("div#comment")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.is-4by3")
                     .append(
                       `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
                     );
                 } else {
                   $("div#comment").append(
-                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                    `<card-component class="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
                   );
                   if (body[key].hasOwnProperty("imgbase64Str")) {
                     $(document)
                       .find("div#comment")
-                      .find(`card-component#${body[key].id}`)
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .append(
                         `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
@@ -437,23 +455,30 @@
                   } else {
                     $(document)
                       .find("div#comment")
-                      .find(`card-component#${body[key].id}`)
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .remove();
                   }
                   $(document)
                     .find("div#comment")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
+                    .find("span.mem_username.is-5")
+                    .html(
+                      `${memUsername}<p class="mt-3 is-size-6 post-time" style="color: #949494;"></p>`
+                    );
+                  $(document)
+                    .find("div#comment")
+                    .find(`card-component.${body[key].id}`)
                     .find("div.content")
                     .text(body[key].text);
                   $(document)
                     .find("div#comment")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("p.post-time")
                     .text(body[key].time);
                   $(document)
                     .find("div#comment")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.image.is-48x48")
                     .prepend(`<img src="${src}" alt="Placeholder image"
             class="is-rounded">`);
@@ -484,19 +509,19 @@
                 if (check) {
                   $(document)
                     .find("div#img")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.is-4by3")
                     .append(
                       `<img src="data:image/*;base64,${body[key].imgbase64Str}" >`
                     );
                 } else {
                   $("div#img").append(
-                    `<card-component id="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
+                    `<card-component class="${body[key].id}" data-id="${body[key].id}" data-name="${memUsername}" "></card-component>`
                   );
                   if (body[key].hasOwnProperty("imgbase64Str")) {
                     $(document)
                       .find("div#img")
-                      .find(`card-component#${body[key].id}`)
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .append(
                         `<img src="data:image/*;base64,${body[key].imgbase64Str}" class="active">`
@@ -504,23 +529,30 @@
                   } else {
                     $(document)
                       .find("div#img")
-                      .find(`card-component#${body[key].id}`)
+                      .find(`card-component.${body[key].id}`)
                       .find("figure.is-4by3")
                       .remove();
                   }
                   $(document)
                     .find("div#img")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
+                    .find("span.mem_username.is-5")
+                    .html(
+                      `${memUsername}<p class="mt-3 is-size-6 post-time" style="color: #949494;"></p>`
+                    );
+                  $(document)
+                    .find("div#img")
+                    .find(`card-component.${body[key].id}`)
                     .find("div.content")
                     .text("");
                   $(document)
                     .find("div#img")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("p.post-time")
                     .text(body[key].time);
                   $(document)
                     .find("div#img")
-                    .find(`card-component#${body[key].id}`)
+                    .find(`card-component.${body[key].id}`)
                     .find("figure.image.is-48x48")
                     .prepend(`<img src="${src}" alt="Placeholder image"
             class="is-rounded">`);
