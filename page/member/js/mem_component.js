@@ -16,10 +16,9 @@ class Card extends HTMLElement {
           <figure class="image is-48x48 mr-3">
           
           </figure>
-          <span class="title is-5  mem_username">${this.CARD_NAME}  
+          <span class="title is-5  mem_username">A 
             <p class="mt-3 is-size-6 post-time" style="color: #949494;"></p>
           </span>
-          
       </div>
 
       <button class="card-header-icon" aria-label="more options">
