@@ -6,8 +6,10 @@ const HOSTNAME = loc.hostname;
 const PORT = loc.port == "80" ? '' : ':8080';
 
 let params = new URLSearchParams(loc.search);
-const specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
+let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
 // const specifier_id = parseCookieTokens(document.cookie).get("memId");
+
+let specifier_username;
 
 // ======= 後端服務端點 =======
 const API_ROOT = `${PROT_HTTP}//${HOSTNAME}${PORT}/lazy-trip-back`;
@@ -66,6 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
    
     setBulmaModal();
     showContent(TYPE_SUGGESTION);
+
+    fetch(`${API_ROOT}/page/member/find?id=${specifier_id}`)
+            .then(response => response.json())
+            .then(result => {
+              specifier_username = (result.username != undefined && result.username != "") ? result.username : result.name;
+              console.log(specifier_username);
+            })
+            .catch(error => console.log('error', error));
   }
 );
 
@@ -304,11 +314,19 @@ function openModal($el) {
 }
 
 function closeModal($el) {
-  $el.classList.remove('is-active');
-  $el.querySelector("div._chatroom_members").innerHTML = ``;
-  $el.querySelector("ul._search_results").innerHTML = ``;
-  $el.querySelector("#ipt-search-text").value = ``;
-  $el.querySelector("div.menu p").style["display"] = "none";
+  const modalType = document.querySelector(".modal.is-active").parentElement.tagName;
+  switch (modalType) {
+    case "CHATROOM-SETTING-MODAL":
+      $el.classList.remove('is-active');
+      break;
+    case "CREATE-CHATROOM-MODAL":
+      $el.classList.remove('is-active');
+      $el.querySelector("div._chatroom_members").innerHTML = ``;
+      $el.querySelector("ul._search_results").innerHTML = ``;
+      $el.querySelector("#ipt-search-text").value = ``;
+      $el.querySelector("div.menu p").style["display"] = "none";
+      break;
+  }
 }
 
 function closeAllModals() {

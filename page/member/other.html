@@ -260,13 +260,21 @@
               ROOT +
                 ROOT_PROJ +
                 API_RELATION +
-                `?specifier_id=${otherMemId}&other_id=${getCookie("memId")}`
+                `?specifier_id=${getCookie("memId")}&other_id=${otherMemId}`
             )
               .then((resp) => resp.json())
               .then((relation) => {
                 if (relation.isRelated == "true") {
-                  $("button.add-friend").attr("disabled", true);
-                  $("button.add-friend span.text").text(relation.type);
+                  if (relation.type == "封鎖對方") {
+                    let html = `<p class="has-text-centered is-size-2 mt-6">您已被該用戶封鎖</p>`;
+                    $(".tabs a").css("pointer-events", "none");
+                    $(".tabs a").css("color", "rgb(148, 148, 148)");
+                    $("#dynamic_msg").html(html);
+                    $("button.add-friend").attr("disabled", true);
+                    $("button.add-friend span.text").text("對方封鎖");
+                  } else {
+                    listPosts();
+                  }
                 }
               });
           }
@@ -526,7 +534,7 @@
         }
 
         getData();
-        listPosts();
+
         getRelationShip();
 
         // 圖片輪播-----------------------
