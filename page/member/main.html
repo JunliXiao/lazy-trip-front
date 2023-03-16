@@ -1002,6 +1002,7 @@
             }),
           }).then((resp) => {
             if (resp.ok) {
+              listPosts();
               getData();
             }
           });
