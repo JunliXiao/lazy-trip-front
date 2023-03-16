@@ -4,7 +4,14 @@
 
 // 頁首 Header (置頂導覽列)
 class Header extends HTMLElement {
-  header_html = `
+  header_html;
+
+  constructor() {
+    super();
+    let loc = window.location;
+    const ORIGIN = loc.origin;
+
+    this.header_html = `
     <nav
     class="navbar has-shadow"
     role="navigation"
@@ -12,7 +19,7 @@ class Header extends HTMLElement {
     >
     <!-- Logo -->
     <div class="navbar-brand">
-      <a id="navbar-logo-area" class="navbar-item has-text-primary" href="http://localhost:8080/lazy-trip-back/index.html">
+      <a id="navbar-logo-area" class="navbar-item has-text-primary" href="${ORIGIN}/lazy-trip-back/">
         &nbsp;
         <span class="icon has-text-primary">
         <i class="fas fa-mountain-sun"></i> 
@@ -70,19 +77,19 @@ class Header extends HTMLElement {
             <span class="icon"><i class="fas fa-plus"></i></span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item"> 新的行程 </a>
-            <a href="/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
           </div>
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable group">
-        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
         <div class="navbar-dropdown">
-        <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
         </div>
         </div>
-
-        <a href="#" class="navbar-item"> 行程 </a>
+      
+        <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/order/order_booking_search.html" class="navbar-item"> 訂房 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item mem_main">
             <span class="icon-text">
@@ -93,22 +100,19 @@ class Header extends HTMLElement {
             </span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/page/member/main.html"> 我的頁面 </a>
-            <a class="navbar-item"> 我的訂單 </a>
-            <a href="page/friend/friend_main.html" class="navbar-item">
+            <a class="navbar-item mem_main"> 我的頁面 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/order/order_member_orders.html" class="navbar-item"> 我的訂單 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
-            <a class="navbar-item"> 我的文章 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/article/myArticle.jsp" class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
-            <a href="http://localhost:8080/lazy-trip-back/page/logout.html" class="navbar-item"> 登出 </a>
+            <a class="navbar-item mem_logout"> 登出 </a>
           </div>
         </div>
       </div>
     </div>
     </nav>`;
-
-  constructor() {
-    super();
   }
 
   connectedCallback() {
@@ -116,6 +120,10 @@ class Header extends HTMLElement {
     $(document).on("click", "a.mem_main", function () {
       let ori = location.origin;
       location.href = ori + "/lazy-trip-back/page/member/main.html";
+    });
+    $(document).on("click", "a.mem_logout", function () {
+      let ori = location.origin;
+      location.href = ori + "/lazy-trip-back/page/logout.html";
     });
     $(function () {
       // Function-----------------
@@ -163,7 +171,7 @@ class Footer extends HTMLElement {
         <div class="column">
           <div class="content">
             <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
+            <a class="admin_login">後台登入</a>
           </div>
         </div>
       </div>
@@ -175,6 +183,10 @@ class Footer extends HTMLElement {
 
   connectedCallback() {
     this.innerHTML = this.footer_html;
+    $(document).on("click", "a.admin_login", function () {
+      let ori = location.origin;
+      location.href = ori + "/lazy-trip-back/page/admin/login.html";
+    });
   }
 }
 

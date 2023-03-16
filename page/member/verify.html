@@ -122,6 +122,13 @@
               });
           }
         });
+
+        $("#form-reset-ps").on("keydown", function (e) {
+          if (e.keyCode == 13) {
+            e.preventDefault();
+            $("button#btn-verify").click();
+          }
+        });
       });
     </script>
   </body>

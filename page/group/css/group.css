@@ -25,9 +25,9 @@ ul.group_list > li a div.one_gp {
   border-radius: 10px;
   padding: 10px;
 }
-ul.group_list > li p {
+/* ul.group_list > li p {
   color: #000000cc;
-}
+} */
 
 label.info {
   font-size: 16px;

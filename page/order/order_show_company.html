@@ -20,6 +20,12 @@
       src="../../asset/js/components.js"
       type="text/javascript"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"
+    />
+    <link rel="stylesheet" href="./css/flatpickr-calendar-theme.css" />
     <!-- 初始化 -->
     <!-- <script defer src="../../asset/js/bulma-init.js"></script> -->
   </head>
@@ -171,7 +177,65 @@
             "
           ></div>
         </div>
-        <!-- 飯店與房型間距 -->
+        <!-- 間距 -->
+        <div style="height: 10px"></div>
+        <!-- 日曆 -->
+        <div
+          class="columns"
+          style="
+            display: flex;
+            flex-direction: row;
+            background-color: #c4c4c4;
+            border-radius: 15px 15px 15px 15px;
+            box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
+            height: 55px;
+          "
+          ;
+        >
+          <!-- 入住日期div -->
+          <div style="flex-basis: 10%"></div>
+          <div style="flex-basis: 13%">
+            <div class="control mt-3"></div>
+            <span class="is-size-5">入住日期:&emsp;</span>
+          </div>
+          <div style="flex-basis: 20%">
+            <div class="control has-icons-left mt-2">
+              <input
+                id="inputCheckInDate"
+                type="text"
+                class="button is-outlined is-hovered"
+                style="width: 100%"
+                placeholder="&emsp;選擇入住日期"
+              />
+              <span class="icon is-left">
+                <i class="fa-regular fa-calendar"></i>
+              </span>
+            </div>
+          </div>
+          <!-- 退房日期div -->
+          <div style="flex-basis: 5%"></div>
+          <div style="flex-basis: 13%">
+            <div class="control mt-3">
+              <span class="is-size-5">退房日期:&emsp;</span>
+            </div>
+          </div>
+          <div style="flex-basis: 20%">
+            <div class="control has-icons-left mt-2">
+              <input
+                id="inputCheckOutDate"
+                type="text"
+                class="button is-outlined is-hovered"
+                style="width: 100%"
+                placeholder="&emsp;選擇退房日期"
+              />
+              <span class="icon is-left">
+                <i class="fa-regular fa-calendar"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 日曆與房型間距 -->
         <div style="height: 15px"></div>
         <!-- 房型資料表格開始 -->
         <div
@@ -230,17 +294,57 @@
       let marker;
       // 預訂資料會存進cmBookingList
       let cmBookingList;
+      // 日期選擇標籤
+      let inputCheckInDate = document.querySelector("#inputCheckInDate");
+      let inputCheckOutDate = document.querySelector("#inputCheckOutDate");
 
       $(function () {
+        dateBtn();
         init();
         bookingBtn();
       });
+
+      function dateBtn() {
+        // 入住日期checkInFlatpickr
+        const checkInFlatpickr = flatpickr(inputCheckInDate, {
+          theme: "confetti",
+          minDate: "today",
+          dateFormat: "Y/m/d",
+
+          onChange: function (selectedDates, dateStr, instance) {
+            // 設定退房日期選擇器的最小日期為選擇的入住日期的隔天並自動打開退房日期視窗
+            checkOutFlatpickr.set(
+              "minDate",
+              new Date(selectedDates[0].getTime() + 24 * 60 * 60 * 1000)
+            );
+            inputCheckOutDate.focus();
+          },
+        });
+
+        // 退房日期checkOutFlatpickr
+        const checkOutFlatpickr = flatpickr(inputCheckOutDate, {
+          theme: "confetti",
+          minDate: new Date().getTime() + 24 * 60 * 60 * 1000,
+          // 最大可選擇天數是六個月後 大約183天
+          maxDate: new Date().getTime() + 183 * 24 * 60 * 60 * 1000,
+          dateFormat: "Y/m/d",
+        });
+
+        // 前面有選擇過的日期來套用
+        let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
+        if (dateInfo.inputCheckInDate != "") {
+          inputCheckInDate.value = dateInfo.inputCheckInDate;
+        }
+        if (dateInfo.inputCheckOutDate != "") {
+          inputCheckOutDate.value = dateInfo.inputCheckOutDate;
+        }
+      }
 
       // 取得sessionStorage並傳送companyID
       function init() {
         let companyID = sessionStorage.getItem("showCompanyInformation");
         fetch(
-          "http://localhost:8080/lazy-trip-back/Company.do?type=showCompanyInformation&companyID=" +
+          "http://localhost:8080/lazy-trip-back/BookingCompany.do?type=showCompanyInformation&companyID=" +
             companyID
         )
           .then(function (response) {
@@ -287,10 +391,12 @@
                     ", " +
                     cmList[0].addressStreet
                 );
-                $(".companyImg").eq(i).attr("src", cmList[i].companyImg);
+                $(".companyImg")
+                  .eq(i)
+                  .attr("src", "data:image/jpg;base64," + cmList[i].companyImg);
                 $(".roomTypeImg")
                   .eq(i)
-                  .attr("src", cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg);
+                  .attr("src", "data:image/jpg;base64,"+cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg);
 
                 // 飯店房型表格相關
                 if (i === 0) {
@@ -310,7 +416,7 @@
                   <tr class="has-text-centered" style="height: 169px">
                 <td>
                   <img
-                    src="${cmList[0].roomTypeVO.roomTypeImgVO.roomTypeImg}"
+                    src="data:image/*;base64,${cmList[0].roomTypeVO.roomTypeImgVO.roomTypeImg}"
                     alt="無圖片"
                     onerror="this.src='../../asset/img/noPicture.png'"
                     class="roomTypeImg"
@@ -372,7 +478,7 @@
               <tr class="has-text-centered" style="height: 169px">
                 <td>
                   <img
-                    src="${cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg}"
+                    src="data:image/*;base64,${cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg}"
                     alt="無圖片"
                     onerror="this.src='../../asset/img/noPicture.png'"
                     class="roomTypeImg"
@@ -439,34 +545,46 @@
       // 預訂按鈕事件綁定
       function bookingBtn() {
         $(document).on("click", "button#bookingBtn", function () {
+          if (inputCheckInDate.value == "") {
+            alert("請選擇入住日期");
+            return;
+          } else if (inputCheckOutDate.value == "") {
+            alert("請選擇退房日期");
+            return;
+          }
+          let dateInfo = {
+            inputCheckInDate: inputCheckInDate.value,
+            inputCheckOutDate: inputCheckOutDate.value,
+          };
+          sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
+
           // 抓取旅客選定的各個房型數量
           let selectRtQuan = $("select[class*='roomTypeQuantity']");
-
-          for (let i = 0; i < cmBookingList.length; i++) {
-            // 確定抓取的房型ID陣列位置跟cmBookingList的陣列位置一樣再存進房型數量
-            if (
-              cmBookingList[i].roomTypeVO.roomTypeID ==
-              selectRtQuan.eq(i).data("roomtype-id")
-            ) {
-              cmBookingList[i].roomTypeVO.roomTypeQuantity = selectRtQuan
-                .eq(i)
-                .val();
-            }
-          }
-          for (let i = 0; i < cmBookingList.length; i++) {
-            if (cmBookingList[i].roomTypeVO.roomTypeQuantity > 0) {
-              // 有決定房型數量就存進sessionStorage
+          for (let i = 0; i < selectRtQuan.length; i++) {
+            if (selectRtQuan.eq(i).val() > 0) {
+              for (let i = 0; i < cmBookingList.length; i++) {
+                // 確定抓取的房型ID陣列位置跟cmBookingList的陣列位置一樣再存進房型數量
+                if (
+                  cmBookingList[i].roomTypeVO.roomTypeID ==
+                  selectRtQuan.eq(i).data("roomtype-id")
+                ) {
+                  cmBookingList[i].roomTypeVO.roomTypeQuantity = selectRtQuan
+                    .eq(i)
+                    .val();
+                } else {
+                  alert("資料錯誤，重新登入");
+                  return;
+                }
+              }
               sessionStorage.setItem(
                 "cmBookingList",
                 JSON.stringify(cmBookingList)
               );
               location.href = "./order_write_send.html";
-              break;
+              return;
             }
-            // 都沒有提醒使用者再次選擇
-            alert("目前無任何選擇房型，請再次選擇!");
-            break;
           }
+          alert("目前無任何選擇房型，請再次選擇!");
         });
       }
     </script>

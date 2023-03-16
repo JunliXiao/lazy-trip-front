@@ -24,8 +24,11 @@ class Chatroom extends HTMLElement {
       html = `
       <li>
         <a class="is-size-5 py-4 _chatroom_name">
-          ${this.CHATROOM_NAME}
-          <span class="is-pulled-right has-text-success"><i class="fas fa-circle"></i></span>
+          <span class="is-pulled-left has-text-success"><i class="fas fa-circle"></i></span>
+          <span class="ml-4">${this.CHATROOM_NAME}</span>
+          <span class="icon is-pulled-right _setting js-modal-trigger" data-target="modal-chatroom-setting">
+            <i class="fas fa-ellipsis-vertical"></i>
+          </span>
         </a>
       <li>
       `
@@ -33,7 +36,11 @@ class Chatroom extends HTMLElement {
       html = `
       <li>
         <a class="is-size-5 py-4 _chatroom_name">
-          ${this.CHATROOM_NAME}
+          <span class="is-pulled-left" style="color: rgba(0, 0, 0, 0);"><i class="fas fa-circle"></i></span>
+          <span class="ml-4">${this.CHATROOM_NAME}</span>
+          <span class="icon is-pulled-right _setting js-modal-trigger" data-target="modal-chatroom-setting">
+            <i class="fas fa-ellipsis-vertical"></i>
+          </span>
         </a>
       <li>
       `
@@ -55,7 +62,7 @@ class Chatroom extends HTMLElement {
             let title_names = [];
             for (let i = 0; i < others.length; i++) {
               // 若有暱稱則用暱稱 (username)；若無，則用名字 (name)
-              let name_show = others[i].hasOwnProperty("username") ? others[i].username : others[i].name;
+              let name_show = others[i].hasOwnProperty("username") && others[i].username != "" ? others[i].username : others[i].name;
               title_names.push(name_show);
               // 只取 3 位聊天室成員
               if (title_names.length == 3) break;
@@ -63,7 +70,11 @@ class Chatroom extends HTMLElement {
             // 若排除本人的成員數超過三人，則說明有更多成員
             this.CHATROOM_NAME = others.length > 3 ? title_names.join("、") + " ..." : title_names.join("、");
             this.setAttribute("chatroom-name", this.CHATROOM_NAME);
-            document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).firstChild.textContent = this.CHATROOM_NAME;
+            let chname = document.createElement("span");
+            // chname.classList.add("ml-2");
+            chname.textContent = this.CHATROOM_NAME;
+            // document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).firstChild.textContent = this.CHATROOM_NAME;
+            document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).appendChild(chname);
           }
         )
         .catch((err) => console.log(err));   
@@ -82,23 +93,40 @@ class Chatroom extends HTMLElement {
 
     });
 
+    const $trigger = this.querySelector(`span._setting[data-target="modal-chatroom-setting"]`);
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener("click", () => {
+      event.stopPropagation();
+      document.querySelector("chatroom-setting-modal").setAttribute("chatroom-id", this.CHATROOM_ID);
+      openModal($target);
+    });
+
   }
 
   attributeChangedCallback(attr, prev, curr) {
     switch (attr) {
       case "chatroom-active":
+        let activeBulb = document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] span.is-pulled-left`);
         if (prev == "true" && curr == "false") {
-          document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] span.is-pulled-right`).remove();
+          // document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] span.is-pulled-left`).remove();
+          activeBulb.classList.remove("has-text-success");
+          // activeBulb.classList.add("has-text-white");
+          activeBulb.style = "color: rgba(0, 0, 0, 0);";
         };
         if (prev == "false" && curr == "true") {
-          let spanNode = document.createElement("span");
-          spanNode.classList.add("is-pulled-right");
-          spanNode.classList.add("has-text-success");
-          let iNode = document.createElement("i");
-          iNode.classList.add("fas");
-          iNode.classList.add("fa-circle");
-          spanNode.appendChild(iNode);
-          document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).appendChild(spanNode);
+          // activeBulb.classList.remove("has-text-white");
+          activeBulb.style = '';
+          activeBulb.classList.add("has-text-success");
+          // let spanNode = document.createElement("span");
+          // spanNode.classList.add("is-pulled-left");
+          // spanNode.classList.add("has-text-success");
+          // let iNode = document.createElement("i");
+          // iNode.classList.add("fas");
+          // iNode.classList.add("fa-circle");
+          // spanNode.appendChild(iNode);
+          // document.querySelector(`chatroom-component[chatroom-id="${this.CHATROOM_ID}"] a._chatroom_name`).appendChild(spanNode);
         }
         break;
     }
@@ -381,11 +409,11 @@ class ChatLogSide extends HTMLElement {
       messageList.appendChild(newItem);
     });
 
-    const webSocket = new WebSocket(WS_ROOT + `/chat-ws/${specifier_id}`);
+    const chat_ws = new WebSocket(WS_ROOT + `/chat-ws/${specifier_id}`);
 
-    webSocket.onopen = (event) => console.log("Connect Success!");
+    chat_ws.onopen = (event) => console.log("Connect Success!");
 
-    webSocket.onmessage = (event) => {
+    chat_ws.onmessage = (event) => {
       let messages = JSON.parse(event.data);
       messages.forEach(m => {
         let newItem = document.createElement("li");
@@ -552,28 +580,28 @@ class ChatLogArea extends HTMLElement {
       if(msg == "") {
         alert("聊天訊息內容不能空白");
       } else {
-        this.sendMessage(webSocket, msg);
+        this.sendMessage(chat_ws, msg);
       }
       input_div.textContent = '';
       input_div.focus();
     });
 
     // 建立聊天室的 WebSocket 連線
-    const webSocket = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
+    const chat_ws = new WebSocket(`${WS_ROOT}/chat-ws/${specifier_id}`);
 
     // 連線成功時
-    webSocket.onopen = (event) => {
+    chat_ws.onopen = (event) => {
       console.log("成功連線到 chat-ws");
       // 請求歷史聊天訊息
       let wrapper = new Object();
       wrapper.messageType = "retrieve-history";
       wrapper.memberId = specifier_id;
       wrapper.chatroomId = this.getAttribute("chatroom-id");
-      webSocket.send(JSON.stringify(wrapper));
+      chat_ws.send(JSON.stringify(wrapper));
     };
 
     // 收到伺服器端的訊息時
-    webSocket.onmessage = (event) => {
+    chat_ws.onmessage = (event) => {
       let wrapper = JSON.parse(event.data);
       
       // 處理歷史聊天訊息
@@ -613,6 +641,7 @@ class ChatLogArea extends HTMLElement {
     const timestamp = Math.floor(dateTime / 1000);  
     let messageContent = new Object();
     messageContent.senderId = specifier_id;
+    messageContent.senderNickname = specifier_username;
     messageContent.chatroomId = this.getAttribute("chatroom-id");
     messageContent.message = msg;
     messageContent.sentAt = timestamp;
@@ -773,96 +802,15 @@ class OtherMessage extends ChatMessageTemplate {
 
 }
 
-class CreateChatroomModal extends HTMLElement {
-
-  NODE_DIV_MEMBERS;
-  NODE_INPUT_SEARCH;
-  NODE_NO_RESULTS;
-  NODE_LIST_SEARCH;
-  NODE_BUTTON_CREATE;
-
-  constructor() {
-    super();
-    this.innerHTML = 
-    `
-    <div id="modal-new-chatroom" class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">建立新聊天室</p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <lable class="label">選擇加入聊天室的會員</lable>
-          <div class="field is-grouped is-grouped-multiline _chatroom_members">
-          </div>
-          <div class="field">
-            <label class="label">搜尋</label>
-            <div class="control">
-              <input
-                class="input is-info"
-                type="text"
-                placeholder="會員暱稱或名字"
-                id="ipt-search-text"
-              />
-            </div>
-          </div>
-          <div class="menu">
-            <p style="display: none">沒有搜尋結果</p>
-            <ul class="menu-list _search_results">
-            </ul>
-            <span class="icon is-large _search_loading" style="display: none">
-              <i class="fas fa-2x fa-spinner fa-pulse"></i>
-            </span>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-info _create_chatroom">
-          <span class="icon is-small">
-            <i class="fas fa-check"></i>
-          </span>
-          <span>
-            建立
-          </span>
-          </button>
-          <button class="button _modal_cancel">取消</button>
-        </footer>
-      </div>
-      <button class="modal-close is-large" aria-label="close"></button>
-    </div>
-    `;
-
-    this.NODE_DIV_MEMBERS = this.querySelector("div._chatroom_members");
-    this.NODE_INPUT_SEARCH = this.querySelector("#ipt-search-text");
-    this.NODE_BUTTON_CREATE = this.querySelector("button._create_chatroom");
-    this.NODE_LIST_SEARCH = this.querySelector("ul._search_results");
-    this.NODE_NO_RESULTS = this.querySelector("div.menu p");
-
-    this.NODE_INPUT_SEARCH.addEventListener("input", debounce(this.onInputChange, 1500));
-    this.NODE_BUTTON_CREATE.addEventListener("click", (event) => {
-      this.NODE_BUTTON_CREATE.classList.add("is-loading");
-      let members = this.NODE_DIV_MEMBERS.querySelectorAll(`a[class="tag is-info is-light"]`);
-      let arr = [];
-      for (const member of members) {
-        arr.push(member.getAttribute("data-id"));
-      }
-      if (arr.length == 0) {
-        alert("沒有選擇任何成員！");
-      } else {
-        arr.push(specifier_id);
-        this.createChatroom(arr);
-      }
-      
-    });
-
-  }
+// SearchFromInput
+class SearchFromInput extends HTMLElement {
 
   async onInputChange(event) {
     // 驗證查詢字串不為空
     let search_text = event.target.value.trim();
 
     // 取得此 DOM 元件和搜尋會員的 API 端點
-    const thisModal = document.querySelector("create-chatroom-modal");
+    const thisModal = document.querySelector(".modal.is-active").parentElement;
     const spinner = thisModal.querySelector("span._search_loading");
 
     if (search_text == '') {
@@ -943,6 +891,200 @@ class CreateChatroomModal extends HTMLElement {
     }
   }
 
+}
+
+// 聊天室設定的 Modal
+class ChatroomSettingModal extends SearchFromInput {
+
+  NODE_DIV_MEMBERS;
+  NODE_INPUT_SEARCH;
+  NODE_NO_RESULTS;
+  NODE_LIST_SEARCH;
+  NODE_BUTTON_CREATE;
+
+  static observedAttributes = ["chatroom-id"];
+
+  constructor() {
+    super();
+    this.innerHTML = 
+    `
+    <div id="modal-chatroom-setting" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">聊天室設定</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <nav id="level-chatroom-members" class="level mb-4">
+            <div class="level-left">
+              <div class="level-item"><lable class="label">聊天室成員</lable></div>
+            </div>
+          </nav>
+          <nav id="level-chatroom-name" class="level mb-4">
+            <div class="level-left">
+              <div class="level-item"><lable class="label">聊天室名稱</lable><span class="ml-4 mb-2">XXX</span></div>
+            </div>
+            <div class="level-right">
+              <div class="level-item"><button class="button _edit_chatroom_name is-info is-light">編輯</button></div>
+            </div>
+          </nav>
+            
+          <nav id="level-exit-chatroom" class="level mb-4">
+            <div class="level-left">
+              <div class="level-item"><lable class="label">退出聊天室</lable></div>
+            </div>
+            <div class="level-right">
+              <div class="level-item"><button class="button _exit_chatroom is-danger is-light">退出</button></div>
+            </div>
+          </nav>  
+         
+          <lable class="label">加入新的成員</lable>
+          <div class="field is-grouped is-grouped-multiline _chatroom_members">
+          </div>
+          <div class="field">
+            <label class="label">搜尋</label>
+            <div class="control">
+              <input
+                class="input is-info"
+                type="text"
+                placeholder="會員暱稱或名字"
+                id="ipt-search-text"
+              />
+            </div>
+          </div>
+          <div class="menu">
+            <p style="display: none">沒有搜尋結果</p>
+            <ul class="menu-list _search_results">
+            </ul>
+            <span class="icon is-large _search_loading" style="display: none">
+              <i class="fas fa-2x fa-spinner fa-pulse"></i>
+            </span>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-info _create_chatroom">
+          <span>
+            加入
+          </span>
+          </button>
+          <button class="button _modal_cancel">關閉</button>
+        </footer>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    `;
+
+    this.NODE_DIV_MEMBERS = this.querySelector("div._chatroom_members");
+    this.NODE_INPUT_SEARCH = this.querySelector("#ipt-search-text");
+    this.NODE_BUTTON_CREATE = this.querySelector("button._create_chatroom");
+    this.NODE_LIST_SEARCH = this.querySelector("ul._search_results");
+    this.NODE_NO_RESULTS = this.querySelector("div.menu p");
+
+    this.NODE_INPUT_SEARCH.addEventListener("input", debounce(this.onInputChange, 1500));
+  }
+
+  attributeChangedCallback(attr, prev, curr) {
+    switch (attr) {
+      case "chatroom-id":
+        this.querySelector("nav#level-chatroom-name span.ml-4.mb-2").textContent = this.getAttribute("chatroom-id");
+        break;
+    }
+  }
+
+}
+
+
+// 建立聊天室的 Modal
+class CreateChatroomModal extends SearchFromInput {
+
+  NODE_DIV_MEMBERS;
+  NODE_INPUT_SEARCH;
+  NODE_NO_RESULTS;
+  NODE_LIST_SEARCH;
+  NODE_BUTTON_CREATE;
+
+  constructor() {
+    super();
+    this.innerHTML = 
+    `
+    <div id="modal-new-chatroom" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">建立新聊天室</p>
+          <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <lable class="label">選擇加入聊天室的會員</lable>
+          <div class="field is-grouped is-grouped-multiline _chatroom_members">
+          </div>
+          <div class="field">
+            <label class="label">搜尋</label>
+            <div class="control">
+              <input
+                class="input is-info"
+                type="text"
+                placeholder="會員暱稱或名字"
+                id="ipt-search-text"
+              />
+            </div>
+          </div>
+          <div class="menu">
+            <p style="display: none">沒有搜尋結果</p>
+            <ul class="menu-list _search_results">
+            </ul>
+            <span class="icon is-large _search_loading" style="display: none">
+              <i class="fas fa-2x fa-spinner fa-pulse"></i>
+            </span>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button is-info _create_chatroom">
+          <span>
+            建立
+          </span>
+          </button>
+          <button class="button _modal_cancel">取消</button>
+        </footer>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    `;
+
+    this.NODE_DIV_MEMBERS = this.querySelector("div._chatroom_members");
+    this.NODE_INPUT_SEARCH = this.querySelector("#ipt-search-text");
+    this.NODE_BUTTON_CREATE = this.querySelector("button._create_chatroom");
+    this.NODE_LIST_SEARCH = this.querySelector("ul._search_results");
+    this.NODE_NO_RESULTS = this.querySelector("div.menu p");
+
+    this.NODE_INPUT_SEARCH.addEventListener("input", debounce(this.onInputChange, 1500));
+    this.NODE_BUTTON_CREATE.addEventListener("click", (event) => {
+      this.NODE_BUTTON_CREATE.classList.add("is-loading");
+      let members = this.NODE_DIV_MEMBERS.querySelectorAll(`a[class="tag is-info is-light"]`);
+      let arr = [];
+      for (const member of members) {
+        arr.push(member.getAttribute("data-id"));
+      }
+      if (arr.length == 0) {
+        alert("沒有選擇任何成員！");
+        this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+      } else {
+        arr.push(specifier_id);
+        // 建立聊天室，沒問題便會移動至新聊天室畫面
+        // if (this.createChatroom(arr)) {
+        //   closeAllModals();
+        // };
+        if (true) {
+          closeAllModals();
+          this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+        }
+      }
+      
+    });
+
+  }
+
   createChatroom(arrayOfMembersId) {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "text/plain");
@@ -960,11 +1102,13 @@ class CreateChatroomModal extends HTMLElement {
         let resultText = result == true ? "成功建立聊天室" : "成員間已有共同的聊天室";
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
         confirm(resultText);
+        return true;
       })
       .catch(error => {
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
         console.log('error', error);
-        alert("發生錯誤");
+        alert("發生錯誤，請重新執行");
+        return false;
       });
   }
 
@@ -975,4 +1119,5 @@ customElements.define("chatlog-side-component", ChatLogSide);
 customElements.define("chatlog-area-component", ChatLogArea);
 customElements.define("msg-self", SelfMessage);
 customElements.define("msg-other", OtherMessage);
+customElements.define("chatroom-setting-modal", ChatroomSettingModal);
 customElements.define("create-chatroom-modal", CreateChatroomModal);

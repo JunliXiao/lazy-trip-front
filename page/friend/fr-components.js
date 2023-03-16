@@ -84,6 +84,12 @@ class Suggestion extends ResultCard {
       if(!confirm("確認邀請？")) return;
       addRequest(specifier_id, other_id);
     });
+
+    this.querySelector("button._block").addEventListener("click", (event) => {
+      let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
+      if(!confirm("確認封鎖對方？")) return;
+      block(other_id);
+    });
     
   }
 
@@ -103,7 +109,7 @@ class Friend extends ResultCard {
       <div class="buttons are-medium">
         <button class="_unfriend button is-info is-light has-text-weight-bold">
           <span class="icon is-small"><i class="fas fa-minus"></i></span>
-          <span>解除</span> 
+          <span>解除好友</span> 
         </button> 
       </div> 
       `
@@ -111,7 +117,11 @@ class Friend extends ResultCard {
 
     this.innerHTML = this.card_html;
 
-    this.querySelectorAll("span.icon").forEach(s => s.addEventListener("click", () => console.log("Icon clicked")))
+    this.querySelector("button._unfriend").addEventListener("click", (event) => {
+      let other_id = event.target.closest("friend-component").getAttribute("member-id");
+      if(!confirm("確認解除好友？")) return;
+      unfriend(other_id);
+    });
   }
 
 }
@@ -187,6 +197,43 @@ class ReceivedRequest extends ResultCard {
       if(!confirm("確認婉拒？")) return;
       declineRequest(other_id);
     });
+
+    this.querySelector("button._block").addEventListener("click", (event) => {
+      let other_id = event.target.closest("received-request-component").getAttribute("member-id");
+      if(!confirm("確認封鎖對方？")) return;
+      block(other_id);
+    });
+  }
+
+}
+
+// 封鎖名單 Blocklist
+class Blocklist extends ResultCard {
+
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.setNameAndUsername();
+    this.buildCard(
+      `
+      <div class="buttons are-medium">
+        <button class="_unfriend button is-info is-light has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-minus"></i></span>
+          <span>解除封鎖</span> 
+        </button> 
+      </div> 
+      `
+    );
+
+    this.innerHTML = this.card_html;
+
+    this.querySelector("button._unfriend").addEventListener("click", (event) => {
+      let other_id = event.target.closest("blocklist-component").getAttribute("member-id");
+      if(!confirm("確認解除封鎖？")) return;
+      unblock(other_id);
+    });
   }
 
 }
@@ -195,3 +242,4 @@ customElements.define('suggestion-component', Suggestion);
 customElements.define('friend-component', Friend);
 customElements.define('sent-request-component', SentRequest);
 customElements.define('received-request-component', ReceivedRequest);
+customElements.define('blocklist-component', Blocklist);

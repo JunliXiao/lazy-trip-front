@@ -42,7 +42,7 @@ $(function () {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              account: account.val(),
+              account: account.val().trim(),
               password: password.val(),
             }),
           })

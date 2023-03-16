@@ -212,6 +212,15 @@
           提交
         </button>
       </div>
+      <div class="column is-1">
+        <button
+          class="button is-2 is-info is-small"
+          id="exit_group"
+          style="border-radius: 10px; margin-top: 35px; margin-left: 20%"
+        >
+          退出群組
+        </button>
+      </div>
     </div>
 
     <!-- 頁尾 -->
@@ -400,6 +409,11 @@
               })
               .catch((error) => console.log("error", error));
           })
+          .then(() => {
+            if (user_id == group_manager_id) {
+              $("#exit_group").css("display", "none");
+            }
+          })
           .catch((error) => console.log("error", error));
 
         //旅程設定
@@ -435,7 +449,7 @@
                     <input type="hidden" name="tour_id" value="${item.tourId}">
                     <input type="hidden" name="tour_name" value="${item.tourTitle}">
                     <input type="hidden" name="tour_start" value="${item.startDate}">
-                    <input type="hidden" name="tour_end" value="${item.endDate}">                   
+                    <input type="hidden" name="tour_end" value="${item.endDate}">
                 <div class="card card1">
                   <div class="card-image">
                     <figure class="image is-2by1" style="overflow: hidden">
@@ -568,26 +582,28 @@
                   .then((response) => response.json())
                   .then((result) => {
                     $("#fr_list").html("");
-                    $.each(result, function (index, item) {
-                      if (!gp_id_list.includes(item.id)) {
-                        var fr_list_html;
-                        var mem_name = "";
-                        if (item.username != null) {
-                          mem_name = item.username;
-                        } else if (item.name != null) {
-                          mem_name = item.name;
-                        } else {
-                          mem_name = "暫無會員名";
-                        }
-                        fr_list_html = `<div class="field">
+                    if (result.dataType != "none") {
+                      $.each(result.dataList, function (index, item) {
+                        if (!gp_id_list.includes(item.id)) {
+                          var fr_list_html;
+                          var mem_name = "";
+                          if (item.username != null) {
+                            mem_name = item.username;
+                          } else if (item.name != null) {
+                            mem_name = item.name;
+                          } else {
+                            mem_name = "暫無會員名";
+                          }
+                          fr_list_html = `<div class="field">
                     <label>
                     <input type="checkbox"  class="to_invite_frds"  value="${item.id}"/>
                     ${mem_name}
                   </label>
                    </div>`;
-                      }
-                      $("#fr_list").append(fr_list_html);
-                    });
+                        }
+                        $("#fr_list").append(fr_list_html);
+                      });
+                    }
                   })
                   .catch((error) => console.log("error", error));
                 show_alert.style.display = "block";
@@ -597,7 +613,6 @@
             alert("人數已滿!");
             show_alert.style.display = "none";
           }
-
         };
         //邀請OK按鈕
         close_alert.addEventListener("click", function () {
@@ -798,6 +813,34 @@
           document.execCommand("Copy");
           if (toInviteLink.value != "") {
             alert("複製成功!");
+          }
+        });
+        //退出群組
+        $("#exit_group").click(function () {
+          var r = confirm("確定要退出此群組嗎");
+          if (r) {
+            var requestOptions = {
+              method: "DELETE",
+              redirect: "follow",
+            };
+
+            fetch(
+              apiUrlGroupMembers +
+                "?action=exitGroup&member=" +
+                user_id +
+                "&groupId=" +
+                gpid,
+              requestOptions
+            )
+              .then((response) => response.text())
+              .then((result) => {
+                alert("退出成功");
+                location.href =
+                  baseUrl +
+                  contextPath +
+                  "/page/group/group_htmls/group_all.html";
+              })
+              .catch((error) => console.log("error", error));
           }
         });
       });

@@ -1,30 +1,17 @@
-// ======= 事件觸發 UI 常數 =======
-const node_show_suggestions = document.getElementById("li-suggestions");
-const node_show_friends = document.getElementById("li-friends");
-const node_show_sent_requests = document.getElementById("li-sent-requests");
-const node_show_received_requests = document.getElementById("li-received-requests");
-const node_show_chatrooms = document.getElementById("li-chatrooms");
-const node_no_result = document.getElementById("div-no-result");
-const node_results = document.getElementById("div-results");
-
-const TYPE_SUGGESTION = "suggestion";
-const TYPE_FRIEND = "friend";
-const TYPE_SENT_REQUEST = "sent-request";
-const TYPE_RECEIVED_REQUEST = "received-request";
-const TYPE_CHATROOM = "chatroom";
-
-// ======= 使用者資訊 =======
-let params = new URLSearchParams(window.location.search);
-const specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
-
-// const specifier_id = parseCookieTokens(document.cookie).get("memId");
+// ======= URL 和使用者 =======
 let loc = window.location;
-
-// ======= API 路徑 =======
 const PROT_HTTP = "http:";
 const PROT_WS = "ws:";
 const HOSTNAME = loc.hostname;
 const PORT = loc.port == "80" ? '' : ':8080';
+
+// let params = new URLSearchParams(loc.search);
+// let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
+const specifier_id = parseCookieTokens(document.cookie).get("memId");
+
+let specifier_username;
+
+// ======= 後端服務端點 =======
 const API_ROOT = `${PROT_HTTP}//${HOSTNAME}${PORT}/lazy-trip-back`;
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
@@ -33,7 +20,24 @@ const API_CHAT_MEMBER = "/api/chat/member";
 const API_IMG_AVATAR = "/img/avatar.png";
 
 const WS_ROOT = `${PROT_WS}//${HOSTNAME}${PORT}/lazy-trip-back`;
-let webSocket;
+
+// ======= 資料物件類型 =======
+const TYPE_SUGGESTION = "suggestion";
+const TYPE_FRIEND = "friend";
+const TYPE_SENT_REQUEST = "sent-request";
+const TYPE_RECEIVED_REQUEST = "received-request";
+const TYPE_CHATROOM = "chatroom";
+const TYPE_BLOCKLIST = "blocklist";
+
+// ======= UI 節點 =======
+const node_show_suggestions = document.getElementById("li-suggestions");
+const node_show_friends = document.getElementById("li-friends");
+const node_show_sent_requests = document.getElementById("li-sent-requests");
+const node_show_received_requests = document.getElementById("li-received-requests");
+const node_show_chatrooms = document.getElementById("li-chatrooms");
+const node_show_blocklists = document.getElementById("li-blocklists");
+const node_no_result = document.getElementById("div-no-result");
+const node_results = document.getElementById("div-results");
 
 // ======= 頁面初始化 =======
 document.addEventListener("DOMContentLoaded", () => {
@@ -57,9 +61,21 @@ document.addEventListener("DOMContentLoaded", () => {
       selectFromMenu(event);
       showContent(TYPE_CHATROOM);
     });
+    node_show_blocklists.addEventListener("click", (event) => {
+      selectFromMenu(event);
+      showContent(TYPE_BLOCKLIST);
+    });
    
     setBulmaModal();
     showContent(TYPE_SUGGESTION);
+
+    fetch(`${API_ROOT}/page/member/find?id=${specifier_id}`)
+            .then(response => response.json())
+            .then(result => {
+              specifier_username = (result.username != undefined && result.username != "") ? result.username : result.name;
+              console.log(specifier_username);
+            })
+            .catch(error => console.log('error', error));
   }
 );
 
@@ -90,6 +106,7 @@ function showContent(type) {
   switch (type) {
     case TYPE_SUGGESTION:
     case TYPE_FRIEND:
+    case TYPE_BLOCKLIST:
       ajax_call_url = `${API_ROOT}${API_FRIEND}?member_id=${specifier_id}&query_type=${type}`;
       fetchDataToAppend(ajax_call_url, component_type, node_to_append);
       break;
@@ -107,10 +124,10 @@ function showContent(type) {
             .then((res) => res.json())
             .then((body) => {
               if(body.dataList.length == 0) {
-                node_summary.style.display = "block";
+                node_no_result.style.display = "block";
                 return;
               } else {
-                node_summary.style.display = "none";
+                node_no_result.style.display = "none";
               }
               
               body.dataList.forEach(data => {
@@ -170,62 +187,56 @@ function showContent(type) {
 
 }
 
-// ======= 好友邀請控制 =======
+// ======= 好友功能控制 =======
 function addRequest(requesterId, addresseeId) {
-    var requestOptions = {
-      method: 'POST',
-      redirect: 'follow'
-    };
-    
-    fetch(API_ROOT + API_FRIEND_REQUEST + `?requester_id=${requesterId}&addressee_id=${addresseeId}`, requestOptions)
+    fetch(API_ROOT + API_FRIEND_REQUEST + `?requester_id=${requesterId}&addressee_id=${addresseeId}`, requestMethod('POST'))
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
 }
 
 function acceptRequest(other_id) {
-    var requestOptions = {
-      method: 'PUT',
-      redirect: 'follow'
-    };
-
-    fetch(API_ROOT + 
-          API_FRIEND_REQUEST + 
-          `?requester_id=${other_id}&addressee_id=${specifier_id}&action=accept`, requestOptions)
+    fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${other_id}&addressee_id=${specifier_id}&action=accept`, requestMethod('PUT'))
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  
 }
 
-function cancelRequest(other_id) {
-    var requestOptions = {
-      method: 'DELETE',
-      redirect: 'follow'
-    };
-  
-    fetch(API_ROOT + 
-          API_FRIEND_REQUEST + 
-          `?requester_id=${specifier_id}&addressee_id=${other_id}`, requestOptions)
+function cancelRequest(other_id) {  
+    fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${specifier_id}&addressee_id=${other_id}`, requestMethod('DELETE'))
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  
 }
 
 function declineRequest(other_id) {
-    var requestOptions = {
-      method: 'DELETE',
-      redirect: 'follow'
-    };
-
-    fetch(API_ROOT + 
-          API_FRIEND_REQUEST + 
-          `?requester_id=${other_id}&addressee_id=${specifier_id}`, requestOptions)
+    fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${other_id}&addressee_id=${specifier_id}`, requestMethod('DELETE'))
       .then(response => response.json())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));  
 }
 
+function unfriend(other_id) {
+  // 須適用於不同的好友邀請方向
+  console.log(`解除好友 other_id = ${other_id}`);
+}
+
+function block(other_id) {
+  fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${other_id}&addressee_id=${specifier_id}&action=block`, requestMethod('PUT'))
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error)); 
+}
+
+function unblock(other_id) {
+  fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${other_id}&addressee_id=${specifier_id}`, requestMethod('DELETE'))
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error)); 
+}
+
 // ======= 輔助功能 =======
+// 解析 cookie 字串
 function parseCookieTokens(cookie) {
   let tokens = cookie.split("; ");
   let map = new Map();
@@ -235,7 +246,24 @@ function parseCookieTokens(cookie) {
   }
   return map;
 }
+ 
+/**
+ * 方便 Fetch API 呼叫使用
+ * @param {string} method 請求方法的英文大寫，例：PUT、PATCH
+ * @returns 設定請求的 options 物件
+ */
+function requestMethod(method) {
+  return {
+    method: method,
+    redirect: 'follow'
+  };
+}
 
+/**
+ * 為監聽 input change 事件的函數設定「去彈跳」 (debounce) 期間
+ * Source: Implementing Debounce in Vanilla JavaScript, from Code with Ahsan on YouTube
+ * URL: https://youtu.be/kSiuXLfF9HM
+ */
 function debounce(debouncedFunction, duration) {
   let timer = null;
   return function (...args) {
@@ -286,11 +314,19 @@ function openModal($el) {
 }
 
 function closeModal($el) {
-  $el.classList.remove('is-active');
-  $el.querySelector("div._chatroom_members").innerHTML = ``;
-  $el.querySelector("ul._search_results").innerHTML = ``;
-  $el.querySelector("#ipt-search-text").value = ``;
-  $el.querySelector("div.menu p").style["display"] = "none";
+  const modalType = document.querySelector(".modal.is-active").parentElement.tagName;
+  switch (modalType) {
+    case "CHATROOM-SETTING-MODAL":
+      $el.classList.remove('is-active');
+      break;
+    case "CREATE-CHATROOM-MODAL":
+      $el.classList.remove('is-active');
+      $el.querySelector("div._chatroom_members").innerHTML = ``;
+      $el.querySelector("ul._search_results").innerHTML = ``;
+      $el.querySelector("#ipt-search-text").value = ``;
+      $el.querySelector("div.menu p").style["display"] = "none";
+      break;
+  }
 }
 
 function closeAllModals() {
