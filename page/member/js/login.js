@@ -118,6 +118,31 @@ $(function () {
     } else {
       // 廠商登入資料
       console.log("company");
+      fetch("company/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyUserName: account.val(),
+          companyPassword: password.val(),
+        }),
+      })
+        .then((resp) => {
+          if (resp.redirected) {
+            location.href = resp.url;
+            alert("登入成功");
+          } else {
+            resp.json().then((body) => {
+              $("p.msg").text(body.errorMessage);
+              $("p.msg").css("color", "red");
+              // alert(`errorMsg: ${body.errorMessage}`);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   });
 });

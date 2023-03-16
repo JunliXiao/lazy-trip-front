@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" -->
-<!-- integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous"> -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" integrity="sha512-t8qKZgG4J4P4oRJPvB8KfxnNwVdYY1FInGjSLb8PZ+EClQV7l63+jX17+V7NlWgLwBB7fCZxEp/BK7vfoGzLGQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-<link rel="stylesheet" href="../asset/css/my-bulma.css" />
+<link rel="stylesheet" href="../../asset/css/my-bulma.css" />
 <script src="https://kit.fontawesome.com/616f19a0b0.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 
@@ -144,10 +140,9 @@
 <!-- service start -->
 
 <!-- service image start -->
-
 <div class="btn" id="chat-icon">
-    <img src="<%=request.getContextPath()%>/customerService/images/phone.png" style="width: 50px;">
-    <img src="<%=request.getContextPath()%>/customerService/images/alert.png" style="width: 30px;" id="alert" class="hide">
+    <img src="<%=request.getContextPath()%>/page/customerService/images/phone.png" style="width: 50px;">
+    <img src="<%=request.getContextPath()%>/page/customerService/images/alert.png" style="width: 30px;" id="alert" class="hide">
 </div>
 <c:if test="${empty 1}">
 	<script>
@@ -219,10 +214,10 @@
 	        });
 	
 	        const user = '<div class="column is-2 col-xs-2 avatar">'
-			            + '<img src="<%=request.getContextPath()%>/customerService/images/profile.png" class="img-responsive">'
+			            + '<img src="<%=request.getContextPath()%>/page/customerService/images/profile.png" class="img-responsive">'
 			    		+ '</div>';
 			const employee = '<div class="column is-2 col-xs-2 avatar">'
-	                	+ '<img src="<%=request.getContextPath()%>/customerService/images/customer-service.png" class="img-responsive">'
+	                	+ '<img src="<%=request.getContextPath()%>/page/customerService/images/customer-service.png" class="img-responsive">'
 	                    + '</div>';
 	
 		     function connect() {

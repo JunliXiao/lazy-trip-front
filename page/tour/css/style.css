@@ -3,14 +3,6 @@
 	margin: 0;
 	box-sizing: border-box;
 }
-/* div {
-  border: 1px black solid;
-  background-color: green;
-} */
-.-none {
-	display: none;
-}
-
 button {
 	cursor: pointer;
 }
@@ -274,8 +266,6 @@ li.recommend_tour:hover {
 	text-decoration: underline;
 	font-weight: bold;
 }
-/* div.column.item */
-div.column.item {
-	display: flex;
-	justify-content: center;
+.-none {
+	display: none;
 }
