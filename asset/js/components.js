@@ -105,7 +105,7 @@ class Header extends HTMLElement {
             <a href="${ORIGIN}/lazy-trip-back/page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
-            <a href="${ORIGIN}/lazy-trip-back/page/article/" class="navbar-item"> 我的文章 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/article/myArticle.jsp" class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
             <a class="navbar-item mem_logout"> 登出 </a>
           </div>
