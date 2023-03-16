@@ -21,6 +21,19 @@ let targetAttractionDate;
 let getTourScheDate;
 let getTourScheId;
 
+// 會員
+const specifier_id = parseCookieTokens(document.cookie).get("memId");
+// ======= 輔助功能 =======
+function parseCookieTokens(cookie) {
+  let tokens = cookie.split("; ");
+  let map = new Map();
+  for (let token of tokens) {
+    let keyValue = token.split("=");
+    map.set(keyValue[0], keyValue[1]);
+  }
+  return map;
+}
+
 $(document).ready(function () {
   $(document).on("click", "div.sort", function () {
     location.reload();
@@ -93,12 +106,12 @@ function initRenderTourData(data) {
   <div class="top" style= background-image:url(data:image/*;base64,${data.tourImg})>
     <div class="icon" style="">
       <div class="return return_tripList">
-        <a href="#" class="return">          
+        <a href="javascript:;" class="return">          
           <i class="fas fa-arrow-left"></i>
         </a>
       </div>
       <div class="sort">
-        <a href="#" class="sort">
+        <a href="javascript:;" class="sort">
           <i class="fas fa-sort-amount-down"></i> 
         </a>
       </div>  
@@ -250,6 +263,7 @@ $(document).on(
   "click",
   "li.dayTripBlock_featureEdit > i.fas.fa-edit",
   function () {
+    enableButton_editAttraction();
     targetAttraction = $(this).closest("div.dayTripBlock_all");
     getTourScheId = targetAttraction.attr("data-scheid");
     getTourScheDate = $(this).closest("section.dayTripBlock").attr("data-date");
@@ -277,6 +291,20 @@ $(document).on(
   }
 );
 
+function enableButton_editAttraction() {
+  if (
+    $("#start_time").val() !== "" &&
+    $("#stay_time").val() !== "" &&
+    $("input#search_input").val() !== "輸入位置"
+  ) {
+    $("button.edit_attraction").prop("disabled", false);
+  } else {
+    $("button.edit_attraction").prop("disabled", true);
+  }
+}
+$("#start_time").on("keyup", enableButton_editAttraction);
+$("#stay_time").on("keyup", enableButton_editAttraction);
+$("input#search_input").on("keyup", enableButton_editAttraction);
 // 更新
 $(document).on("click", "button.edit_attraction", function () {
   //點擊"修改"後，將頁面收回，並將button改回成"加入景點"
@@ -317,7 +345,6 @@ $(document).on("click", "button.edit_attraction", function () {
       console.log("error");
     },
     complete: function (xhr) {
-      console.log(targetAttractionId);
       //更新DB
       $.ajax({
         url: `http://localhost:8080/lazy-trip-back/tourScheUpdate`,
@@ -339,7 +366,6 @@ $(document).on("click", "button.edit_attraction", function () {
             url: `http://localhost:8080/lazy-trip-back/attractionQueryOne?attractionId=${targetAttractionId}`,
             type: "GET",
             success: function (AttractionData) {
-              console.log(AttractionData);
               // 將資料渲染到頁面上
               targetAttraction.html(`
             <ul class="dayTripBlock_locationInfo">
@@ -462,10 +488,6 @@ function initMap() {
         marker = new google.maps.Marker({
           position: selected_attraction.location,
           map: map,
-          label: {
-            text: "!",
-            color: "white",
-          },
         });
         markers.push(marker);
         marker.setPosition(selected_attraction.location);
@@ -521,8 +543,6 @@ function initMap() {
 
 //使用者點選"加入景點"，發送請求
 $(document).on("click", "button.add_attraction", function () {
-  showRouteLine();
-  showMarkers();
   // 1.景點存入DB, attraction_arr
   // 2.景點與相關資訊存入tourSchedule_arr
   // 3.將景點資訊渲染到正選區
@@ -641,23 +661,30 @@ function tourScheStoreIntoDB(tourSchedule_arr_ready) {
 
 function renderAttractionToShowBox(selected_attraction) {
   let new_attraction = "";
+  new_attraction = `
+    <div class="dayTripBlock_all">
+      <ul class="dayTripBlock_locationInfo">
+        <li class="dayTripBlock_locationInfoImg">
+          <img style="width: 70px; height: 70px; border-radius: 4px; background-size: cover" src=${selected_attraction.photo.getUrl()}/>
+        </li>
+        <li class="dayTripBlock_locationInfoBlock">
+          <ul class="dayTripBlock_locationInfoBlockDetail">
+            <li class="attraction_title">
+              ${selected_attraction.name}
+            </li>
+            <li class="address">${selected_attraction.address}</li>
 
-  new_attraction = `<div>
-                    <div><img src="${selected_attraction.photo.getUrl()}" style="max-width: 100px; max-height: 100px;"></div>
-                    <h3 class="attractionTitle">${selected_attraction.name}</h3>
-                    <p class="location">${selected_attraction.location}</p>
-                    <p class="carRouteTime">${
-                      selected_attraction.carRoute_time
-                    }</p>
-                    <p class="latitude">${selected_attraction.latitude}</p>
-                    <p class="longitude">${selected_attraction.longitude}</p>
-                </div>`;
+          </ul>
+        </li>
+      </ul>
+    </div>
+  `;
 
   $("div.attraction_detail_show").html(new_attraction);
 }
 
 function renderAttractionToTourInfo(tourSchedule_arr, start_time, stay_time) {
-  // 將景點資訊渲染到div.schedule.lodge
+  // 將景點資訊渲染到正選區
   let new_dayTripInfo = "";
 
   for (let i = 0; i < tourSchedule_arr.length; i++) {
@@ -747,49 +774,4 @@ function endTimeCalculateForEdit(start_time, stay_time) {
     minute: "2-digit",
     hour12: false,
   });
-}
-
-$(document).on("click", "button.reset_attraction", function () {
-  showRouteLine();
-});
-let flightPlanCoordinates;
-function showRouteLine() {
-  // 定義折線上的座標
-  flightPlanCoordinates = [
-    selected_attraction.location,
-    { lat: 25.0443486, lng: 121.532292 },
-  ];
-
-  // 創建一個新的折線
-  var flightPath = new google.maps.Polyline({
-    path: flightPlanCoordinates,
-    geodesic: true,
-    strokeColor: "#000000",
-    strokeOpacity: 1.0,
-    strokeWeight: 2,
-  });
-
-  // 將折線添加到地圖上
-  flightPath.setMap(map);
-  console.log(222);
-}
-
-var markersData = [
-  { lat: 25.0443486, lng: 121.532292, title: "台北101" },
-  { lat: 25.0572688, lng: 121.5376685, title: "中正紀念堂" },
-  { lat: 25.0602121, lng: 121.5257872, title: "台北車站" },
-];
-
-function showMarkers() {
-  for (var i = 0; i < markersData.length; i++) {
-    var marker = new google.maps.Marker({
-      position: markersData[i],
-      map: map,
-      title: markersData[i].title,
-      label: {
-        text: "1",
-        color: "white",
-      },
-    });
-  }
 }

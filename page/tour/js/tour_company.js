@@ -30,8 +30,8 @@ const trip_start_date = $("input#trip_start_date");
 const trip_end_date = $("input#trip_end_date");
 const people = $("input#people");
 const trip_price = $("input#trip_price");
-const trip_img_upload = document.querySelector("input#trip_img_upload");
-const trip_feature = document.querySelector("input#trip_feature");
+const trip_img_upload = $("input#trip_img_upload");
+const trip_feature = $("input#trip_feature");
 const trip_comfirm_btn = $("button.trip_comfirm_btn");
 const trip_clear_btn = $("button.trip_clear_btn");
 
@@ -42,15 +42,20 @@ const attraction_search = $("input#attraction_search");
 const attraction_time = $("input#attraction_time");
 const attraction_stay_min = $("input#attraction_stay_min");
 const buttons_tour_info = $("div.buttons.tour_info");
+const comfirm_add_attraction_btn = $(".comfirm_add_attraction_btn");
+const clear_btn = $("button.clear_btn");
 
 // 行程管理
 const tbody_tour = $("tbody.tbody_tour");
-
 const tbody_sche = $("tbody.tbody_sche");
 
 // google map
+let map;
 let current_position;
 let selected_attraction;
+let directions_service;
+let directions_renderer;
+let carRoute_time;
 
 // 監聽DOM元素
 basic_info_li.addEventListener("click", function () {
@@ -81,6 +86,19 @@ mamage_attraction_li.addEventListener("click", function () {
   basic_schedule_info.classList.remove("-none");
 });
 
+// 監聽所有input元素的keyup事件
+trip_date.on("keyup", enableButton_addAttractionBtn);
+attraction_search.on("keyup", enableButton_addAttractionBtn);
+attraction_time.on("keyup", enableButton_addAttractionBtn);
+attraction_stay_min.on("keyup", enableButton_addAttractionBtn);
+
+trip_name.on("keyup", enableButton_addBasicInfo);
+trip_start_date.on("keyup", enableButton_addBasicInfo);
+trip_end_date.on("keyup", enableButton_addBasicInfo);
+people.on("keyup", enableButton_addBasicInfo);
+trip_price.on("keyup", enableButton_addBasicInfo);
+trip_feature.on("keyup", enableButton_addBasicInfo);
+
 $(function () {
   init();
   add_BasicInfo();
@@ -89,20 +107,28 @@ $(function () {
   deleteTour();
   selectTourByButtons();
   addAttractionIntoDB();
+  enableButton_addAttractionBtn();
+  enableButton_addBasicInfo();
 });
 
 function init() {}
 
-trip_img_upload.addEventListener("change", function () {
-  const reader = new FileReader();
-  reader.readAsDataURL(this.files[0]);
-  reader.addEventListener("load", function () {
-    base64 = reader.result.replace(/^data:.*?;base64,/, "");
-  });
+trip_img_upload.on("change", function () {
+  let reader = new FileReader();
+  // 監聽input:file事件，上傳成功與否
+  if (this.files[0] != null && this.files[0]) {
+    reader.readAsDataURL(this.files[0]);
+    $("span.file-name").text("上傳成功");
+    reader.addEventListener("load", function () {
+      base64 = reader.result.replace(/^data:.*?;base64,/, "");
+    });
+  } else {
+    return;
+  }
 });
 
 function add_BasicInfo() {
-  $("button.trip_comfirm_btn").on("click", function () {
+  trip_comfirm_btn.on("click", function () {
     $.ajax({
       url: `http://localhost:8080/lazy-trip-back/tourComCreate`,
       type: "POST",
@@ -112,24 +138,38 @@ function add_BasicInfo() {
         endDate: trip_end_date.val().trim(),
         tourPerson: people.val().trim(),
         cost: trip_price.val().trim(),
+        feature: trip_feature.val().trim(),
         tourImg: base64,
         companyId: company_id,
       }),
       dataType: "json",
       contentType: "application/json",
+      beforeSend: function () {
+        tbody_tour.append(
+          "<div class='temp_loading is-centered'><span><i class='fas fa-spinner fa-spin fa-2x'></i></span></div>"
+        );
+      },
       success: function (data) {
-        console.log(data);
         tourCom_arr.push({
           tourTitle: trip_name.val().trim(),
           startDate: trip_start_date.val().trim(),
           endDate: trip_end_date.val().trim(),
           tourPerson: people.val().trim(),
           cost: trip_price.val().trim(),
+          feature: trip_feature.val().trim(),
           tourImg: base64,
           companyId: company_id,
           tourComId: data.tourComId,
         });
-        console.log(tourCom_arr);
+        // 清空輸入欄位值
+        trip_name.val("");
+        trip_start_date.val("");
+        trip_end_date.val("");
+        people.val("");
+        trip_price.val("");
+        trip_feature.val("");
+        base64 = "";
+        $("span.file-name").text("");
       },
       error: function (xhr) {
         console.log("error");
@@ -137,6 +177,8 @@ function add_BasicInfo() {
       complete: function (xhr) {
         renderToManageTour(tourCom_arr);
         renderToButtons(tourCom_arr);
+        tbody_tour.children("div.temp_loading").remove();
+        $("div.field").removeClass("control is-loading");
       },
     });
   });
@@ -170,12 +212,12 @@ function renderToManageTour(tourCom_arr) {
           <td class="tour_img">
             <img class="tour_img" src="data:image/*;base64,${
               tourCom_arr[i - 1].tourImg
-            }" style="width: 50px; height: 50px"/>
+            }" style="min-width: 50px; height: 50px"/>
           </td>
           <td class="-none">
             <img class="update_tour_img" src="data:image/*;base64,${
               tourCom_arr[i - 1].tourImg
-            }" style="width: 50px; height: 50px"/>
+            }" style="min-width: 50px; height: 50px"/>
           </td>
           <td><button class="button is-primary is-outlined trip_detail">明細</button></td>
           <td><button class="button is-warning is-outlined edit_tour_btn">修改</button></td>
@@ -220,8 +262,17 @@ function initRenderToAddAttractionButtons() {
     type: "GET",
     dataType: "json",
     contentType: "application/json",
+    beforeSend: function () {
+      buttons_tour_info.append(
+        "<div class='temp_loading is-right'><span><i class='fas fa-spinner fa-spin fa-2x'></i></span></div>"
+      );
+    },
+    statusCode: {
+      400: function (res) {
+        console.log(res);
+      },
+    },
     success: function (data) {
-      console.log(data);
       tourCom_arr = data;
       let str = "";
       for (let i = 0; i < tourCom_arr.length; i++) {
@@ -244,8 +295,12 @@ function initRenderToManageTour() {
     type: "GET",
     dataType: "json",
     contentType: "application/json",
+    beforeSend: function () {
+      tbody_tour.append(
+        `<div class='temp_loading'><span><i class='fas fa-spinner fa-spin fa-3x'></i></span></div>`
+      );
+    },
     success: function (data) {
-      console.log(data);
       tourCom_arr = data;
       let str = "";
       for (let i = 0; i < tourCom_arr.length; i++) {
@@ -262,7 +317,7 @@ function initRenderToManageTour() {
           <td class="trip_price">${tourCom_arr[i].cost}</td>
           <td class="-none update_trip_price"><input type="number" name="update_trip_price" id="update_trip_price" class="update_trip_price" value=${tourCom_arr[i].cost}></td>
           <td class="tour_img">
-            <img class="tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="width: 50px; height: 50px"/>
+            <img class="tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="min-width: 50px; height: 50px"/>
           </td>
           <td class="-none">
             <img class="update_tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="width: 50px; height: 50px"/>
@@ -296,7 +351,6 @@ function deleteTour() {
             tourCom_arr.splice(i, 1);
           }
         }
-        console.log(tourCom_arr);
       },
       error: function (xhr) {
         console.log("error");
@@ -471,77 +525,147 @@ function initMap() {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      setAutocompleteBounds();
-    });
-  } else {
-    setAutocompleteBounds();
-  }
+      map.setCenter(current_position);
+      map.setZoom(16);
 
-  function setAutocompleteBounds() {
-    const autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("attraction_search"),
-      {
-        bounds: current_position
-          ? {
-              east: current_position.lng + 0.01,
-              west: current_position.lng - 0.01,
-              south: current_position.lat - 0.01,
-              north: current_position.lat + 0.01,
+      const autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("attraction_search"),
+        {
+          // 查詢的範圍
+          bounds: {
+            east: current_position.lng + 0.001,
+            west: current_position.lng - 0.001,
+            south: current_position.lat - 0.001,
+            north: current_position.lat + 0.001,
+          },
+          // false代表非僅限上述範圍內查詢
+          strictBounds: false,
+        }
+      );
+
+      autocomplete.addListener("place_changed", function () {
+        const place = autocomplete.getPlace();
+
+        // 將搜尋到的地點設定為下一次查詢的起點
+        const start_location = selected_attraction
+          ? selected_attraction.location
+          : current_position;
+
+        selected_attraction = {
+          location: place.geometry.location,
+          place_id: place.place_id,
+          name: place.name,
+          address: place.formatted_address,
+          photo: place.photos[0],
+          rating: place.rating,
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng(),
+        };
+        // 將搜尋到的結果渲染畫面，且給予marker
+        map.setCenter(selected_attraction.location);
+
+        if (!directions_service) {
+          directions_service = new google.maps.DirectionsService();
+        }
+        if (!directions_renderer) {
+          directions_renderer = new google.maps.DirectionsRenderer({
+            map: map,
+          });
+        }
+        directions_renderer.set("directions", null);
+        directions_service.route(
+          {
+            origin: start_location,
+            destination: {
+              placeId: selected_attraction.place_id,
+            },
+            travelMode: "DRIVING", // 交通模式 DRIVING
+          },
+          function (response, status) {
+            if (status === "OK") {
+              directions_renderer.setDirections(response);
+              carRoute_time = response.routes[0].legs[0].duration.text;
             }
-          : undefined,
-        strictBounds: false,
-      }
-    );
-    autocomplete.addListener("place_changed", function () {
-      const place = autocomplete.getPlace();
-      selected_attraction = {
-        location: place.geometry.location,
-        place_id: place.place_id,
-        name: place.name,
-        address: place.formatted_address,
-        photo: place.photos[0],
-        rating: place.rating,
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
-      };
-      console.log(selected_attraction);
+          }
+        );
+      });
     });
   }
 }
 
+function enableButton_addAttractionBtn() {
+  if (
+    trip_date.val() !== "" &&
+    attraction_search.val() !== "" &&
+    attraction_time.val() !== "" &&
+    attraction_stay_min.val() !== ""
+  ) {
+    comfirm_add_attraction_btn.prop("disabled", false);
+  } else {
+    comfirm_add_attraction_btn.prop("disabled", true);
+  }
+}
+
+function enableButton_addBasicInfo() {
+  if (
+    trip_name.val() !== "" &&
+    trip_start_date.val() !== "" &&
+    trip_end_date.val() !== "" &&
+    people.val() !== "" &&
+    trip_price.val() !== "" &&
+    trip_feature.val() !== ""
+  ) {
+    trip_comfirm_btn.prop("disabled", false);
+  } else {
+    trip_comfirm_btn.prop("disabled", true);
+  }
+}
+
 function addAttractionIntoDB() {
-  $(".comfirm_add_attraction_btn").on("click", function () {
-    $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/attractionCreate`,
-      type: "POST",
-      dataType: "json",
-      data: JSON.stringify({
-        attractionTitle: selected_attraction.name,
-        location: selected_attraction.address,
-        latitude: selected_attraction.latitude,
-        longitude: selected_attraction.longitude,
-        attractionImg: selected_attraction.photo.getUrl(),
-      }),
-      contentType: "application/json",
-      success: function (data) {
-        console.log(data);
-        attraction_arr.push({
-          attractionTitle: data.attractionTitle,
-          location: data.location,
-          latitude: data.latitude,
-          longitude: data.longitude,
-          attractionImg: data.attractionImg,
-          attractionId: data.attractionId,
-        });
-        attractionId = data.attractionId;
-      },
-      error: function (xhr) {
-        console.log("error");
-      },
-      complete: function (xhr) {
-        addAttractionToTourSchedule(attractionId);
-      },
-    });
+  comfirm_add_attraction_btn.on("click", function () {
+    // 前端驗證
+    if (targetTourIdByButtons == undefined) {
+      buttons_tour_info.addClass("vibrate");
+      buttons_tour_info.delay(500).queue(function () {
+        buttons_tour_info.removeClass("vibrate");
+        $(this).dequeue();
+        return;
+      });
+    } else {
+      $.ajax({
+        url: `http://localhost:8080/lazy-trip-back/attractionCreate`,
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify({
+          attractionTitle: selected_attraction.name,
+          location: selected_attraction.address,
+          latitude: selected_attraction.latitude,
+          longitude: selected_attraction.longitude,
+          attractionImg: selected_attraction.photo.getUrl(),
+          carRouteTime: carRoute_time,
+        }),
+        contentType: "application/json",
+        success: function (data) {
+          console.log(data);
+          attraction_arr.push({
+            attractionTitle: data.attractionTitle,
+            location: data.location,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            attractionImg: data.attractionImg,
+            attractionId: data.attractionId,
+            carRouteTime: carRoute_time,
+          });
+          attractionId = data.attractionId;
+        },
+        error: function (xhr) {
+          console.log("error");
+        },
+        complete: function (xhr) {
+          addAttractionToTourSchedule(attractionId);
+        },
+      });
+    }
   });
 }
 
@@ -565,6 +689,7 @@ function addAttractionToTourSchedule() {
     startTime: attraction_time.val(),
     stayTime: attraction_stay_min.val(),
     endTime: endTimeCalculate(attraction_time.val(), attraction_stay_min.val()),
+    carRouteTime: carRoute_time,
   });
   let transfer_arr = [
     {
@@ -577,6 +702,7 @@ function addAttractionToTourSchedule() {
         attraction_time.val(),
         attraction_stay_min.val()
       ),
+      carRouteTime: carRoute_time,
     },
   ];
   $.ajax({
@@ -609,6 +735,11 @@ function initRenderScheduleToManageTour(targetTourId) {
     type: "GET",
     dataType: "json",
     contentType: "application/json",
+    beforeSend: function () {
+      tbody_sche.append(
+        "<div class='temp_loading is-centered'><span><i class='fas fa-spinner fa-spin fa-2x'></i></span></div>"
+      );
+    },
     success: function (data) {
       tourTotalInfo_arr = data;
       // 渲染到頁面上
@@ -660,4 +791,27 @@ $(document).on("click", "button.delete_tour_sche_btn", function () {
       console.log("error");
     },
   });
+});
+
+trip_clear_btn.on("click", function () {
+  trip_name.val("");
+  trip_start_date.val("");
+  trip_end_date.val("");
+  people.val("");
+  trip_price.val("");
+  trip_feature.val("");
+  base64 = "";
+  $("span.file-name").text("");
+});
+
+clear_btn.on("click", function () {
+  trip_date.val("");
+  attraction_search.val("");
+  attraction_time.val("");
+  attraction_stay_min.val("");
+  if (targetTourIdByButtons !== undefined) {
+    targetTourIdByButtons = undefined;
+    $("h3.tour_title").html("");
+    $("h5.tour_date").html("");
+  }
 });

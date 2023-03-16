@@ -24,6 +24,33 @@
       .-none {
         display: none;
       }
+      div.card-content {
+        overflow-x: auto;
+      }
+      .vibrate {
+        animation: vibrate 0.3s linear infinite;
+      }
+
+      @keyframes vibrate {
+        0% {
+          transform: translate(0);
+        }
+        20% {
+          transform: translate(-2px, 2px);
+        }
+        40% {
+          transform: translate(2px, -2px);
+        }
+        60% {
+          transform: translate(-2px, -2px);
+        }
+        80% {
+          transform: translate(2px, 2px);
+        }
+        100% {
+          transform: translate(0);
+        }
+      }
     </style>
   </head>
   <body>
@@ -38,13 +65,13 @@
           <aside class="menu" style="width: 100%">
             <ul class="menu-list has-text-centered has-text-weight-semibold">
               <li id="li-basic-info">
-                <a class="is-size-4 py-5 is-active">行程基本資料</a>
+                <a class="is-size-4 py-5 is-active">新增主行程模板</a>
               </li>
               <li id="li-search-add-attraction">
-                <a class="is-size-4 py-5">查詢/加入景點</a>
+                <a class="is-size-4 py-5">查詢/加入景點到主行程模板</a>
               </li>
               <li id="li-mamage-attraction">
-                <a class="is-size-4 py-5">行程管理</a>
+                <a class="is-size-4 py-5">行程模板管理</a>
               </li>
             </ul>
           </aside>
@@ -77,6 +104,7 @@
                           </span>
                           <span class="file-label"> 圖片上傳 </span>
                         </span>
+                        <span class="file-name"></span>
                       </label>
                     </div>
                     <div class="field is-horizontal">
@@ -332,9 +360,9 @@
                           <p class="control has-icons-left">
                             <input
                               class="input"
-                              type="time"
-                              name="attraction_stay_hour"
-                              id="attraction_stay_hour"
+                              type="number"
+                              name="attraction_stay_min"
+                              id="attraction_stay_min"
                             />
                             <span class="icon is-small is-left">
                               <i class="fas fa-clock"></i>
@@ -355,7 +383,7 @@
                         </span>
                       </button>
                       <button
-                        type="reset"
+                        type="button"
                         class="button is-success comfirm_add_attraction_btn"
                         style="float: right; margin: 24px 0px 24px 0px"
                       >

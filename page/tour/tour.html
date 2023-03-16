@@ -30,18 +30,6 @@
     <!-- 導覽列 -->
     <header-component></header-component>
     <header>
-      <!-- <li class="tags has-addons">
-        <input
-          type="checkbox"
-          name="trip_tag_el_checkbox"
-          id="trip_tag_el_checkbox"
-        />
-        <span class="tag is-info is-light">花蓮</span>
-        <button
-          class="tag is-delete button delete"
-          style="border: none"
-        ></button>
-      </li> -->
       <h1 class="title">行程</h1>
     </header>
     <main>
@@ -53,24 +41,20 @@
             type="text"
             placeholder="搜尋行程"
           />
+          <button type="sumbit" class="button btn_create_trip is-primary">
+            + 創建新行程
+          </button>
         </div>
         <div class="recommend_tour">
-          <span class="recommend_tour">推薦旅遊行程：</span>
+          <span style="font-weight: bold">新增推薦您的旅遊景點模板：</span>
+          <ul style="display: flex"></ul>
         </div>
       </div>
       <hr />
       <div class="columns">
         <div class="column is-1"></div>
         <div class="column wrapper"></div>
-        <div class="column is-1">
-          <button
-            type="sumbit"
-            class="button btn_create_trip"
-            style="position: fixed; right: 60px; bottom: 60px"
-          >
-            +
-          </button>
-        </div>
+        <div class="column is-1"></div>
       </div>
 
       <!-- 創建行程的彈跳視窗 -->
@@ -84,7 +68,7 @@
           </div>
           <div class="message-body contents">
             <div
-              class="file is-primary"
+              class="file is-primary has-name"
               style="align-self: flex-end; margin-bottom: 12px"
             >
               <label class="file-label" for="tourImg">
@@ -100,6 +84,7 @@
                   </span>
                   <span class="file-label"> 行程封面照片 </span>
                 </span>
+                <span class="file-name"></span>
               </label>
             </div>
 
@@ -169,27 +154,12 @@
               </div>
             </div>
 
-            <div
-              class="control has-icons-left"
-              style="align-self: flex-end; margin-bottom: 12px"
-            >
-              <div class="select">
-                <select name="trip_tag" id="trip_tag">
-                  <option value="進行中">進行中</option>
-                  <option value="想去">想去</option>
-                </select>
-              </div>
-              <div class="icon is-small is-left">
-                <i class="fas fa-tag"></i>
-              </div>
-            </div>
-
             <div>
               <button
                 class="button is-danger is-outlined trip_close_btn"
                 style="float: right; margin: 24px 0px 24px 12px"
               >
-                <span>清除</span>
+                <span>取消</span>
                 <span class="icon is-small">
                   <i class="fas fa-times"></i>
                 </span>

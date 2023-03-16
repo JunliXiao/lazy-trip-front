@@ -234,6 +234,9 @@ div.trip_tag_place>ul li {
 	padding: 4px;
 	margin: 2px;
 }
+div.icon_total {
+  background-color: rgba(217, 217, 219,0.4);
+}
 /* 主行程內的各個標記標籤 */
 li[data-tag]:hover {
 	cursor: pointer;
@@ -263,4 +266,16 @@ li[data-tag]:hover {
 /* 捲軸滑塊在滑鼠移過捲軸區域時顯示的樣式 */
 ::-webkit-scrollbar-thumb:active {
 	background: #7a3306;
+}
+
+/* recommend_tour */
+li.recommend_tour:hover {
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold;
+}
+/* div.column.item */
+div.column.item {
+	display: flex;
+	justify-content: center;
 }
