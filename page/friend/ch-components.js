@@ -53,7 +53,7 @@ class Chatroom extends HTMLElement {
 
     // 如果沒有設定聊天室本身的名字 (預設一個空格)，改用聊天室成員的暱稱或名字組成
     if(this.CHATROOM_NAME.trim().length === 0) {
-      fetch(API_ROOT + API_CHAT_MEMBER + `?action=chatroom_member&chatroom_id=${this.CHATROOM_ID}`)
+      fetch(`${API_ROOT}${API_CHAT_MEMBER}?action=chatroom_member&chatroom_id=${this.CHATROOM_ID}`)
         .then((res) => res.json())
         .then((members) => 
           {

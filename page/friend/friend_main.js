@@ -3,7 +3,7 @@ let loc = window.location;
 const PROT_HTTP = "http:";
 const PROT_WS = "ws:";
 const HOSTNAME = loc.hostname;
-const PORT = loc.port == "80" ? '' : ':8080';
+// const PORT = loc.port == "80" ? '' : ':8080';
 
 // let params = new URLSearchParams(loc.search);
 // let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
@@ -12,14 +12,14 @@ const specifier_id = parseCookieTokens(document.cookie).get("memId");
 let specifier_username;
 
 // ======= 後端服務端點 =======
-const API_ROOT = `${PROT_HTTP}//${HOSTNAME}${PORT}/lazy-trip-back`;
+const API_ROOT = `${PROT_HTTP}//${HOSTNAME}/lazy-trip-back`;
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
 const API_CHAT_MEMBER = "/api/chat/member";
 const API_IMG_AVATAR = "/img/avatar.png";
 
-const WS_ROOT = `${PROT_WS}//${HOSTNAME}${PORT}/lazy-trip-back`;
+const WS_ROOT = `${PROT_WS}//${HOSTNAME}/lazy-trip-back`;
 
 // ======= 資料物件類型 =======
 const TYPE_SUGGESTION = "suggestion";
