@@ -567,27 +567,30 @@
                 fetch(`${apiUrlFriend}?member_id=${user_id}&query_type=friend`)
                   .then((response) => response.json())
                   .then((result) => {
+                    console.log(result);
                     $("#fr_list").html("");
-                    $.each(result, function (index, item) {
-                      if (!gp_id_list.includes(item.id)) {
-                        var fr_list_html;
-                        var mem_name = "";
-                        if (item.username != null) {
-                          mem_name = item.username;
-                        } else if (item.name != null) {
-                          mem_name = item.name;
-                        } else {
-                          mem_name = "暫無會員名";
-                        }
-                        fr_list_html = `<div class="field">
+                    if (result.dataType != "none") {
+                      $.each(result, function (index, item) {
+                        if (!gp_id_list.includes(item.id)) {
+                          var fr_list_html;
+                          var mem_name = "";
+                          if (item.username != null) {
+                            mem_name = item.username;
+                          } else if (item.name != null) {
+                            mem_name = item.name;
+                          } else {
+                            mem_name = "暫無會員名";
+                          }
+                          fr_list_html = `<div class="field">
                     <label>
                     <input type="checkbox"  class="to_invite_frds"  value="${item.id}"/>
                     ${mem_name}
                   </label>
                    </div>`;
-                      }
-                      $("#fr_list").append(fr_list_html);
-                    });
+                        }
+                        $("#fr_list").append(fr_list_html);
+                      });
+                    }
                   })
                   .catch((error) => console.log("error", error));
                 show_alert.style.display = "block";
@@ -597,7 +600,6 @@
             alert("人數已滿!");
             show_alert.style.display = "none";
           }
-
         };
         //邀請OK按鈕
         close_alert.addEventListener("click", function () {
