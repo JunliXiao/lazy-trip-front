@@ -49,7 +49,7 @@
                 <a class="is-size-4 py-5 is-active">房間管理</a>
               </li>
               <ul id="left-roomAdd">
-                <a class="is-size-4 py-5">房型新增修改</a>
+                <a class="is-size-4 py-5">房型新增</a>
               </ul>
 
               <li id="left-roomManagement">
@@ -60,7 +60,7 @@
                 <a class="is-size-4 py-5 is-active">廠商訂單管理</a>
               </li>
               <li id="left-orderData">
-                <a class="is-size-4 py-5">訂單資料</a>
+                <a class="is-size-4 py-5">訂單明細</a>
               </li>
 
               <li id="left-orderShow">
@@ -100,8 +100,8 @@
                 <div class="level-item">
                   <!-- 右上房型種類 -->
                   <div class="buttons has-addons is-right">
-                    <button class="button twoRoom">雙人房</button>
-                    <button class="button threeRoom">三人房</button>
+                    <button class="button twoRoom">豪華雙人房</button>
+                    <button class="button threeRoom">尊爵三人房</button>
                   </div>
                 </div>
               </div>
@@ -230,7 +230,7 @@
                         class="input"
                         type="text"
                         name="roomTypeName"
-                        placeholder="雙人房or三人房"
+                        placeholder="豪華雙人房or尊爵三人房"
                         id="roomTypeName"
                       />
                     </div>
@@ -293,23 +293,19 @@
           <!-- 包裝轉換orderShow頁面 -->
           <div class="trans-right-orderShow">
             <!-- demo資料框框 -->
-            <div class="box">
+            <div class="table-container is-size-7">
               <table class="table">
                 <thead>
                   <tr>
                     <th colspan="20"></th>
                   </tr>
                   <tr class="orderShow">
-                    <th><abbr title="order_id">訂單編號</abbr></th>
-                    <th>
-                      <abbr title="company_id" class="companyID none"
-                        >廠商編號</abbr
-                      >
+                    <th><abbr title="order_id">編號</abbr></th>
+                    <th class="-none">
+                      <abbr title="company_id" class="companyID">廠商編號</abbr>
                     </th>
-                    <th>
-                      <abbr title="member_id" class="memberID none"
-                        >會員編號</abbr
-                      >
+                    <th class="-none">
+                      <abbr title="member_id" class="memberID">會員編號</abbr>
                     </th>
                     <th>
                       <abbr title="order_check_in_date" class="orderCheckInDate"
@@ -325,29 +321,27 @@
                     </th>
                     <th>
                       <abbr title="order_total_price" class="orderTotalPrice"
-                        >訂單總金額</abbr
+                        >總金額</abbr
                       >
                     </th>
                     <th>
-                      <abbr title="order_status" class="orderStatus"
-                        >訂單狀態</abbr
-                      >
+                      <abbr title="order_status" class="orderStatus">狀態</abbr>
                     </th>
                     <th>
                       <abbr
                         title="order_create_datetime"
                         class="orderCreateDatetime"
-                        >訂單成立日期時間</abbr
+                        >成立日期時間</abbr
                       >
                     </th>
                     <th>
                       <abbr title="order_pay_deadline" class="orderPayDeadline"
-                        >訂單付款截止日期</abbr
+                        >付款截止日期</abbr
                       >
                     </th>
                     <th>
                       <abbr title="order_pay_datetime" class="orderPayDatetime"
-                        >訂單付款時間</abbr
+                        >付款時間</abbr
                       >
                     </th>
                     <th>
@@ -374,11 +368,7 @@
                   </tr>
                 </thead>
                 <tbody class="orderShowList">
-                  <td>
-                    <button class="button is-primary" id="orderDetail">
-                      訂單明細
-                    </button>
-                  </td>
+                  <td></td>
                 </tbody>
               </table>
             </div>
@@ -390,11 +380,15 @@
             <div class="box">
               <table class="table">
                 <thead>
-                  <tr>
+                  <tr class="orderDataList">
                     <th colspan="8"></th>
                   </tr>
                   <tr class="orderData">
-                    <th><abbr title="order_detail_id">訂單明細編號</abbr></th>
+                    <th>
+                      <abbr title="order_detail_id" class="orderDetailID"
+                        >訂單明細編號</abbr
+                      >
+                    </th>
                     <th>
                       <abbr title="order_id" class="orderID">訂單編號</abbr>
                     </th>
@@ -416,21 +410,19 @@
                     <th>
                       <abbr
                         title="order_detail_room_price"
-                        class="orderCheckOutDate"
+                        class="orderDetailRoomPrice"
                         >訂單明細房間價格</abbr
                       >
                     </th>
                     <th>
                       <abbr
                         title="order_detail_room_quantity"
-                        class="orderTotalPrice"
+                        class="orderDetailRoomQuantity"
                         >訂單明細房間數量</abbr
                       >
                     </th>
-                    <th>
-                      <abbr
-                        title="order_detail_coupon_discount_price"
-                        class="orderStatus"
+                    <th class="-none">
+                      <abbr title="order_detail_coupon_discount_price"
                         >訂單明細總折扣金額</abbr
                       >
                     </th>

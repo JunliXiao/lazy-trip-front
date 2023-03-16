@@ -2,6 +2,7 @@
 $(function () {
   console.log('init');
   init();
+  getCompany();
   $(".trans-right-roomManagement").removeClass("none");      
   $(".trans-right-roomAdd").addClass("none")
   $(".trans-right-orderShow").addClass("none")
@@ -9,15 +10,17 @@ $(function () {
 });
 let roomList = [];
 let companyID;
+let companyId;
 let roomTypeID=null;
 
 function init() {
-	let companyId = getCookie("companyId");
+	//getCookie
+  companyId = getCookie("companyId");
   let companyName = getCookie("companyUsername");
-  let companyImg = getCookie("companyImg");
+  // let companyImg = getCookie("companyImg");
   console.log(companyImg);
   $("#showCompanyName").text(companyName);  
-  $("#companyImg").attr("src", companyImg);
+  // $("#companyImg").attr("src", "data:image/*;base64,"+companyImg);
   roomList = [];
   console.log(companyId);
   $.ajax({
@@ -57,6 +60,24 @@ function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function getCompany(){
+  fetch("check", {
+    method: "POST",
+    
+  })
+    .then((resp) => resp.json()) 
+    .then((resp) =>{
+      // resp.companyName
+      // resp.companyImg
+      
+
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  console.log("company");
 }
 
 // 事件觸發 UI 常數
@@ -167,7 +188,7 @@ $("button.twoRoom").on("click",(event) => {
 
 //房型刪除按鈕
 $("tbody.roomList").on("click","button#roomAddDelete",function() {
-  let newRoomTypeID = $(this).closest("tr").attr("data-card");
+  let newRoomTypeID = $().closest("tr").attr("data-card");
   console.log(newRoomTypeID);
   $.ajax({
     url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
@@ -279,7 +300,7 @@ if(newRoomTypeName.trim()== ''){
     type: "POST",
     data: {
       action:'insert',
-      companyID:'168',
+      companyID:companyId,
       
       roomTypeName: newRoomTypeName,
       roomTypePerson: newRoomTypePerson,
@@ -466,25 +487,21 @@ function renderRoomData(roomList) {
 
 //ordershow抓取ordertable資料function
 let orderShowList = [];
-let orderID;
+
 function orderShowInit() {
+	
   console.log(00000);
   orderShowList = [];
     $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/Order.do",
+    url: `http://localhost:8080/lazy-trip-back/Order.do?type=showOrderByCompanyID&companyID=${companyId}`,
     type: "GET",
-    data: {
-      type:'showOrderByCompanyID',
-      companyID:'168'
-    }, // 將物件資料(不用雙引號) 傳送到指定的 url
+     // 將物件資料(不用雙引號) 傳送到指定的 url
 
     success: function (data) {
         console.log(data);
       for (let i = 0; i < data.length; i++) {
         orderShowList.push({
           orderID: data[i].orderID,
-          companyID: data[i].companyID,
-          memeberID: data[i].memeberID,
           orderCheckInDate: data[i].orderCheckInDate,
           orderCheckOutDate: data[i].orderCheckOutDate,
           orderTotalPrice: data[i].orderTotalPrice,
@@ -500,7 +517,6 @@ function orderShowInit() {
       } 
       document.querySelector("tbody.orderShowList").innerHTML = "";
       renderOrderShow(orderShowList);
-      console.log(orderShowList);
     },
     error: function (xhr) {
       console.log("error");
@@ -509,14 +525,11 @@ function orderShowInit() {
 }
 
 //將資料渲染到orderShow
-
 function renderOrderShow(orderShowList) {
   let newOrderList = [];
-  for (let i = 0; i < roomList.length; i++) {
+  for (let i = 0; i < orderShowList.length; i++) {
   newOrderList+=`<tr data-card=${orderShowList[i].orderID} class="orderShowList" id="orderShowList">
     <td >${orderShowList[i].orderID}</td>  
-    <td>${orderShowList[i].companyID}</td>
-    <td>${orderShowList[i].memeberID}</td>
     <td>${orderShowList[i].orderCheckInDate}</td>
     <td>${orderShowList[i].orderCheckOutDate}</td>  
     <td>${orderShowList[i].orderTotalPrice}</td>
@@ -529,51 +542,23 @@ function renderOrderShow(orderShowList) {
     <td>${orderShowList[i].travelerEmail}</td>  
     <td>${orderShowList[i].travelerPhone}</td>
     
-    <td> <button class="button is-primary" id="orderdetailbutton">訂單明細</button></td>
+    <td> <button class="button is-primary is-small" id="orderdetailbutton">訂單明細</button></td>
   </tr>`
   $("tbody.orderShowList").html(newOrderList);
   }
 }
-  
 
-// //將資料渲染到orderData
-
-// (function renderOrderShow(orderShowList)) {
-//   let newList = "";
-//         newList+=`<tr data-card=${orderShowList[i].orderID} class="orderShowList" id="orderShowList">
-//                 <td >${orderShowList[i].orderID}</td>  
-//                 <td>${orderShowList[i].companyID}</td>
-//                 <td>${orderShowList[i].memeberID}</td>
-//                 <td>${orderShowList[i].orderCheckInDate}</td>
-//                 <td>${orderShowList[i].orderCheckOutDate}</td>  
-//                 <td>${orderShowList[i].orderTotalPrice}</td>
-//                 <td>${orderShowList[i].orderStatus}</td>
-//                 <td>${orderShowList[i].orderCreateDatetime}</td>
-//                 <td>${orderShowList[i].orderPayDeadline}</td>  
-//                 <td>${orderShowList[i].orderPayDatetime}</td>
-//                 <td>${orderShowList[i].travelerName}</td>
-//                 <td>${orderShowList[i].travelerIDNumber}</td>
-//                 <td>${orderShowList[i].travelerEmail}</td>  
-//                 <td>${orderShowList[i].travelerPhone}</td>
-                
-//                 <td> <button class="button is-primary" id="orderdetailbutton">訂單明細</button></td>
-//               </tr>`
-//   }
-//   $("tbody.orderShowList").html(newList);
-
-
-訂單明細按鈕
-$("tbody.orderDataList").on("click","button#orderDetail",function() {
+//訂單明細按鈕
+$(document).on("click","button#orderdetailbutton",function() {
   let neworderDetailID = $(this).closest("tr").attr("data-card");
+  let orderID =  $(this).closest("tr.orderShowList").find("td:nth-child(1)").text(); 
+  let orderDataList=[];
   console.log(neworderDetailID);
+  console.log(orderID);
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/Order.do",
-    type: "POST",
-    data: {
-      action:'',
-           orderDetailID: neworderDetailID,
-          }, 
-          success: function (data) {
+    url: `http://localhost:8080/lazy-trip-back/Order.do?type=showOrderDetailByOrderID&orderID=${orderID}`,
+    type: "GET",
+            success: function (data) {
             console.log(data);
           for (let i = 0; i < data.length; i++) {
             orderDataList.push({
@@ -584,13 +569,11 @@ $("tbody.orderDataList").on("click","button#orderDetail",function() {
               roomTypePerson: data[i].roomTypePerson,
               orderDetailRoomPrice: data[i].orderDetailRoomPrice,
               orderDetailRoomQuantity: data[i].orderDetailRoomQuantity,
-              orderDetailCouponDiscountPrice: data[i].orderDetailCouponDiscountPrice,
-              orderCheckOutDate: data[i].orderCheckOutDate
-    
+              
             });
           } 
           document.querySelector("tbody.orderDataList").innerHTML = "";
-          renderRoomData(orderDataList);
+          renderOrderData(orderDataList);
           console.log(orderDataList);
         },
         error: function (xhr) {
@@ -599,7 +582,19 @@ $("tbody.orderDataList").on("click","button#orderDetail",function() {
       });
     })
 
-//orderdata抓取orderdetailtable資料function
-
-
-
+//將orderdetail table資料渲染到orderData
+function renderOrderShow(orderDataList) {
+  let newOrderDataList = [];
+  for (let i = 0; i < orderShowList.length; i++) {
+  newOrderDataList+=`<tr data-card=${orderDataList[i].orderID} class="orderDataList" id="orderDataList">
+    <td >${orderDataList[i].orderDetailID}</td>  
+    <td>${orderDataList[i].orderID}</td>
+    <td>${orderDataList[i].roomTypeID}</td>  
+    <td>${orderDataList[i].roomTypeName}</td>
+    <td>${orderDataList[i].roomTypePerson}</td>
+    <td>${orderDataList[i].orderDetailRoomPrice}</td>
+    <td>${orderDataList[i].orderDetailRoomQuantity}</td>  
+    </tr>`
+  $("tbody.orderDataList").html(newOrderDataList);
+  }
+}
