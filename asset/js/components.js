@@ -87,8 +87,9 @@ class Header extends HTMLElement {
         <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
         </div>
         </div>
-
+      
         <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/order/order_booking_search.html" class="navbar-item"> 訂房 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item mem_main">
             <span class="icon-text">
@@ -100,11 +101,11 @@ class Header extends HTMLElement {
           </a>
           <div class="navbar-dropdown">
             <a class="navbar-item mem_main"> 我的頁面 </a>
-            <a class="navbar-item"> 我的訂單 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/order/order_member_orders.html" class="navbar-item"> 我的訂單 </a>
             <a href="${ORIGIN}/lazy-trip-back/page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
-            <a class="navbar-item"> 我的文章 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/article/" class="navbar-item"> 我的文章 </a>
             <hr class="navbar-divider" />
             <a class="navbar-item mem_logout"> 登出 </a>
           </div>
