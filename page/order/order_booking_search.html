@@ -20,6 +20,12 @@
       src="../../asset/js/components.js"
       type="text/javascript"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"
+    />
+    <link rel="stylesheet" href="./css/flatpickr-calendar-theme.css" />
     <!-- 初始化 -->
     <!-- <script defer src="../../asset/js/bulma-init.js"></script> -->
     <style>
@@ -65,26 +71,32 @@
           </div>
           <!-- 入住日期div -->
           <div style="width: 20%">
-            <div class="control">
-              <button
+            <div class="control has-icons-left">
+              <input
+                id="inputCheckInDate"
                 type="text"
-                class="button is-info is-outlined"
+                class="button is-outlined is-hovered"
                 style="width: 90%"
-              >
-                <span class="is-size-7">入住日期 ----/--/--</span>
-              </button>
+                placeholder="&emsp;選擇入住日期"
+              />
+              <span class="icon is-left">
+                <i class="fa-regular fa-calendar"></i>
+              </span>
             </div>
           </div>
           <!-- 退房日期div -->
           <div style="width: 20%">
-            <div class="control">
-              <button
+            <div class="control has-icons-left">
+              <input
+                id="inputCheckOutDate"
                 type="text"
-                class="button is-info is-outlined"
+                class="button is-outlined is-hovered"
                 style="width: 90%"
-              >
-                <span class="is-size-7">退房日期 ----/--/--</span>
-              </button>
+                placeholder="&emsp;選擇退房日期"
+              />
+              <span class="icon is-left">
+                <i class="fa-regular fa-calendar"></i>
+              </span>
             </div>
           </div>
           <!-- 搜尋按鈕div -->
@@ -160,15 +172,56 @@
     <script>
       // 子元素要放飯店資料的標籤
       let companyChildrenStart = $("#companyChildrenStart");
-      search();
-      selectCompany();
+      // 日期選擇標籤
+      let inputCheckInDate = document.querySelector("#inputCheckInDate");
+      let inputCheckOutDate = document.querySelector("#inputCheckOutDate");
+      let searchBtn = $("#searchBtn");
+      let searchBar = $("#searchBar");
+      $(function () {
+        search();
+        selectCompany();
+        dateBtn();
+
+        // 在搜尋框按下enter後綁定搜尋按鈕事件
+        searchBar.on("keydown", function (e) {
+          if (e.keyCode === 13) {
+            searchBtn.click();
+          }
+        });
+      });
+
+      function dateBtn() {
+        // 入住日期checkInFlatpickr
+        const checkInFlatpickr = flatpickr(inputCheckInDate, {
+          theme: "confetti",
+          minDate: "today",
+          dateFormat: "Y/m/d",
+
+          onChange: function (selectedDates, dateStr, instance) {
+            // 設定退房日期選擇器的最小日期為選擇的入住日期的隔天並自動打開退房日期視窗
+            checkOutFlatpickr.set(
+              "minDate",
+              new Date(selectedDates[0].getTime() + 24 * 60 * 60 * 1000)
+            );
+            inputCheckOutDate.focus();
+          },
+        });
+
+        // 退房日期checkOutFlatpickr
+        const checkOutFlatpickr = flatpickr(inputCheckOutDate, {
+          theme: "confetti",
+          minDate: new Date().getTime() + 24 * 60 * 60 * 1000,
+          // 最大可選擇天數是六個月後 大約183天
+          maxDate: new Date().getTime() + 183 * 24 * 60 * 60 * 1000,
+          dateFormat: "Y/m/d",
+        });
+      }
 
       // 搜尋
       function search() {
-        $("#searchBtn").on("click", function () {
-          let searchBarVal = $("#searchBar").val().trim().replace("台", "臺");
+        searchBtn.on("click", function () {
+          let searchBarVal = searchBar.val().trim().replace("台", "臺");
           if (searchBarVal.length > 1) {
-            console.log(searchBarVal);
             // 清空所有飯店資料
             companyChildrenStart.empty();
             // 執行搜尋關鍵字方法
@@ -179,6 +232,8 @@
 
       // 傳送搜尋關鍵字方法
       function sendSearchKeyFun(keyword) {
+        // 按鈕變成跑圈圈
+        searchBtn.addClass("is-loading");
         let companyHtml;
         fetch(
           "http://localhost:8080/lazy-trip-back/BookingSearch.do?type=showCompanyListByCompanyNameOrCountyOrArea&keyword=" +
@@ -196,124 +251,134 @@
               }
 
               companyHtml = `
-                    <!-- 飯店資料開始 -->
-                    <div
-    class="columns is-mobile"
-    style="
-      border-radius: 10px 10px 10px 10px;
-      height: 170px;
-      background-color: #ffffff;
-      box-shadow: 0px 0px 5px 1px rgba(137, 200, 232, 0.5);
-    "
-  >
-    <div
-      style="
-        border-radius: 10px 0px 0px 10px;
-        width: 23%;
-        height: 170px;
-      "
-    >
-      <img
-        class="companyImg"
-        src="${cmVO.companyImg}"
-        alt="無圖片"
-        onerror="this.src='../../asset/img/noPicture.png'"
+                        <!-- 飯店資料開始 -->
+                        <div
+        class="columns is-mobile"
         style="
-          border-radius: 10px 0px 0px 10px;
-          height: 100%;
-          width: 100%;
+          border-radius: 10px 10px 10px 10px;
+          height: 170px;
+          background-color: #ffffff;
+          box-shadow: 0px 0px 5px 1px rgba(137, 200, 232, 0.5);
         "
-      />
-    </div>
-    <!-- 飯店資訊概述 -->
-    <div style="height: 170px; width: 44%">
-      <div class="is-flex" style="height: 25%">
-        <span class="is-size-4 has-text-weight-bold pt-3 pl-3 companyName"
-          >${cmVO.companyName}</span
-        >
-      </div>
-      <div class="is-flex" style="height: 20%">
-        <p class="control pt-2 pl-3">
-          <span class="icon"
-            ><i class="fa-solid fa-location-dot"></i
-          ></span>
-          <span class="is-size-6 addressCounty">${cmVO.addressCounty},</span>
-          <span class="is-size-6 addressArea">${cmVO.addressArea}</span>
-        </p>
-      </div>
-      <div class="is-flex" style="height: 43%">
-        <span class="is-size-7 pt-2 pl-3 pr-2 introduction"
-          >${introduction}</span
-        >
-      </div>
-    </div>
-    <!-- 飯店價格概述及選擇按鈕 -->
-    <div
-      style="
-        height: 150px;
-        width: 32%;
-        margin-top: 9px;
-        margin-right: 10px;
-
-        border-radius: 10px 10px 10px 10px;
-        border: 1px #dbdde1 solid;
-        background-color: #f1f8ea;
-      "
-    >
-      <!-- <div style="border: 1px green solid"></div> -->
-      <div style="display: flex; flex-direction: row">
-        <div style="flex-basis: 50%; height: 170px">
-          <div
-            class="control"
-            style="padding-top: 60%; padding-left: 13%"
-            ;
-          >
-            <div>
-              <span class="is-size-7">每晚價格</span>
-            </div>
-            <div style="padding-bottom: 12%">
-              <span class="is-size-4 has-text-weight-bold roomTypePrice"
-                >${cmVO.roomTypeVO.roomTypePrice}</span
-              >
-            </div>
-          </div>
-        </div>
+      >
         <div
           style="
-            flex-basis: 50%;
+            border-radius: 10px 0px 0px 10px;
+            width: 23%;
             height: 170px;
-            border-radius: 0px 10px 10px 0px;
           "
         >
-          <div class="control" style="padding-top: 70%">
-            <button data-company-id="${cmVO.companyID}" class="button is-info companyID">
-              <span>選擇房型&nbsp;</span>
-              <span class="icon"><i class="fas fa-angle-right"></i></span>
-            </button>
+          <img
+            class="companyImg"
+            src="data:image/*;base64,${cmVO.companyImg}"
+            alt="無圖片"
+            onerror="this.src='../../asset/img/noPicture.png'"
+            style="
+              border-radius: 10px 0px 0px 10px;
+              height: 100%;
+              width: 100%;
+            "
+          />
+        </div>
+        <!-- 飯店資訊概述 -->
+        <div style="height: 170px; width: 44%">
+          <div class="is-flex" style="height: 25%">
+            <span class="is-size-4 has-text-weight-bold pt-3 pl-3 companyName"
+              >${cmVO.companyName}</span
+            >
+          </div>
+          <div class="is-flex" style="height: 20%">
+            <p class="control pt-2 pl-3">
+              <span class="icon"
+                ><i class="fa-solid fa-location-dot"></i
+              ></span>
+              <span class="is-size-6 addressCounty">${cmVO.addressCounty},</span>
+              <span class="is-size-6 addressArea">${cmVO.addressArea}</span>
+            </p>
+          </div>
+          <div class="is-flex" style="height: 43%">
+            <span class="is-size-7 pt-2 pl-3 pr-2 introduction"
+              >${introduction}</span
+            >
+          </div>
+        </div>
+        <!-- 飯店價格概述及選擇按鈕 -->
+        <div
+          style="
+            height: 150px;
+            width: 32%;
+            margin-top: 9px;
+            margin-right: 10px;
+
+            border-radius: 10px 10px 10px 10px;
+            border: 1px #dbdde1 solid;
+            background-color: #f1f8ea;
+          "
+        >
+          <!-- <div style="border: 1px green solid"></div> -->
+          <div style="display: flex; flex-direction: row">
+            <div style="flex-basis: 50%; height: 170px">
+              <div
+                class="control"
+                style="padding-top: 60%; padding-left: 13%"
+                ;
+              >
+                <div>
+                  <span class="is-size-7">每晚價格</span>
+                </div>
+                <div style="padding-bottom: 12%">
+                  <span class="is-size-4 has-text-weight-bold roomTypePrice"
+                    >${cmVO.roomTypeVO.roomTypePrice}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              style="
+                flex-basis: 50%;
+                height: 170px;
+                border-radius: 0px 10px 10px 0px;
+              "
+            >
+              <div class="control" style="padding-top: 70%">
+                <button data-company-id="${cmVO.companyID}" class="button is-info companyID">
+                  <span>選擇房型&nbsp;</span>
+                  <span class="icon"><i class="fas fa-angle-right"></i></span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <!-- 飯店資料與資料之間的間距 -->
-  <div style="height: 10px"></div>
-  <!-- 飯店資料結束 -->
-  `;
-
+      <!-- 飯店資料與資料之間的間距 -->
+      <div style="height: 10px"></div>
+      <!-- 飯店資料結束 -->
+      `;
+              console.log(cmVO);
               companyChildrenStart.append(companyHtml);
             });
-            console.log("send companys資料成功");
+            searchBtn.removeClass("is-loading");
+            console.log("search companys success!");
           })
           .catch((error) => {
-            console.log("send companys資料失敗");
+            searchBtn.removeClass("is-loading");
+            console.log("search companys fail.");
           });
       }
 
-      // 選擇房型按鈕把ID存到sessionStorage
+      // 按下房型按鈕把資訊存到sessionStorage
       function selectCompany() {
         $(document).on("click", "button[class*='companyID']", function () {
+          // 抓取companyID放進session
           let companyID = $(this).data("company-id");
+          // 抓取有設定入住與退房的日期放進session
+          let dateInfo = {
+            inputCheckInDate: inputCheckInDate.value,
+            inputCheckOutDate: inputCheckOutDate.value,
+          };
           sessionStorage.setItem("showCompanyInformation", companyID);
+          sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
+
           // location.href = "./company頁面.html";
           window.open("./order_show_company.html", "_blank");
         });
