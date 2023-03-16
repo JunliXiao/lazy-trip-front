@@ -9,11 +9,7 @@ class Header extends HTMLElement {
   constructor() {
     super();
     let loc = window.location;
-    const PROT_HTTP = "http://";
-    const HOSTNAME = loc.hostname;
-    // const PATHNAME = loc.pathname;
-    // const PORT = loc.port == "80" ? '' : ':8080';
-    const PORT = ":" + loc.port;
+    const ORIGIN = loc.origin;
 
     this.header_html = `
     <nav
@@ -23,7 +19,7 @@ class Header extends HTMLElement {
     >
     <!-- Logo -->
     <div class="navbar-brand">
-      <a id="navbar-logo-area" class="navbar-item has-text-primary" href="${PROT_HTTP}${HOSTNAME}${PORT}/lazy-trip-back/">
+      <a id="navbar-logo-area" class="navbar-item has-text-primary" href="${ORIGIN}/lazy-trip-back/">
         &nbsp;
         <span class="icon has-text-primary">
         <i class="fas fa-mountain-sun"></i> 
@@ -81,19 +77,18 @@ class Header extends HTMLElement {
             <span class="icon"><i class="fas fa-plus"></i></span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item"> 新的行程 </a>
-            <a href="/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
+            <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/new_group.html" class="navbar-item"> 新的揪團 </a>
           </div>
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable group">
-        <a href="${PROT_HTTP}${HOSTNAME}${PORT}/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 揪團 </a>
         <div class="navbar-dropdown">
-        <a href="${PROT_HTTP}${HOSTNAME}${PORT}/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
         </div>
         </div>
 
-        <a href="#" class="navbar-item"> 行程 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item mem_main">
             <span class="icon-text">
@@ -106,7 +101,7 @@ class Header extends HTMLElement {
           <div class="navbar-dropdown">
             <a class="navbar-item mem_main"> 我的頁面 </a>
             <a class="navbar-item"> 我的訂單 </a>
-            <a href="${PROT_HTTP}${HOSTNAME}${PORT}/lazy-trip-back/page/friend/friend_main.html" class="navbar-item">
+            <a href="${ORIGIN}/lazy-trip-back/page/friend/friend_main.html" class="navbar-item">
               我的好友
             </a>
             <a class="navbar-item"> 我的文章 </a>
