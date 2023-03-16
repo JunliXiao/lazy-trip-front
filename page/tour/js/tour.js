@@ -5,6 +5,8 @@ const tourImg = document.getElementById("tourImg");
 const memberId = document.getElementById("memberId");
 const selectTagElem = document.getElementById("trip_tag");
 
+const loc = location.origin;
+
 // 會員
 const specifier_id = parseCookieTokens(document.cookie).get("memId");
 // ======= 輔助功能 =======
@@ -40,7 +42,7 @@ tourImg.addEventListener("change", function () {
 function init() {
   // 主行程初始渲染
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourQueryOne?memberId=${member_Id}`,
+    url: `${loc}/lazy-trip-back/tourQueryOne?memberId=${member_Id}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -76,7 +78,7 @@ function init() {
 function initTag() {
   // 標籤初始渲染
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourTagQueryByMember?memberId=${member_Id}`,
+    url: `${loc}/lazy-trip-back/tourTagQueryByMember?memberId=${member_Id}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -97,7 +99,7 @@ function initTag() {
       // tourTag
       let req = tourId_arr.map((tourId) => {
         return $.ajax({
-          url: `http://localhost:8080/lazy-trip-back/tourTagQueryByTour?tourId=${tourId}&memberId=${member_Id}`,
+          url: `${loc}/lazy-trip-back/tourTagQueryByTour?tourId=${tourId}&memberId=${member_Id}`,
           type: "GET",
           dataType: "json",
           contentType: "application/json",
@@ -130,7 +132,7 @@ document
   .querySelector("button.button.trip_create_btn")
   .addEventListener("click", function addTourData() {
     $.ajax({
-      url: "http://localhost:8080/lazy-trip-back/tourCreate",
+      url: `${loc}/lazy-trip-back/tourCreate`,
       type: "POST",
       data: JSON.stringify({
         tourTitle: tourTitle.value,
@@ -278,7 +280,7 @@ $(document).on("click", "a.trip_delete", function (e) {
   // 點擊確認刪除後執行
   $("div.trip_delete_lightbox button.trip_delete_btn").on("click", function () {
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourDelete?tourId=${targetDataCard_id}`,
+      url: `${loc}/lazy-trip-back/tourDelete?tourId=${targetDataCard_id}`,
       type: "DELETE",
       success: function (data) {
         targetCard.fadeOut(1000, function () {
@@ -383,7 +385,7 @@ $(document).on("click", "a.trip_pen", function () {
       let closest_card = $(this).closest("div.card");
       let that = this;
       $.ajax({
-        url: "http://localhost:8080/lazy-trip-back/tourUpdate",
+        url: `${loc}/lazy-trip-back/tourUpdate`,
         type: "POST",
         data: JSON.stringify({
           tourTitle: update_tour_name,
@@ -475,7 +477,7 @@ $(document).on("click", "i.fa-tag", function () {
 $(".trip_tag_create").on("click", function createNewTag() {
   let inputText = $(".trip_tag_input").val();
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourTagCreate`,
+    url: `${loc}/lazy-trip-back/tourTagCreate`,
     type: "POST",
     data: JSON.stringify({
       memberId: member_Id,
@@ -540,7 +542,7 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
   let that = $(this);
   if ($(this).prop("checked")) {
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTagCreate`,
+      url: `${loc}/lazy-trip-back/tourTagCreate`,
       type: "POST",
       data: JSON.stringify({
         memberId: member_Id,
@@ -570,7 +572,7 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
     });
   } else {
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTagOnTourDelete?tourId=${targetTourId}&memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
+      url: `${loc}/lazy-trip-back/tourTagOnTourDelete?tourId=${targetTourId}&memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
       type: "DELETE",
       success: function (data) {
         alert(data);
@@ -610,7 +612,7 @@ $("ul.trip_tag_detail").on(
     targetCard = $(this).closest("div.column.item");
     targetDataCard_id = targetCard.attr("data-card");
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTagDelete?memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
+      url: `${loc}/lazy-trip-back/tourTagDelete?memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
       type: "DELETE",
       success: function (data) {
         alert(data);
@@ -634,7 +636,7 @@ $("ul.trip_tag_detail").on(
         for (let key in tag_obj) {
           if (tag_obj[key].indexOf(tourTagTitle) !== -1) {
             $.ajax({
-              url: `http://localhost:8080/lazy-trip-back/tourTagOnTourDelete?tourId=${key}&memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
+              url: `${loc}/lazy-trip-back/tourTagOnTourDelete?tourId=${key}&memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
               type: "DELETE",
               success: function (data) {
                 // 更新tag_obj
@@ -665,7 +667,7 @@ $("input#tour_search").on("keyup", function (e) {
   if (e.keyCode === 13) {
     let queryStr = $("input#tour_search").val();
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTitleQuery?queryStr=${queryStr}`,
+      url: `${loc}/lazy-trip-back/tourTitleQuery?queryStr=${queryStr}`,
       type: "GET",
       beforeSend: function () {
         $("div.search_btn").addClass("control is-loading");
@@ -686,10 +688,11 @@ $("input#tour_search").on("keyup", function (e) {
   }
 });
 
+// 標籤的查詢功能
 $(document).on("click", "div.trip_tag_place > ul > li", function () {
   let tourTagContent = $(this).text();
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourQueryByTourTagTitle?tourTagTitle=${tourTagContent}&memberId=${member_Id}`,
+    url: `${loc}/lazy-trip-back/tourQueryByTourTagTitle?tourTagTitle=${tourTagContent}&memberId=${member_Id}`,
     type: "GET",
     success: function (data) {
       console.log(data);
@@ -714,7 +717,7 @@ $(document).on("keyup", "#trip_tag_search", function (e) {
   if (e.keyCode === 13) {
     let queryStr = $("#trip_tag_search").val();
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourTagQuery?queryStr=${queryStr}&memberId=${member_Id}`,
+      url: `${loc}/lazy-trip-back/tourTagQuery?queryStr=${queryStr}&memberId=${member_Id}`,
       type: "GET",
       success: function (data) {
         console.log(data);
@@ -739,7 +742,7 @@ $(document).on("keyup", "#trip_tag_search", function (e) {
 
 function initRecommendTourCom() {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/recommendTourByMember?memberId=${member_Id}`,
+    url: `${loc}/lazy-trip-back/recommendTourByMember?memberId=${member_Id}`,
     type: "GET",
     beforeSend: function () {
       $("div.recommend_tour > span").append(
@@ -788,7 +791,7 @@ $(document).on("click", "li.recommend_tour", function () {
   }
   // 創建與渲染主行程
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/tourCreate",
+    url: `${loc}/lazy-trip-back/tourCreate`,
     type: "POST",
     data: JSON.stringify({
       tourTitle: tourComArr[index].tourTitle,
@@ -816,7 +819,7 @@ $(document).on("click", "li.recommend_tour", function () {
     },
     complete: function (xhr) {
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/tourScheComQueryOne?tourComId=${tourComArr[index].tourComId}`,
+        url: `${loc}/lazy-trip-back/tourScheComQueryOne?tourComId=${tourComArr[index].tourComId}`,
         type: "GET",
         dataType: "json",
         contentType: "application/json",
@@ -841,7 +844,7 @@ $(document).on("click", "li.recommend_tour", function () {
         complete: function (xhr) {
           // 將廠商日行程資料匯入該主行程的日行程
           $.ajax({
-            url: "http://localhost:8080/lazy-trip-back/tourScheCreate",
+            url: `${loc}/lazy-trip-back/tourScheCreate`,
             type: "POST",
             data: JSON.stringify(tourSchedule_arr_ready),
             dataType: "json",
@@ -869,12 +872,6 @@ $(document).on("click", "a.trip_edit", function (e) {
   targetDataCard_id = targetCard.attr("data-card");
   targetStartDate = targetCard.find("time.startDate").text();
   targetEndDate = targetCard.find("time.endDate").text();
-  location = `http://localhost:8080/lazy-trip-back/page/tour/tourSchedule.html?tourId=${targetDataCard_id}&memberId=${member_Id}&startDate=${targetStartDate}&endDate=${targetEndDate}`;
+  location = `${loc}/lazy-trip-back/page/tour/tourSchedule.html?tourId=${targetDataCard_id}&memberId=${member_Id}&startDate=${targetStartDate}&endDate=${targetEndDate}`;
   e.preventdefault();
 });
-
-// ======= 使用者資訊 =======
-// let params = new URLSearchParams(window.location.search);
-// const specifier_id = params.has("specifier_id")
-//   ? params.get("specifier_id")
-//   : 2;
