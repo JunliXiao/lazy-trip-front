@@ -5,9 +5,9 @@ const PROT_WS = "ws:";
 const HOSTNAME = loc.hostname;
 const PORT = loc.port == "80" ? '' : ':8080';
 
-let params = new URLSearchParams(loc.search);
-let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
-// const specifier_id = parseCookieTokens(document.cookie).get("memId");
+// let params = new URLSearchParams(loc.search);
+// let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
+const specifier_id = parseCookieTokens(document.cookie).get("memId");
 
 let specifier_username;
 
