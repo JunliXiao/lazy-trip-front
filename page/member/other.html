@@ -293,6 +293,8 @@
                     $("button.add-friend").attr("disabled", true);
                     $("button.add-friend span.text").text("對方封鎖");
                   } else {
+                    $("button.add-friend").attr("disabled", true);
+                    $("button.add-friend span.text").text(relation.type);
                     setTimeout(() => {
                       listPosts();
                     }, 1500);
