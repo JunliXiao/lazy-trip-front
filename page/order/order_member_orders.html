@@ -165,6 +165,7 @@
           location.href = ROOT + ROOT_PROJ + LOGIN;
         } else {
           let memberID = getCookie("memId");
+          console.log(memberID);
 
           fetch(
             "http://localhost:8080/lazy-trip-back/Order.do?type=showOrderAllByMemberID&memberID=" +
@@ -278,7 +279,7 @@
                 "
               >
                 <table
-                  class="table is-fullwidth table is-narrow is-hoverable"
+                  class="table is-fullwidth is-narrow is-hoverable"
                   style="border-radius: 15px 15px 15px 15px"
                 >
                   <thead>
@@ -431,7 +432,7 @@
                         <!-- 圖片欄 -->
                         <div style="flex-basis: 30%">
                           <img
-                            src="${order.companyVO.companyImg}"
+                            src="data:image/*;base64,${order.companyVO.companyImg}"
                             alt="無圖片"
                             onerror="this.src='../../asset/img/noPicture.png'"
                             class="roomTypeImg"
@@ -691,7 +692,7 @@
                         <!-- 圖片欄 -->
                         <div style="flex-basis: 30%">
                           <img
-                            src="${order.companyVO.companyImg}"
+                            src="data:image/*;base64,${order.companyVO.companyImg}"
                             alt="無圖片"
                             onerror="this.src='../../asset/img/noPicture.png'"
                             style="

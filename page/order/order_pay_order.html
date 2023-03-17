@@ -22,12 +22,6 @@
     ></script>
     <!-- 初始化 -->
     <!-- <script defer src="../../asset/js/bulma-init.js"></script> -->
-    <style>
-      /* 飯店搜尋placeholder 文字大小 */
-      input#searchBar::placeholder {
-        font-size: 0.8em;
-      }
-    </style>
   </head>
   <body>
     <!-- 導覽列 -->
@@ -43,255 +37,165 @@
       class="columns is-mobile is-centered"
       style="background-color: #f3f4f5"
     >
-      <div id="bookingChildrenStart" class="column is-8">
-        <!-- 填寫訂單開始 -->
+      <div class="column is-9">
+        <!-- 付款頁面開始 -->
+        <!-- 大背景區塊 -->
         <div
           style="
-            display: flex;
-            flex-direction: row;
-            height: 500px;
-            border: 1px solid white;
+            min-height: 600px;
+            background-color: #ffffff;
+            border-radius: 15px 15px 15px 15px;
+            box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
           "
         >
-          <!-- 左邊主要旅客資訊 -->
+          <div style="height: 30px"></div>
+          <div style="height: 40px">
+            <span class="is-size-3" style="padding-left: 5%">進行付款</span>
+          </div>
+          <!-- 水平線 -->
           <div
             style="
-              height: 100%;
-              flex-basis: 55%;
-              background-color: white;
-              border-radius: 15px 15px 15px 15px;
-              box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
+              height: 30px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
             "
           >
+            <div
+              style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+            ></div>
+          </div>
+          <div>
+            <strong class="is-size-4" style="padding-left: 5%"
+              >未付款明細:</strong
+            >
+          </div>
+          <div style="height: 15px"></div>
+
+          <!-- 付款明細開始 -->
+          <div>
+            <div>
+              <strong class="is-size-5" style="padding-left: 5%"
+                >訂單編號:&emsp;<span id="pay_orderID">123123</span></strong
+              >
+            </div>
+            <div style="height: 15px"></div>
+            <!-- 表格開始 -->
+            <div
+              style="
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <table
+                class="table is-hoverable is-bordered"
+                style="width: 850px"
+              >
+                <thead>
+                  <tr class="is-selected">
+                    <th style="text-align: center">飯店名稱</th>
+                    <th style="text-align: center">住宿期間</th>
+                    <th style="text-align: center">房型名稱</th>
+                    <th style="text-align: center">每晚房價</th>
+                    <th style="text-align: center">住宿天數</th>
+                    <th style="text-align: center">房間數量</th>
+                    <th style="text-align: center">小計</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody">
+                  <tr>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6 pay_companyName"
+                        >希臘風情特色民宿</span
+                      >
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6"
+                        ><span class="pay_orderCheckInDate">2023/03/22</span
+                        ><span>~</span
+                        ><span class="pay_orderCheckOutDate">2023/03/28</span>
+                      </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6 pay_roomtypeName">尊貴標準房</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6 pay_detailRoomPrice">$10000</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6 pay_numberOfNights">6</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <span class="is-size-6 pay_detailRoomQuantity">2</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle">
+                      <strong class="is-size-6 pay_detailRoomTotalPrice"
+                        >120000</strong
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td style="text-align: right" colspan="8">
+                      <strong
+                        >應付總額:&emsp;<span id="pay_totalPrice"
+                          >$240000</span
+                        ></strong
+                      >
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- 表格結束 -->
             <div style="height: 20px"></div>
-            <div style="height: 50px">
-              <span class="is-size-3" style="padding-left: 5%"
-                >主要旅客資訊</span
+            <div>
+              <strong class="is-size-5" style="padding-left: 5%"
+                >選擇付款方式:</strong
               >
             </div>
-            <div style="height: 40px; margin-top: 10px">
-              <span class="is-size-6" style="padding-left: 5%"
-                >請填寫以下資訊(參與住宿的旅客其中一人資料):</span
-              >
-            </div>
-            <div style="height: 90px; padding-left: 5%">
-              <label class="label is-size-6"
-                >姓名<span class="is-size-5" style="color: red"
-                  >&nbsp;*</span
-                ></label
-              >
-              <input
-                type="input"
-                id="travelerName"
-                class="input is-info is-outlined"
-                style="width: 30%"
-              />
-            </div>
-            <div style="height: 90px; padding-left: 5%">
-              <label class="label is-size-6"
-                >身分證號碼<span class="is-size-5" style="color: red"
-                  >&nbsp;*</span
-                ></label
-              >
-              <input
-                type="input"
-                id="travelerIDNumber"
-                class="input is-info is-outlined"
-                style="width: 50%"
-              />
-            </div>
-            <div style="height: 90px; padding-left: 5%">
-              <label class="label is-size-6"
-                >電子信箱<span class="is-size-5" style="color: red"
-                  >&nbsp;*</span
-                ></label
-              >
-              <input
-                type="input"
-                id="travelerEmail"
-                class="input is-info is-outlined"
-                style="width: 65%"
-              />
-            </div>
-            <div style="height: 90px; padding-left: 5%">
-              <label class="label is-size-6"
-                >手機號碼<span class="is-size-5" style="color: red"
-                  >&nbsp;*</span
-                ></label
-              >
-              <input
-                type="input"
-                id="travelerPhone"
-                class="input is-info is-outlined"
-                style="width: 40%"
-              />
-            </div>
-          </div>
-          <!-- 中間行距 -->
-          <div style="flex-basis: 2%"></div>
-          <!-- 右邊訂房資訊總覽 -->
-          <div style="height: 100%; flex-basis: 43%; border: 1px solid white">
-            <!-- 飯店資訊 -->
             <div
-              style="
-                height: 32%;
-                background-color: white;
-                border-radius: 15px 15px 15px 15px;
-                box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
-                border: 1px solid white;
-              "
+              style="display: flex; flex-direction: row; align-items: center"
             >
-              <!-- 日期 -->
-              <!-- 間距 -->
-              <div style="height: 7%"></div>
-              <div style="height: 19%; display: flex; justify-content: center">
-                <span class="is-size-5">日期:&nbsp;</span>
-                <span id="orderCheckInDate" class="is-size-5">2023/05/01</span>
-                <span class="is-size-5">&nbsp;~&nbsp;</span>
-                <span id="orderCheckOutDate" class="is-size-5">2023/05/02</span>
+              <div style="flex-basis: 38%"></div>
+              <div style="flex-basis: 5%">
+                <input type="radio" checked />
               </div>
-              <div style="height: 5%; display: flex; justify-content: center">
-                <div
-                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
-                ></div>
-              </div>
-              <div
-                style="
-                  height: 60%;
-                  display: flex;
-                  flex-direction: row;
-                  border: 1px solid white;
-                "
-              >
-                <!-- 飯店照片 -->
-                <div style="flex-basis: 7%"></div>
-                <div style="flex-basis: 32%">
-                  <img
-                    id="companyImg"
-                    src=""
-                    style="
-                      height: 100%;
-                      width: 100%;
-                      border-radius: 5px 5px 5px 5px;
-                    "
-                    alt="無圖片"
-                    onerror="this.src='../../asset/img/noPicture.png'"
-                  />
-                </div>
-                <!-- 飯店地址 -->
-                <div style="flex-basis: 3%"></div>
-                <div style="flex-basis: 52%">
-                  <div stlye="height:50%">
-                    <span id="companyName" class="is-size-5"></span>
-                  </div>
-                  <div stlye="height:50%">
-                    <span id="address" class="is-size-6"></span>
-                  </div>
-                </div>
-                <div style="flex-basis: 6%"></div>
-              </div>
-              <!-- 間距 -->
-              <div style="height: 7%"></div>
-            </div>
-            <!-- 中間間距 -->
-            <div style="height: 3%"></div>
-            <!-- 價格明細 -->
-            <div
-              style="
-                overflow: auto;
-                height: 65%;
-                background-color: white;
-                border-radius: 15px 15px 15px 15px;
-                box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
-                border: 1px solid white;
-              "
-            >
-              <div style="height: 65px; display: flex; align-items: center">
-                <span class="is-size-4" style="padding-left: 7%">價格明細</span>
-              </div>
-              <div style="height: 5px; display: flex; justify-content: center">
-                <div
-                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
-                ></div>
-              </div>
-              <!-- 房型明細 -->
-              <div id="orderDetailChild">
-                <!-- <div
+
+              <div style="flex-basis: 20%">
+                <img
+                  src="../../asset/img/linepay.png"
+                  alt="無圖片"
+                  onerror="this.src='../../asset/img/noPicture.png'"
                   style="
-                    display: flex;
-                    flex-direction: row;
+                    width: auto;
                     height: 80px;
-                    align-items: center;
+                    margin-top: 10px;
+                    border-radius: 10px 10px 10px 10px;
                   "
-                >
-                  <div style="flex-basis: 40%">
-                    <span
-                      class="is-size-5 roomTypeName"
-                      style="padding-left: 18%"
-                    ></span>
-                  </div>
-                  <div style="flex-basis: 35%">
-                    <span class="is-size-5" style="padding-left: 5%">$</span>
-                    <span class="is-size-5 roomTypePrice"></span>
-                  </div>
-                  <div style="flex-basis: 25%">
-                    <span class="is-size-5 roomTypeQuantity"></span>
-                    <span class="is-size-5">間</span>
-                  </div>
-                </div>
-                <div
-                  style="height: 5px; display: flex; justify-content: center"
-                >
-                  <div
-                    style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
-                  ></div>
-                </div> -->
-              </div>
-              <!-- 應付總額 -->
-              <div
-                style="
-                  display: flex;
-                  flex-direction: row;
-                  height: 80px;
-                  align-items: center;
-                "
-              >
-                <div style="flex-basis: 50%">
-                  <span class="is-size-5" style="padding-left: 15%"
-                    >應付總額:</span
-                  >
-                </div>
-                <div style="flex-basis: 50%; text-align: right">
-                  <strong
-                    class="is-size-4"
-                    style="padding-right: 25%; color: #3bc0e8"
-                    >$<span id="orderTotalPrice"></span
-                  ></strong>
-                </div>
-              </div>
-              <div style="height: 5px; display: flex; justify-content: center">
-                <div
-                  style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
-                ></div>
-              </div>
-              <!-- 按鈕 -->
-              <div
-                id="sendOrder"
-                style="
-                  height: 80px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                <button class="button is-info">
-                  &emsp;&emsp;&emsp;送出訂單&emsp;&emsp;&emsp;
-                </button>
+                />
               </div>
             </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                height: 120px;
+              "
+            >
+              <button id="pay_btn" class="button is-link" style="width: 230px">
+                前往付款
+              </button>
+            </div>
           </div>
+          <!-- 付款明細結束 -->
         </div>
-        <!-- 填寫訂單結束 -->
+        <!-- 付款頁面結束 -->
       </div>
     </div>
 
@@ -299,6 +203,18 @@
     <footer-component></footer-component>
 
     <script>
+      let pay_btn = $("#pay_btn");
+      let tbody = $("#tbody");
+      let pay_orderID = $("#pay_orderID");
+      let pay_orderCheckInDate = $(".pay_orderCheckInDate");
+      let pay_orderCheckOutDate = $(".pay_orderCheckOutDate");
+      let pay_companyName = $(".pay_companyName");
+      let pay_roomtypeName = $(".pay_roomtypeName");
+      let pay_detailRoomPrice = $(".pay_detailRoomPrice");
+      let pay_numberOfNights = $(".pay_numberOfNights");
+      let pay_detailRoomQuantity = $(".pay_detailRoomQuantity");
+      let pay_detailRoomTotalPrice = $(".pay_detailRoomTotalPrice");
+      let pay_totalPrice = $("#pay_totalPrice");
       let orderID = sessionStorage.getItem("showPayTableFromTheOrderID");
     </script>
   </body>

@@ -324,7 +324,7 @@
                 ;
               >
                 <div>
-                  <span class="is-size-7">每晚價格</span>
+                  <span class="is-size-7">每晚最低價格</span>
                 </div>
                 <div style="padding-bottom: 12%">
                   <span class="is-size-4 has-text-weight-bold roomTypePrice"
@@ -372,12 +372,20 @@
           // 抓取companyID放進session
           let companyID = $(this).data("company-id");
           // 抓取有設定入住與退房的日期放進session
-          let dateInfo = {
-            inputCheckInDate: inputCheckInDate.value,
-            inputCheckOutDate: inputCheckOutDate.value,
-          };
+          let dateInfo = {};
+          let dateNum = 0;
+          if (inputCheckInDate.value.trim != "") {
+            dateInfo.inputCheckInDate = inputCheckInDate.value;
+            dateNum++;
+          }
+          if (inputCheckOutDate.value.trim != "") {
+            (dateInfo.inputCheckOutDate = inputCheckOutDate.value), dateNum++;
+          }
+          if (dateNum === 2) {
+            sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
+          }
+
           sessionStorage.setItem("showCompanyInformation", companyID);
-          sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
 
           // location.href = "./company頁面.html";
           window.open("./order_show_company.html", "_blank");
