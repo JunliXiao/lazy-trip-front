@@ -2,7 +2,7 @@
 $(function () {
   console.log('init');
   init();
-  getCompany();
+  
   $(".trans-right-roomManagement").removeClass("none");      
   $(".trans-right-roomAdd").addClass("none")
   $(".trans-right-orderShow").addClass("none")
@@ -32,6 +32,8 @@ function init() {
     }, // 將物件資料(不用雙引號) 傳送到指定的 url
 
     success: function (data) {
+	let companyImg = data[0].companyImg;
+	 $("#companyImg").attr("src", "data:image/*;base64,"+companyImg);
         console.log(data);
       for (let i = 0; i < data.length; i++) {
         roomList.push({
@@ -43,8 +45,7 @@ function init() {
           roomTypePrice: data[i].roomTypePrice,
           roomTypeImgVO: data[i].roomTypeImgVO,
           orderCheckInDate: data[i].orderCheckInDate,
-          orderCheckOutDate: data[i].orderCheckOutDate
-
+          orderCheckOutDate: data[i].orderCheckOutDate		  
         });
       } 
       document.querySelector("tbody.roomList").innerHTML = "";
@@ -60,24 +61,6 @@ function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
-}
-
-function getCompany(){
-  fetch("check", {
-    method: "POST",
-    
-  })
-    .then((resp) => resp.json()) 
-    .then((resp) =>{
-      // resp.companyName
-      // resp.companyImg
-      
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  console.log("company");
 }
 
 // 事件觸發 UI 常數
@@ -116,21 +99,22 @@ left_show_roomAdd.addEventListener("click",(event) => {
        
 });
 //訂單資料介面切換按鈕
-left_show_orderData.addEventListener("click",(event) => {
-  console.log(222);
-  $(".trans-right-roomManagement").addClass("none")
-  $(".trans-right-roomAdd").addClass("none")
-  $(".trans-right-orderShow").addClass("none")
-  $(".trans-right-orderData").removeClass("none")
-});
+// left_show_orderData.addEventListener("click",(event) => {
+//   console.log(222);
+//   $(".trans-right-roomManagement").addClass("none")
+//   $(".trans-right-roomAdd").addClass("none")
+//   $(".trans-right-orderShow").addClass("none")
+//   $(".trans-right-orderData").removeClass("none")
+// });
 //廠商訂單介面切換按鈕
 left_show_orderShow.addEventListener("click",(event) => {
   console.log(333);
-  orderShowInit();
+ 
   $(".trans-right-roomManagement").addClass("none")
   $(".trans-right-roomAdd").addClass("none")
   $(".trans-right-orderShow").removeClass("none")
   $(".trans-right-orderData").addClass("none")
+  orderShowInit();
 });
 
 //房型總覽介面搜尋按鈕
@@ -188,7 +172,7 @@ $("button.twoRoom").on("click",(event) => {
 
 //房型刪除按鈕
 $("tbody.roomList").on("click","button#roomAddDelete",function() {
-  let newRoomTypeID = $().closest("tr").attr("data-card");
+  let newRoomTypeID = $(this).closest("tr").attr("data-card");
   console.log(newRoomTypeID);
   $.ajax({
     url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
@@ -489,15 +473,13 @@ function renderRoomData(roomList) {
 let orderShowList = [];
 
 function orderShowInit() {
-	
-  console.log(00000);
   orderShowList = [];
     $.ajax({
     url: `http://localhost:8080/lazy-trip-back/Order.do?type=showOrderByCompanyID&companyID=${companyId}`,
     type: "GET",
      // 將物件資料(不用雙引號) 傳送到指定的 url
-
     success: function (data) {
+      console.log(797979);
         console.log(data);
       for (let i = 0; i < data.length; i++) {
         orderShowList.push({
@@ -515,7 +497,9 @@ function orderShowInit() {
           travelerPhone: data[i].travelerPhone,
         });
       } 
-      document.querySelector("tbody.orderShowList").innerHTML = "";
+      console.log(7744);
+      console.log(orderShowList);
+      // document.querySelector("tbody.orderShowList").innerHTML = "";
       renderOrderShow(orderShowList);
     },
     error: function (xhr) {
@@ -526,6 +510,7 @@ function orderShowInit() {
 
 //將資料渲染到orderShow
 function renderOrderShow(orderShowList) {
+  console.log(8585);
   let newOrderList = [];
   for (let i = 0; i < orderShowList.length; i++) {
   newOrderList+=`<tr data-card=${orderShowList[i].orderID} class="orderShowList" id="orderShowList">
@@ -546,6 +531,7 @@ function renderOrderShow(orderShowList) {
   </tr>`
   $("tbody.orderShowList").html(newOrderList);
   }
+  console.log(newOrderList);
 }
 
 //訂單明細按鈕
@@ -583,9 +569,9 @@ $(document).on("click","button#orderdetailbutton",function() {
     })
 
 //將orderdetail table資料渲染到orderData
-function renderOrderShow(orderDataList) {
+function renderOrderData(orderDataList) {
   let newOrderDataList = [];
-  for (let i = 0; i < orderShowList.length; i++) {
+  for (let i = 0; i < orderDataList.length; i++) {
   newOrderDataList+=`<tr data-card=${orderDataList[i].orderID} class="orderDataList" id="orderDataList">
     <td >${orderDataList[i].orderDetailID}</td>  
     <td>${orderDataList[i].orderID}</td>
@@ -597,4 +583,9 @@ function renderOrderShow(orderDataList) {
     </tr>`
   $("tbody.orderDataList").html(newOrderDataList);
   }
+
+  $(".trans-right-roomManagement").addClass("none")
+  $(".trans-right-roomAdd").addClass("none")
+  $(".trans-right-orderShow").addClass("none")
+  $(".trans-right-orderData").removeClass("none")
 }
