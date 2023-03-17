@@ -605,7 +605,6 @@ $("ul.trip_tag_detail").on(
   "click",
   "button.button.delete",
   function deleteTag() {
-    let targetDataCard_id;
     let targetCard;
     targetTag_li = $(this).closest("li.trip_tag_el");
     let tourTagTitle = $(this).prev("span").text();
