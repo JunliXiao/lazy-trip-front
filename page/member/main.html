@@ -229,9 +229,27 @@
         </div>
 
         <div class="column is-7">
-          <div id="dynamic_msg" class="content-tab"></div>
-          <div id="comment" class="content-tab" style="display: none"></div>
-          <div id="img" class="content-tab" style="display: none"></div>
+          <div id="dynamic_msg" class="content-tab">
+            <div class="columns is-centered is-vcentered" style="height: 30vh">
+              <div class="column is-narrow">
+                <div class="loader" style="width: 50px; height: 50px"></div>
+              </div>
+            </div>
+          </div>
+          <div id="comment" class="content-tab" style="display: none">
+            <div class="columns is-centered is-vcentered" style="height: 30vh">
+              <div class="column is-narrow">
+                <div class="loader" style="width: 50px; height: 50px"></div>
+              </div>
+            </div>
+          </div>
+          <div id="img" class="content-tab" style="display: none">
+            <div class="columns is-centered is-vcentered" style="height: 30vh">
+              <div class="column is-narrow">
+                <div class="loader" style="width: 50px; height: 50px"></div>
+              </div>
+            </div>
+          </div>
           <div id="tour" class="content-tab" style="display: none"></div>
         </div>
       </div>
@@ -675,11 +693,11 @@
         }
 
         function listPosts() {
-          $("div#dynamic_msg").empty();
           fetch("listposts")
             .then((resp) => resp.json())
             .then((body) => {
               let src = $("div.mem_img.ml-4 > img").attr("src");
+              $("div#dynamic_msg").empty();
 
               for (let key in body) {
                 let check = false;
@@ -750,11 +768,11 @@
         }
 
         function listComments() {
-          $("div#comment").empty();
           fetch("listcomments")
             .then((resp) => resp.json())
             .then((body) => {
               let src = $("div.mem_img.ml-4 > img").attr("src");
+              $("div#comment").empty();
               for (let key in body) {
                 let check = false;
                 $("div#comment > card-component").each(function () {
@@ -824,11 +842,11 @@
         }
 
         function listImgs() {
-          $("div#img").empty();
           fetch("listimgs")
             .then((resp) => resp.json())
             .then((body) => {
               let src = $("div.mem_img.ml-4 > img").attr("src");
+              $("div#img").empty();
               for (let key in body) {
                 let check = false;
                 $("div#img > card-component").each(function () {
@@ -1027,7 +1045,9 @@
 
         updateCount();
         getData();
-        listPosts();
+        setTimeout(() => {
+          listPosts();
+        }, 1500);
 
         // image upload
         (function ($) {

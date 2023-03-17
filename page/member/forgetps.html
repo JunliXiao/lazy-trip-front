@@ -50,6 +50,14 @@
                 請輸入您註冊的帳號(電子郵件)，我們將產生驗證碼並寄送給您，您可以輸入此驗證碼來修改密碼
               </p>
             </div>
+            <div
+              class="columns is-centered is-vcentered show_load"
+              style="height: 10vh; display: none"
+            >
+              <div class="column is-narrow">
+                <div class="loader" style="width: 50px; height: 50px"></div>
+              </div>
+            </div>
             <p class="msg"></p>
             <div class="field">
               <label class="label" for="input-account">電子郵件</label>
@@ -99,6 +107,7 @@
             return check;
           }
           if (check) {
+            $("div.show_load").css("display", "flex");
             fetch("forgetps", {
               method: "POST",
               headers: {
@@ -113,6 +122,7 @@
                   location.href = resp.url;
                 } else {
                   resp.json().then((body) => {
+                    $("div.show_load").css("display", "none");
                     $("p.msg").text(body.msg);
                     $("p.msg").css("color", "red");
                     // alert(`errorMsg: ${body.errorMessage}`);
