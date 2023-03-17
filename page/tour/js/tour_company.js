@@ -815,3 +815,89 @@ clear_btn.on("click", function () {
     $("h5.tour_date").html("");
   }
 });
+
+// 萬能查詢功能
+const mamage_attraction_title = $("input#mamage-attraction-title");
+const mamage_attraction_startDate = $("input#mamage-attraction-startDate");
+const mamage_attraction_endDate = $("input#mamage-attraction-endDate");
+const mamage_attraction_cost = $("input#mamage-attraction-cost");
+const mamage_attraction_feature = $("input#mamage-attraction-feature");
+
+$("button#btn-mamage-attraction").on("click", function () {
+  $.ajax({
+    url: `http://localhost:8080/lazy-trip-back/tourComSelected`,
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+      tourTitle: mamage_attraction_title.val().trim(),
+      startDate: mamage_attraction_startDate.val().trim(),
+      endDate: mamage_attraction_endDate.val().trim(),
+      cost: mamage_attraction_cost.val().trim(),
+      feature: mamage_attraction_feature.val().trim(),
+      companyId: company_id,
+    }),
+    contentType: "application/json",
+    success: function (data) {
+      tourCom_arr = data;
+      let str = "";
+      for (let i = 0; i < tourCom_arr.length; i++) {
+        str += `
+        <tr data-tourid=${tourCom_arr[i].tourComId}>
+          <th class="trip_name">${tourCom_arr[i].tourTitle}</th>
+          <th class="-none update_trip_name"><input type="text" name="update_trip_name" id="update_trip_name" class="update_trip_name" value=${tourCom_arr[i].tourTitle}></th>
+          <td class="trip_start_date">${tourCom_arr[i].startDate}</td>
+          <td class="-none update_trip_start_date"><input type="date" name="update_trip_start_date" id="update_trip_start_date" class="update_trip_start_date" value=${tourCom_arr[i].startDate}></td>
+          <td class="trip_end_date">${tourCom_arr[i].endDate}</td>
+          <td class="-none update_trip_end_date"><input type="date" name="update_trip_end_date" id="update_trip_end_date" class="update_trip_end_date" value=${tourCom_arr[i].endDate}></td>
+          <td class="people">${tourCom_arr[i].tourPerson}</td>
+          <td class="-none update_people"><input type="number" name="update_people" id="update_people" class="update_people" value=${tourCom_arr[i].tourPerson}></td>
+          <td class="trip_price">${tourCom_arr[i].cost}</td>
+          <td class="-none update_trip_price"><input type="number" name="update_trip_price" id="update_trip_price" class="update_trip_price" value=${tourCom_arr[i].cost}></td>
+          <td class="tour_img">
+            <img class="tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="min-width: 50px; height: 50px"/>
+          </td>
+          <td class="-none">
+            <img class="update_tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="width: 50px; height: 50px"/>
+          </td>
+          <td><button class="button is-primary is-outlined trip_detail">明細</button></td>
+          <td><button class="button is-warning is-outlined edit_tour_btn">修改</button></td>
+          <td><button class="button is-danger is-outlined delete_tour_btn">刪除</button></td>
+      </tr>
+        `;
+      }
+      tbody_tour.html(str);
+    },
+    error: function (xhr) {
+      console.log("error");
+    },
+    complete: function (xhr) {},
+  });
+});
+
+const search_add_attraction_title = $("input#search-add-attraction-title");
+$("button#btn-search-add-attraction").on("click", function () {
+  $.ajax({
+    url: `http://localhost:8080/lazy-trip-back/tourComSelected`,
+    type: "POST",
+    dataType: "json",
+    data: JSON.stringify({
+      tourTitle: search_add_attraction_title.val().trim(),
+      companyId: company_id,
+    }),
+    contentType: "application/json",
+    success: function (data) {
+      tourCom_arr = data;
+      let str = "";
+      for (let i = 0; i < tourCom_arr.length; i++) {
+        str += `
+          <button class="button tour_info" data-tourid=${tourCom_arr[i].tourComId}>${tourCom_arr[i].tourTitle}</button>
+        `;
+      }
+      buttons_tour_info.html(str);
+    },
+    error: function (xhr) {
+      console.log("error");
+    },
+    complete: function (xhr) {},
+  });
+});
