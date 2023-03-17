@@ -21,6 +21,7 @@ let targetAttractionDate;
 let getTourScheDate;
 let getTourScheId;
 
+const loc = location.origin;
 // 會員
 const specifier_id = parseCookieTokens(document.cookie).get("memId");
 // ======= 輔助功能 =======
@@ -46,12 +47,12 @@ $(function () {
 
 function init() {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/TourQueryOneByTourId?tourId=${tourId}`,
+    url: `${loc}/lazy-trip-back/TourQueryOneByTourId?tourId=${tourId}`,
     type: "GET",
     success: function (data) {
       initRenderTourData(data);
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/tourScheQueryOne?tourId=${tourId}`,
+        url: `${loc}/lazy-trip-back/tourScheQueryOne?tourId=${tourId}`,
         type: "GET",
         success: function (data) {
           console.log(data);
@@ -315,7 +316,7 @@ $(document).on("click", "button.edit_attraction", function () {
   let start_time = $("#start_time").val();
   let stay_time = $("#stay_time").val();
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/attractionCreate`,
+    url: `${loc}/lazy-trip-back/attractionCreate`,
     type: "POST",
     data: JSON.stringify({
       attractionTitle: selected_attraction.name,
@@ -347,7 +348,7 @@ $(document).on("click", "button.edit_attraction", function () {
     complete: function (xhr) {
       //更新DB
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/tourScheUpdate`,
+        url: `${loc}/lazy-trip-back/tourScheUpdate`,
         type: "POST",
         data: JSON.stringify({
           tourScheduleId: getTourScheId,
@@ -363,7 +364,7 @@ $(document).on("click", "button.edit_attraction", function () {
         success: function (tourScheData) {
           // 取得當前attractionId的景點資訊
           $.ajax({
-            url: `http://localhost:8080/lazy-trip-back/attractionQueryOne?attractionId=${targetAttractionId}`,
+            url: `${loc}/lazy-trip-back/attractionQueryOne?attractionId=${targetAttractionId}`,
             type: "GET",
             success: function (AttractionData) {
               // 將資料渲染到頁面上
@@ -560,7 +561,7 @@ $(document).on("click", "button.add_attraction", function () {
 
 function attractionAction(stay_time, start_time, endTime) {
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/attractionCreate",
+    url: `${loc}/lazy-trip-back/attractionCreate`,
     type: "POST",
     data: JSON.stringify({
       attractionTitle: selected_attraction.name,
@@ -631,7 +632,7 @@ function attractionAction(stay_time, start_time, endTime) {
 
 function tourScheStoreIntoDB(tourSchedule_arr_ready) {
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/tourScheCreate",
+    url: `${loc}/lazy-trip-back/tourScheCreate`,
     type: "POST",
     data: JSON.stringify(tourSchedule_arr_ready),
     dataType: "json",
@@ -741,7 +742,7 @@ $(document).on("click", ".dayTripBlock_featureDelete.delete", function () {
 
   // 串接刪除API
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourScheDelete?tourScheduleId=${getTourScheId}`,
+    url: `${loc}/lazy-trip-back/tourScheDelete?tourScheduleId=${getTourScheId}`,
     type: "DELETE",
     success: function (data) {
       targetAttraction.remove();
