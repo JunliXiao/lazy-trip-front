@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>客服聊天室-後台</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/customerService/css/style.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/page/customerService/css/style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- font-awesome -->
@@ -236,22 +236,26 @@
     		offLineList.innerHTML = '';
     		let userIds = document.querySelector('#userId').innerText.substring(1);
     		for (let user of userList) {
+console.log(user);
     			let userRow = '';
     			if(user.status === 'unread' && userIds != user.userId){
     				userRow = '<a href="#" class="d-flex align-items-center a" id="user' + user.userId + '" onclick="showUserChatBox();">'
 							+ '<div class="flex-shrink-0">'
 							+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/customerService/images/user.png">'
-							+ '<img src="<%=request.getContextPath()%>/customerService/images/alert.png" style="position: absolute; bottom: 0px; left: 34px; width: 15px;">'
+							+ '<img src="<%=request.getContextPath()%>/page/customerService/images/alert.png" style="position: absolute; bottom: 0px; left: 34px; width: 15px;">'
 							+ '</div><div class="flex-grow-1 ms-3">'
 							+ '<h3>' + user.userName + '</h3>'
 							+ '<p>' + JSON.parse(user.lastmsg).message + '</p></div></a>';
+console.log(222);
     			}else{
+console.log(333);
 	    			userRow = '<a href="#" class="d-flex align-items-center a" id="user' + user.userId + '" onclick="showUserChatBox();">'
     						+ '<div class="flex-shrink-0">'
-    						+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/back-end/customerService/images/user.png">'
+    						+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/page/customerService/images/user.png">'
     						+ '</div><div class="flex-grow-1 ms-3">'
     						+ '<h3>' + user.userName + '</h3>'
     						+ '<p>' + JSON.parse(user.lastmsg).message + '</p></div></a>';
+console.log(444);
     			}
     			if(user.onoff === 'online'){
     				onLineList.innerHTML += userRow;
