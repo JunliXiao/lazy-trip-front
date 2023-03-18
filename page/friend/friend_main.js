@@ -2,7 +2,8 @@
 let loc = window.location;
 const PROT_HTTP = "http:";
 const PROT_WS = "ws:";
-const HOSTNAME = loc.hostname;
+const ORIGIN = loc.origin;
+const HOSTNAME = loc.port == 5501 ? loc.hostname + ":8080" : loc.hostname;
 // const PORT = loc.port == "80" ? '' : ':8080';
 
 // let params = new URLSearchParams(loc.search);
@@ -12,7 +13,7 @@ const specifier_id = parseCookieTokens(document.cookie).get("memId");
 let specifier_username;
 
 // ======= 後端服務端點 =======
-const API_ROOT = `${PROT_HTTP}//${HOSTNAME}/lazy-trip-back`;
+const API_ROOT = `${ORIGIN}/lazy-trip-back`;
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
@@ -38,6 +39,20 @@ const node_show_chatrooms = document.getElementById("li-chatrooms");
 const node_show_blocklists = document.getElementById("li-blocklists");
 const node_no_result = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
+
+// 顏色常數
+const PRIMARY = "is-primary";
+const LINK = "is-link";
+const SUCCESS = "is-success";
+const INFO = "is-info";
+const WARNING = "is-warning";
+const DANGER = "is-danger";
+const PRIMARY_LIGHT = "is-primary is-light";
+const LINK_LIGHT = "is-link is-light";
+const SUCCESS_LIGHT = "is-success is-light";
+const INFO_LIGHT = "is-info is-light";
+const WARNING_LIGHT = "is-warning is-light";
+const DANGER_LIGHT = "is-danger is-light";
 
 // ======= 頁面初始化 =======
 document.addEventListener("DOMContentLoaded", () => {
