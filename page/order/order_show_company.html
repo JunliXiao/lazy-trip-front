@@ -250,7 +250,7 @@
         >
           <!-- 表格欄 -->
           <table
-            class="table is-fullwidth is-bordered"
+            class="table is-fullwidth is-hoverable"
             style="height: 100%; border-radius: 15px 15px 15px 15px"
           >
             <thead>
@@ -297,6 +297,10 @@
       // 日期選擇標籤
       let inputCheckInDate = document.querySelector("#inputCheckInDate");
       let inputCheckOutDate = document.querySelector("#inputCheckOutDate");
+      // flatpickr時間格式物件
+      let flatpickrInputDate;
+      let flatpickrOutputDate;
+      let inputOrderNumberOfNights;
 
       $(function () {
         dateBtn();
@@ -317,6 +321,7 @@
               "minDate",
               new Date(selectedDates[0].getTime() + 24 * 60 * 60 * 1000)
             );
+            flatpickrInputDate = selectedDates[0].getTime();
             inputCheckOutDate.focus();
           },
         });
@@ -328,14 +333,19 @@
           // 最大可選擇天數是六個月後 大約183天
           maxDate: new Date().getTime() + 183 * 24 * 60 * 60 * 1000,
           dateFormat: "Y/m/d",
+          onChange: function (selectedDates, dateStr, instance) {
+            flatpickrOutputDate = selectedDates[0].getTime();
+          },
+          onClose: function (selectedDates, dateStr, instance) {
+        	  flatpickrOutputDate = selectedDates[0].getTime();
+          },
         });
 
         // 前面有選擇過的日期來套用
-        let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
-        if (dateInfo.inputCheckInDate != "") {
+        let dateInfo;
+        if (sessionStorage.getItem("dateInfo") != null) {
+          dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
           inputCheckInDate.value = dateInfo.inputCheckInDate;
-        }
-        if (dateInfo.inputCheckOutDate != "") {
           inputCheckOutDate.value = dateInfo.inputCheckOutDate;
         }
       }
@@ -396,7 +406,11 @@
                   .attr("src", "data:image/jpg;base64," + cmList[i].companyImg);
                 $(".roomTypeImg")
                   .eq(i)
-                  .attr("src", "data:image/jpg;base64,"+cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg);
+                  .attr(
+                    "src",
+                    "data:image/jpg;base64," +
+                      cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg
+                  );
 
                 // 飯店房型表格相關
                 if (i === 0) {
@@ -555,6 +569,8 @@
           let dateInfo = {
             inputCheckInDate: inputCheckInDate.value,
             inputCheckOutDate: inputCheckOutDate.value,
+            inputOrderNumberOfNights: (flatpickrOutputDate - flatpickrInputDate) /
+                (1000 * 60 * 60 * 24),
           };
           sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
 

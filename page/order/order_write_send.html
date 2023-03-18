@@ -209,7 +209,7 @@
                       style="padding-left: 18%"
                     ></span>
                   </div>
-                  <div style="flex-basis: 35%">
+                  <div style="flex-basis: 30%">
                     <span class="is-size-5" style="padding-left: 5%">$</span>
                     <span class="is-size-5 roomTypePrice"></span>
                   </div>
@@ -291,7 +291,7 @@
       let travelerIDNumber = $("#travelerIDNumber");
       let travelerEmail = $("#travelerEmail");
       let travelerPhone = $("#travelerPhone");
-
+      let orderNumberOfNights;
       const ROOT = location.origin;
       const ROOT_PROJ = "/lazy-trip-back";
       const LOGIN = "/page/login.html";
@@ -313,17 +313,17 @@
                     align-items: center;
                   "
                 >
-                  <div style="flex-basis: 40%">
+                  <div style="flex-basis: 35%">
                     <span
                       class="is-size-5 roomTypeName"
                       style="padding-left: 18%"
                     ></span>
                   </div>
-                  <div style="flex-basis: 35%">
+                  <div style="flex-basis: 45%">
                     <span class="is-size-5" style="padding-left: 5%">$</span>
                     <span class="is-size-5 roomTypePrice"></span>
                   </div>
-                  <div style="flex-basis: 25%">
+                  <div style="flex-basis: 20%">
                     <span class="is-size-5 roomTypeQuantity"></span>
                     <span class="is-size-5">間</span>
                   </div>
@@ -389,117 +389,128 @@
       });
 
       function init() {
-        cmBookingList = JSON.parse(sessionStorage.getItem("cmBookingList"));
-        let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
-
-        // 插入選擇日期
-        orderCheckInDate.text(dateInfo.inputCheckInDate);
-        orderCheckOutDate.text(dateInfo.inputCheckOutDate);
-
-        let num = 0;
-        for (let i = 0; i < cmBookingList.length; i++) {
-          if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
-            // 插入每個房型html
-            orderDetailChild.append(orderDetailHtml);
-          }
-        }
-        let roomTypeName = $("span[class*='roomTypeName']");
-        let roomTypePrice = $("span[class*='roomTypePrice']");
-        let roomTypeQuantity = $("span[class*='roomTypeQuantity']");
-        let k = 0;
-        for (let i = 0; i < cmBookingList.length; i++) {
-          // 插入飯店資料
-          if (i === 0) {
-            companyImg.attr("src", cmBookingList[0].companyImg);
-            companyName.text(cmBookingList[0].companyName);
-            address.text(
-              cmBookingList[0].addressCounty +
-                ", " +
-                cmBookingList[0].addressArea +
-                ", " +
-                cmBookingList[0].addressStreet
-            );
-          }
-          if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
-            roomTypeName.eq(k).text(cmBookingList[i].roomTypeVO.roomTypeName);
-            roomTypePrice.eq(k).text(cmBookingList[i].roomTypeVO.roomTypePrice);
-            roomTypeQuantity
-              .eq(k)
-              .text(cmBookingList[i].roomTypeVO.roomTypeQuantity);
-            num +=
-              cmBookingList[k].roomTypeVO.roomTypePrice *
-              parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity);
-            k++;
-          }
-        }
-
-        orderTotalPrice.text(num);
-      }
-
-      function sendOrder() {
-        // 一個空陣列 orderVOs
         if (getCookie("memId") == null) {
+          alert("您尚未登入，轉至登入畫面");
+
           let loc = location.href;
           sessionStorage.setItem("loc", loc);
           location.href = ROOT + ROOT_PROJ + LOGIN;
         } else {
-          let memberID = getCookie("memId");
-          let orderVOs = new Array();
-          for (let i = 0; i < cmBookingList.length; i++) {
-            // 一個 新 orderVO 物件裝進訂單與訂單明細資料
-            let orderVO = {
-              memberID: memberID,
-              companyID: cmBookingList[i].companyID,
-              orderCheckInDate: orderCheckInDate.text().replaceAll("\/", "-"),
-              orderCheckOutDate: orderCheckOutDate.text().replaceAll("\/", "-"),
-              orderTotalPrice: orderTotalPrice.text(),
-              travelerName: travelerName.val().trim(),
-              travelerIDNumber: travelerIDNumber.val().trim(),
-              travelerEmail: travelerEmail.val().trim(),
-              travelerPhone: travelerPhone.val().trim(),
-              orderDetailVO: {
-                roomTypeID: cmBookingList[i].roomTypeVO.roomTypeID,
-                roomTypeName: cmBookingList[i].roomTypeVO.roomTypeName,
-                roomTypePerson: cmBookingList[i].roomTypeVO.roomTypePerson,
-                orderDetailRoomPrice: cmBookingList[i].roomTypeVO.roomTypePrice,
-                orderDetailRoomQuantity:
-                  cmBookingList[i].roomTypeVO.roomTypeQuantity,
-              },
-            };
-            orderVOs[i] = orderVO;
-            console.log(orderVOs);
-          }
-          console.log("物件準備完畢等待傳送");
+          cmBookingList = JSON.parse(sessionStorage.getItem("cmBookingList"));
+          let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
 
-          fetch("http://localhost:8080/lazy-trip-back/CreateOrderAll", {
-            method: "POST",
-            body: JSON.stringify(orderVOs),
-          })
-            .then(function (response) {
-              if (response) return response.json();
-            })
-            .then(function (orderID) {
-              try {
-                console.log(typeof orderID);
-                console.log(orderID);
-                if (orderID === 0) {
-                  alert("發生一些問題，請重新登入再填寫訂單");
-                } else if (orderID > 0) {
-                  sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
-                  if (confirm("送出訂單成功! 立即付款請按確定")) {
-                    location.href = "./order_pay_order.html";
-                  } else {
-                    location.href = "./order_member_orders.html";
-                  }
-                }
-              } catch (e) {
-                console.log("catch: " + e);
-              }
-            })
-            .catch(function (error) {
-              console.log("create order all failed");
-            });
+          // 插入選擇日期
+          orderCheckInDate.text(dateInfo.inputCheckInDate);
+          orderCheckOutDate.text(dateInfo.inputCheckOutDate);
+          orderNumberOfNights = dateInfo.inputOrderNumberOfNights;
+
+          let num = 0;
+          for (let i = 0; i < cmBookingList.length; i++) {
+            if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
+              // 插入每個房型html
+              orderDetailChild.append(orderDetailHtml);
+            }
+          }
+          let roomTypeName = $("span[class*='roomTypeName']");
+          let roomTypePrice = $("span[class*='roomTypePrice']");
+          let roomTypeQuantity = $("span[class*='roomTypeQuantity']");
+          let k = 0;
+          for (let i = 0; i < cmBookingList.length; i++) {
+            // 插入飯店資料
+            if (i === 0) {
+              companyImg.attr(
+                "src",
+                "data:image/*;base64," + cmBookingList[0].companyImg
+              );
+              companyName.text(cmBookingList[0].companyName);
+              address.text(
+                cmBookingList[0].addressCounty +
+                  ", " +
+                  cmBookingList[0].addressArea +
+                  ", " +
+                  cmBookingList[0].addressStreet
+              );
+            }
+            if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
+              roomTypeName.eq(k).text(cmBookingList[i].roomTypeVO.roomTypeName);
+              roomTypePrice
+                .eq(k)
+                .text(
+                  cmBookingList[i].roomTypeVO.roomTypePrice +
+                    "(x" +
+                    orderNumberOfNights +
+                    "晚)"
+                );
+              roomTypeQuantity
+                .eq(k)
+                .text(cmBookingList[i].roomTypeVO.roomTypeQuantity);
+              num +=
+                cmBookingList[k].roomTypeVO.roomTypePrice *
+                parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity);
+              k++;
+            }
+          }
+
+          orderTotalPrice.text(num);
         }
+      }
+
+      function sendOrder() {
+        // 一個空陣列 orderVOs
+        let memberID = getCookie("memId");
+        let orderVOs = new Array();
+        for (let i = 0; i < cmBookingList.length; i++) {
+          // 一個 新 orderVO 物件裝進訂單與訂單明細資料
+          let orderVO = {
+            memberID: memberID,
+            companyID: cmBookingList[i].companyID,
+            orderCheckInDate: orderCheckInDate.text().replaceAll("\/", "-"),
+            orderCheckOutDate: orderCheckOutDate.text().replaceAll("\/", "-"),
+            orderNumberOfNights: orderNumberOfNights,
+            orderTotalPrice: orderTotalPrice.text(),
+            travelerName: travelerName.val().trim(),
+            travelerIDNumber: travelerIDNumber.val().trim(),
+            travelerEmail: travelerEmail.val().trim(),
+            travelerPhone: travelerPhone.val().trim(),
+            orderDetailVO: {
+              roomTypeID: cmBookingList[i].roomTypeVO.roomTypeID,
+              roomTypeName: cmBookingList[i].roomTypeVO.roomTypeName,
+              roomTypePerson: cmBookingList[i].roomTypeVO.roomTypePerson,
+              orderDetailRoomPrice: cmBookingList[i].roomTypeVO.roomTypePrice,
+              orderDetailRoomQuantity:
+                cmBookingList[i].roomTypeVO.roomTypeQuantity,
+            },
+          };
+          orderVOs[i] = orderVO;
+        }
+        console.log("物件準備完畢等待傳送");
+
+        fetch("http://localhost:8080/lazy-trip-back/CreateOrderAll", {
+          method: "POST",
+          body: JSON.stringify(orderVOs),
+        })
+          .then(function (response) {
+            if (response) return response.json();
+          })
+          .then(function (orderID) {
+            try {
+              if (orderID === 0) {
+                alert("發生一些問題，請重新登入再填寫訂單");
+              } else if (orderID > 0) {
+                sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
+                if (confirm("送出訂單成功! 立即付款請按確定")) {
+                  location.href = "./order_pay_order.html";
+                } else {
+                  location.href = "./order_member_orders.html";
+                }
+              }
+            } catch (e) {
+              console.log("catch: " + e);
+            }
+          })
+          .catch(function (error) {
+            console.log("create order all failed");
+          });
       }
     </script>
   </body>
