@@ -2,17 +2,18 @@
 let loc = window.location;
 const PROT_HTTP = "http:";
 const PROT_WS = "ws:";
+const ORIGIN = loc.origin;
 const HOSTNAME = loc.port == 5501 ? loc.hostname + ":8080" : loc.hostname;
 // const PORT = loc.port == "80" ? '' : ':8080';
 
-let params = new URLSearchParams(loc.search);
-let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
-// const specifier_id = parseCookieTokens(document.cookie).get("memId");
+// let params = new URLSearchParams(loc.search);
+// let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
+const specifier_id = parseCookieTokens(document.cookie).get("memId");
 
 let specifier_username;
 
 // ======= 後端服務端點 =======
-const API_ROOT = `${PROT_HTTP}//${HOSTNAME}/lazy-trip-back`;
+const API_ROOT = `${ORIGIN}/lazy-trip-back`;
 const API_FRIEND = "/api/friend";
 const API_FRIEND_REQUEST = "/api/friend/request";
 const API_CHAT = "/api/chat";
