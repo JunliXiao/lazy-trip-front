@@ -2,12 +2,12 @@
 let loc = window.location;
 const PROT_HTTP = "http:";
 const PROT_WS = "ws:";
-const HOSTNAME = loc.hostname;
+const HOSTNAME = loc.port == 5501 ? loc.hostname + ":8080" : loc.hostname;
 // const PORT = loc.port == "80" ? '' : ':8080';
 
-// let params = new URLSearchParams(loc.search);
-// let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
-const specifier_id = parseCookieTokens(document.cookie).get("memId");
+let params = new URLSearchParams(loc.search);
+let specifier_id = params.has("specifier_id") ? params.get("specifier_id") : 4;
+// const specifier_id = parseCookieTokens(document.cookie).get("memId");
 
 let specifier_username;
 
@@ -38,6 +38,20 @@ const node_show_chatrooms = document.getElementById("li-chatrooms");
 const node_show_blocklists = document.getElementById("li-blocklists");
 const node_no_result = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
+
+// 顏色常數
+const PRIMARY = "is-primary";
+const LINK = "is-link";
+const SUCCESS = "is-success";
+const INFO = "is-info";
+const WARNING = "is-warning";
+const DANGER = "is-danger";
+const PRIMARY_LIGHT = "is-primary is-light";
+const LINK_LIGHT = "is-link is-light";
+const SUCCESS_LIGHT = "is-success is-light";
+const INFO_LIGHT = "is-info is-light";
+const WARNING_LIGHT = "is-warning is-light";
+const DANGER_LIGHT = "is-danger is-light";
 
 // ======= 頁面初始化 =======
 document.addEventListener("DOMContentLoaded", () => {
