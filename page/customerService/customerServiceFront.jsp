@@ -144,14 +144,14 @@
     <img src="<%=request.getContextPath()%>/page/customerService/images/phone.png" style="width: 50px;">
     <img src="<%=request.getContextPath()%>/page/customerService/images/alert.png" style="width: 30px;" id="alert" class="hide">
 </div>
-<c:if test="${empty 1}">
+<c:if test="${empty sessionScope.member.id}">
 	<script>
 	        document.querySelector('#chat-icon').addEventListener('click', function(){
-	        	window.location = '<%=request.getContextPath()%>/front-end/member/login.jsp';
+	        	window.location = '<%=request.getContextPath()%>/page/login.html';
 	        });
 	</script>
 </c:if> 
-<c:if test="${not empty 1}">
+<c:if test="${not empty sessionScope.member.id}">
 	<!-- service image end  -->
 	<div class="container hide" id="chatBox" style="width: 500px;">
 	<div class="row chat-window col-md-12" id="chat_window_1" style="margin-left:10px;">
@@ -186,14 +186,14 @@
 	</div>
 	<!-- service end -->
 	<script>
-			const ServerPoint = "/CustomerService/1";
+			const ServerPoint = "/CustomerService/${sessionScope.member.id}";
 		    const host = window.location.host;  //localhost:8081
 		    const path = window.location.pathname; // '/lazytrip-servlet'
 		    const webCtx = path.substring(0, path.indexOf('/', 1));
 		    const endPointURL = "ws://" + host + webCtx + ServerPoint;
 		
 		    const msgContainer = document.querySelector('#msgContainer');
-		    const self = '1';
+		    const self = ${sessionScope.member.id};
 		    let webSocket;		
 	
 	        let con = false;
@@ -252,7 +252,7 @@
 	                         content = '<div class="column is-10 col-xs-10">'
 	                              + '<div class="messages msg_receive">'
 	                              + '<p>' + showMsg + '</p>'
-	                              + '<time>' + '${sessionScope.usersVO.userName} • '
+	                              + '<time>' + '${sessionScope.member.username} • '
 	                              + time + '</time></div></div>' + user;
 	                     }else{
 	                         content = employee + '<div class="column is-10 col-xs-10">'
@@ -276,7 +276,7 @@
 	                         content = '<div class="column is-10 col-xs-10">'
 	                                 + '<div class="messages msg_receive">'
 	                                 + '<p>' + showMsg + '</p>'
-	                                 + '<time>' + '${sessionScope.usersVO.userName} • '
+	                                 + '<time>' + '${sessionScope.member.username} • '
 	                                 + time + '</time></div></div>' + user;
 	                     }else{
 	                         content = employee + '<div class="column is-10 col-xs-10">'
