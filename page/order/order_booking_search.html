@@ -170,6 +170,8 @@
     <footer-component></footer-component>
 
     <script>
+      const loc = location.origin;
+
       // 子元素要放飯店資料的標籤
       let companyChildrenStart = $("#companyChildrenStart");
       // 日期選擇標籤
@@ -235,9 +237,9 @@
         // 按鈕變成跑圈圈
         searchBtn.addClass("is-loading");
         let companyHtml;
+
         fetch(
-          "http://localhost:8080/lazy-trip-back/BookingSearch.do?type=showCompanyListByCompanyNameOrCountyOrArea&keyword=" +
-            keyword
+          `${loc}/lazy-trip-back/BookingSearch.do?type=showCompanyListByCompanyNameOrCountyOrArea&keyword=${keyword}`
         )
           .then((response) => response.json())
           .then((cmVOs) => {
@@ -388,7 +390,10 @@
           sessionStorage.setItem("showCompanyInformation", companyID);
 
           // location.href = "./company頁面.html";
-          window.open("./order_show_company.html", "_blank");
+          window.open(
+            "http://localhost:8080/lazy-trip-back/page/order/order_show_company.html",
+            "_blank"
+          );
         });
       }
     </script>

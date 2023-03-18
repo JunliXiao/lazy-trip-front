@@ -203,6 +203,7 @@
     <footer-component></footer-component>
 
     <script>
+      const loc = location.origin;
       let pay_btn = $("#pay_btn");
       let tbody = $("#tbody");
       let pay_orderID = $("#pay_orderID");
@@ -215,7 +216,18 @@
       let pay_detailRoomQuantity = $(".pay_detailRoomQuantity");
       let pay_detailRoomTotalPrice = $(".pay_detailRoomTotalPrice");
       let pay_totalPrice = $("#pay_totalPrice");
-      let orderID = sessionStorage.getItem("showPayTableFromTheOrderID");
+      let orderID;
+
+      if (
+        sessionStorage.getItem("showPayTableFromTheOrderID", orderID) != null
+      ) {
+        orderID = sessionStorage.getItem("showPayTableFromTheOrderID", orderID);
+      } else {
+        alert("查詢帳單失敗，按下確定前往我的訂單連結付款");
+        location.href(
+          `${loc}/lazy-trip-back/page/order/order_member_orders.html`
+        );
+      }
     </script>
   </body>
 </html>

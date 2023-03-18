@@ -391,8 +391,9 @@
       function init() {
         if (getCookie("memId") == null) {
           alert("您尚未登入，轉至登入畫面");
-
           let loc = location.href;
+          console.log(loc);
+
           sessionStorage.setItem("loc", loc);
           location.href = ROOT + ROOT_PROJ + LOGIN;
         } else {
@@ -485,7 +486,7 @@
         }
         console.log("物件準備完畢等待傳送");
 
-        fetch("http://localhost:8080/lazy-trip-back/CreateOrderAll", {
+        fetch(`${loc}/lazy-trip-back/CreateOrderAll`, {
           method: "POST",
           body: JSON.stringify(orderVOs),
         })
@@ -499,9 +500,9 @@
               } else if (orderID > 0) {
                 sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
                 if (confirm("送出訂單成功! 立即付款請按確定")) {
-                  location.href = "./order_pay_order.html";
+                  location = `${ROOT}/lazy-trip-back/page/order/order_pay_order.html`;
                 } else {
-                  location.href = "./order_member_orders.html";
+                  location = `${ROOT}/lazy-trip-back/page/order/order_member_orders.html`;
                 }
               }
             } catch (e) {

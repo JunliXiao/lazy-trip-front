@@ -102,9 +102,7 @@
             >
               <span class="is-size-5" style="padding-top: 5px"
                 >若要查詢訂單&nbsp;</span
-              ><a
-                class="button is-primary is-outlined"
-                href="../order/order_member_orders.html"
+              ><a id="myOrders" class="button is-primary is-outlined" href=""
                 >請按此</a
               >
             </div>
@@ -118,6 +116,10 @@
     <!-- 頁尾 -->
     <footer-component></footer-component>
 
-    <script></script>
+    <script>
+      const loc = location.origin;
+      // 查詢訂單按鈕綁定網址
+      $("#myOrders");
+    </script>
   </body>
 </html>

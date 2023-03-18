@@ -168,8 +168,7 @@
           console.log(memberID);
 
           fetch(
-            "http://localhost:8080/lazy-trip-back/Order.do?type=showOrderAllByMemberID&memberID=" +
-              memberID
+            `${ROOT}/lazy-trip-back/Order.do?type=showOrderAllByMemberID&memberID=${memberID}`
           )
             .then(function (response) {
               return response.json();
