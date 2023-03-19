@@ -76,8 +76,8 @@
           <div>
             <div>
               <strong class="is-size-5" style="padding-left: 5%"
-                >訂單編號:&emsp;<span id="pay_orderID">123123</span></strong
-              >
+                >訂單編號:&emsp;<span id="pay_orderID"></span
+              ></strong>
             </div>
             <div style="height: 15px"></div>
             <!-- 表格開始 -->
@@ -105,46 +105,14 @@
                   </tr>
                 </thead>
                 <tbody id="tbody">
-                  <tr>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6 pay_companyName"
-                        >希臘風情特色民宿</span
-                      >
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6"
-                        ><span class="pay_orderCheckInDate">2023/03/22</span
-                        ><span>~</span
-                        ><span class="pay_orderCheckOutDate">2023/03/28</span>
-                      </span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6 pay_roomtypeName">尊貴標準房</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6 pay_detailRoomPrice">$10000</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6 pay_numberOfNights">6</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <span class="is-size-6 pay_detailRoomQuantity">2</span>
-                    </td>
-                    <td style="text-align: center; vertical-align: middle">
-                      <strong class="is-size-6 pay_detailRoomTotalPrice"
-                        >120000</strong
-                      >
-                    </td>
-                  </tr>
+                  <!-- orderList paste here -->
                 </tbody>
                 <tfoot>
                   <tr>
                     <td style="text-align: right" colspan="8">
                       <strong
-                        >應付總額:&emsp;<span id="pay_totalPrice"
-                          >$240000</span
-                        ></strong
-                      >
+                        >應付總額:&emsp;<span id="pay_totalPrice"></span
+                      ></strong>
                     </td>
                   </tr>
                 </tfoot>
@@ -204,6 +172,8 @@
 
     <script>
       const loc = location.origin;
+      // const loc = "http://localhost:8080";
+      // console.log("loc假資料");
       let pay_btn = $("#pay_btn");
       let tbody = $("#tbody");
       let pay_orderID = $("#pay_orderID");
@@ -218,15 +188,158 @@
       let pay_totalPrice = $("#pay_totalPrice");
       let orderID;
 
-      if (
-        sessionStorage.getItem("showPayTableFromTheOrderID", orderID) != null
-      ) {
-        orderID = sessionStorage.getItem("showPayTableFromTheOrderID", orderID);
-      } else {
-        alert("查詢帳單失敗，按下確定前往我的訂單連結付款");
-        location.href(
-          `${loc}/lazy-trip-back/page/order/order_member_orders.html`
-        );
+      $(function () {
+        init();
+      });
+
+      function init() {
+        if (
+          sessionStorage.getItem("showPayTableFromTheOrderID", orderID) != null
+        ) {
+          orderID = sessionStorage.getItem(
+            "showPayTableFromTheOrderID",
+            orderID
+          );
+          // orderID = 28;
+          // console.log("orderID假資料");
+          showPayTable(orderID);
+        } else {
+          alert("查詢帳單失敗，按下確定至我的訂單再次付款!");
+          location.href(
+            `${loc}/lazy-trip-back/page/order/order_member_orders.html`
+          );
+        }
+      }
+
+      // 透過orderID連線找到該張訂單
+      function showPayTable(orderID) {
+        fetch(
+          `${loc}/lazy-trip-back/Order.do?type=showPayTableFromTheOrderID&orderID=${orderID}`
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (orderList) {
+            try {
+              pasteOrderList(orderList);
+              payBtn(orderList[0]);
+              console.log("get orderList資料成功");
+            } catch (e) {
+              console.log(e);
+            }
+          })
+          .catch(function (error) {
+            console.log("get orderList資料失敗");
+          });
+      }
+
+      function pasteOrderList(orderList) {
+        let pasteOrderHtml = "";
+        pay_orderID.text(orderList[0].orderID);
+        pay_totalPrice.text(orderList[0].orderTotalPrice);
+
+        for (let i = 0; i < orderList.length; i++) {
+          console.log(orderList[i]);
+          pasteOrderHtml += `<tr>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6 pay_companyName"
+                                          >${
+                                            orderList[i].companyVO.companyName
+                                          }</span
+                                        >
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6"
+                                          ><span class="pay_orderCheckInDate">${orderList[
+                                            i
+                                          ].orderCheckInDate.replaceAll(
+                                            "-",
+                                            "/"
+                                          )}</span
+                                          ><span>~</span
+                                          ><span class="pay_orderCheckOutDate">${orderList[
+                                            i
+                                          ].orderCheckOutDate.replaceAll(
+                                            "-",
+                                            "/"
+                                          )}</span>
+                                        </span>
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6 pay_roomtypeName">${
+                                          orderList[i].orderDetailVO
+                                            .roomTypeName
+                                        }</span>
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6 pay_detailRoomPrice">${
+                                          orderList[i].orderDetailVO
+                                            .orderDetailRoomPrice
+                                        }</span>
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6 pay_numberOfNights">${
+                                          orderList[i].orderNumberOfNights
+                                        }</span>
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <span class="is-size-6 pay_detailRoomQuantity">${
+                                          orderList[i].orderDetailVO
+                                            .orderDetailRoomQuantity
+                                        }</span>
+                                      </td>
+                                      <td style="text-align: center; vertical-align: middle">
+                                        <strong class="is-size-6 pay_detailRoomTotalPrice"
+                                          >${
+                                            orderList[i].orderDetailVO
+                                              .orderDetailRoomPrice *
+                                            orderList[i].orderNumberOfNights *
+                                            orderList[i].orderDetailVO
+                                              .orderDetailRoomQuantity
+                                          }</strong
+                                        >
+                                      </td>
+                                    </tr>`;
+        }
+        tbody.append(pasteOrderHtml);
+      }
+
+      function payBtn(orderList) {
+        pay_btn.on("click", function () {
+          // 創建送出支付Json物件
+          let payJson = {
+            productName: orderList.companyVO.companyName,
+            amount: orderList.orderTotalPrice,
+            currency: "TWD",
+            confirmUrl: `${loc}/lazy-trip-back/Pay.do`,
+            linePayOrderID: new Date().getTime().toString(),
+            orderID: orderList.orderID,
+          };
+
+          // 送出Json物件
+          fetch(`${loc}/lazy-trip-back/Pay.do`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payJson),
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (payData) {
+              try {
+                console.log(payData);
+                alert("前往LinePay頁面，請登入LinePay並開始支付訂單");
+                location = payData.info.paymentUrl.web;
+              } catch (e) {
+                console.log(e);
+              }
+            })
+            .catch(function (error) {
+              console.log("get pay data資料失敗");
+            });
+        });
       }
     </script>
   </body>
