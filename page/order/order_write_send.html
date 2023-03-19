@@ -421,7 +421,7 @@
           sessionStorage.setItem("loc", loc);
           location.href = ROOT + ROOT_PROJ + LOGIN;
         } else {
-          getMemberData(31);
+          getMemberData(getCookie("memId"));
           cmBookingList = JSON.parse(sessionStorage.getItem("cmBookingList"));
           let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
 
