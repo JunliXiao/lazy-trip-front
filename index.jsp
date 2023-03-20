@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="article.model.*"%>
+<%@ page import="java.util.*"%>
+
+<%
+ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServlet.java(Concroller), 存入req的empVO物件
+%>
 
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -62,45 +68,46 @@
     </section>
 
     <div class="column"></div>
-    <div class="columns is-centered">
-      <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">熱門行程</a></b></h2>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">花東5日遊
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">夜遊台北
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">台南古城
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-    </div>
-    <hr>
+    <section class="section">
+<!--     <div class="columns is-centered"> -->
+<!--       <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">熱門行程</a></b></h2> -->
+<!--     </div> -->
+<!--     <div class="columns"> -->
+<!--       <div class="column"> -->
+<!--         <span>台中3天兩夜</span> -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">花東5日遊 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">夜遊台北 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">台南古城 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--     <hr> -->
 
-    <div class="columns is-centered">
-      <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">揪團活動</a></b></h2>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">花東5日遊
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">夜遊台北
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">台南古城
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-    </div>
-    <hr>
+<!--     <div class="columns is-centered"> -->
+<!--       <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">揪團活動</a></b></h2> -->
+<!--     </div> -->
+<!--     <div class="columns"> -->
+<!--       <div class="column"> -->
+<!--         <span>台中3天兩夜</span> -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">花東5日遊 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">夜遊台北 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--       <div class="column">台南古城 -->
+<!--         <img src="../asset/img/dog.jpg" alt=""> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--     <hr> -->
 
     <div class="columns is-centered">
       <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">廠商推薦</a></b></h2>
@@ -123,29 +130,29 @@
     <hr>
 
     <div class="columns is-centered">
-      <h2><b><a class="hot" href="page/article/allArticle.jsp">推薦文章</a></b></h2>
+      <h2><b><a class="hot" href="<%=request.getContextPath()%>/page/article/allArticle.jsp">推薦文章</a></b></h2>
     </div>
-    <div class="columns">
-      <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="asset/img/dog.jpg" alt="">
+    <div class="columns pic">
+      <div class="column">台北101
+        <img src="asset/img/101.jpg"  alt="">
       </div>
       <div class="column">花東5日遊
-        <img src="asset/img/dog.jpg" alt="">
+        <img src="asset/img/ocean.jpg"  alt="">
       </div>
-      <div class="column">夜遊台北
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">高雄
+        <img src="asset/img/kaohsiung.jpg" alt="">
       </div>
       <div class="column">台南古城
-        <img src="asset/img/dog.jpg" alt="">
+        <img src="asset/img/Tainan.jpg" alt="">
       </div>
     </div>
     <hr>
+</section>
 
 
     <!-- 頁尾 -->
     <footer-component></footer-component>
     <script src="asset/js/checkLogin.js?ver=1"></script>
-    <script src="../../asset/js/bulma-init.js"></script>
+    <script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
   </body>
 </html>
