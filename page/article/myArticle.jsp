@@ -4,12 +4,17 @@
 <%@ page import="article.model.*"%>
 <%@ page import="article.service.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import=" member.model.*"%>
 
 <%
 ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServlet.java(Concroller), 存入req的empVO物件
 
+Member member = (Member)session.getAttribute("member");
+Integer memberId = member.getId();
+
+
   ArticleService articleSvc = new ArticleService();
-  List<ArticleVO> list = articleSvc.getOneByMember(1); //先將會員ID寫死為1
+  List<ArticleVO> list = articleSvc.getOneByMember(memberId); //先將會員ID寫死為1
   pageContext.setAttribute("list",list);
 %>
 
@@ -20,15 +25,17 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>我的文章</title>
-<link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/asset/css/my-bulma.css" />
 <link rel="stylesheet" href="" />
 <script src="https://kit.fontawesome.com/0548105e54.js"
 	crossorigin="anonymous"></script>
 	    <script
       defer
-      src="../../asset/js/components.js"
+      src="<%=request.getContextPath()%>/asset/js/components.js"
       type="text/javascript"
     ></script>
+            <!-- jquery -->
+    <script src="<%=request.getContextPath()%>/asset/js/jquery-3.6.3.min.js"></script>
 
 
 </head>
@@ -109,6 +116,6 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
     <!-- 頁尾 -->
     <footer-component></footer-component>
 
-	<script src="../../asset/js/bulma-init.js"></script>
+	<script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
 </body>
 </html>

@@ -18,15 +18,17 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新增文章</title>
-<link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+<link rel="stylesheet" href="<%=request.getContextPath()%>/asset/css/my-bulma.css" />
 <link rel="stylesheet" href="" />
 <script src="https://kit.fontawesome.com/0548105e54.js"
 	crossorigin="anonymous"></script>
 	    <script
       defer
-      src="../../asset/js/components.js"
+      src="<%=request.getContextPath()%>/asset/js/components.js"
       type="text/javascript"
     ></script>
+                <!-- jquery -->
+    <script src="<%=request.getContextPath()%>/asset/js/jquery-3.6.3.min.js"></script>
 
 
 </head>
@@ -151,10 +153,10 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 	java.sql.Timestamp articleDate = null;
 	%>
 	<link rel="stylesheet" type="text/css"
-		href="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.css" />
-	<script src="<%=request.getContextPath()%>/datetimepicker/jquery.js"></script>
+		href="<%=request.getContextPath()%>/page/datetimepicker/jquery.datetimepicker.css" />
+	<script src="<%=request.getContextPath()%>/page/datetimepicker/jquery.js"></script>
 	<script
-		src="<%=request.getContextPath()%>/datetimepicker/jquery.datetimepicker.full.js"></script>
+		src="<%=request.getContextPath()%>/page/datetimepicker/jquery.datetimepicker.full.js"></script>
 
 
 	<script>
@@ -176,6 +178,6 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
     <!-- 頁尾 -->
     <footer-component></footer-component>
 
-	<script src="../../asset/js/bulma-init.js"></script>
+	<script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
 </body>
 </html>

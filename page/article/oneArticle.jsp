@@ -23,7 +23,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${articleVO.articleTitle}</title>
-    <link rel="stylesheet" href="../../asset/css/my-bulma.css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/asset/css/my-bulma.css" />
     <link rel="stylesheet" href="#" />
     <script
     src="https://kit.fontawesome.com/0548105e54.js"
@@ -31,9 +31,11 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
   ></script>
       <script
       defer
-      src="../../asset/js/components.js"
+      src="<%=request.getContextPath()%>/asset/js/components.js"
       type="text/javascript"
     ></script>
+                <!-- jquery -->
+    <script src="<%=request.getContextPath()%>/asset/js/jquery-3.6.3.min.js"></script>
 
 
 </head>
@@ -95,6 +97,6 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
       <!-- 頁尾 -->
     <footer-component></footer-component>
   
-      <script src="../../asset/js/bulma-init.js"></script>
+      <script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
 </body>
 </html>

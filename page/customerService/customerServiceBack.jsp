@@ -26,6 +26,10 @@
 		.message-area{
 			margin-left: 350px;
 		}
+		.img-fluid.ps-1{
+			height:50px;
+			width:50px;
+		}
 	</style>
 </head>
 <body onload="connect();" onunload="disconnect();">
@@ -84,6 +88,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0" id="userImg"></div>
                                                     <div class="flex-grow-1 ms-3">
+                                                    
                                                         <h3 id="userName">會員姓名</h3>
                                                         <div id="userId" style="display: none;"></div>
                                                     </div>
@@ -102,7 +107,7 @@
                                         <form action="" autocomplete="off">
                                             <input type="text" class="form-control" id="btn-input" onkeydown="if (event.keyCode == 13) sendMessage();">
 
-                                            <button type="button" onclick="sendMessage();"><i class="fa fa-paper-plane"></i> 送出</button>
+                                            <button type="button" onclick="sendMessage();"><i class="fa fa-paper-plane"></i> 回覆</button>
                                         </form>
                                     </div>
                                 </div>
@@ -145,7 +150,7 @@
     				refreshUserList(jsonObj);
     			}else if ("history" === jsonObj.type) {
     				document.querySelector('#userName').innerText = jsonObj.userName;
-    				document.querySelector('#userImg').innerHTML = '<img alt="" style="width: 50px;" src="<%=request.getContextPath()%>/usersServlet?action=getUserPic&userId=' + JSON.parse(jsonObj.msgObj).receiver + '">';
+    				document.querySelector('#userImg').innerHTML = '<img alt="" style="width: 50px;" src="<%=request.getContextPath()%>/customerService/GetMemberImg?userId=' + JSON.parse(jsonObj.msgObj).receiver + '">';
     				document.querySelector('#userId').innerText = 'u' + JSON.parse(jsonObj.msgObj).receiver;
                     msgContainer.innerHTML = '';
                     // 這行的jsonObj.message是從redis撈出跟客服的歷史訊息，再parse成JSON格式處理
@@ -236,26 +241,25 @@
     		offLineList.innerHTML = '';
     		let userIds = document.querySelector('#userId').innerText.substring(1);
     		for (let user of userList) {
-console.log(user);
+				console.log(user.userId);
     			let userRow = '';
     			if(user.status === 'unread' && userIds != user.userId){
     				userRow = '<a href="#" class="d-flex align-items-center a" id="user' + user.userId + '" onclick="showUserChatBox();">'
 							+ '<div class="flex-shrink-0">'
-							+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/customerService/images/user.png">'
+<%-- 							+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/page/customerService/images/user.png">' --%>
+							+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/customerService/GetMemberImg?userId=' + user.userId + '">'
 							+ '<img src="<%=request.getContextPath()%>/page/customerService/images/alert.png" style="position: absolute; bottom: 0px; left: 34px; width: 15px;">'
 							+ '</div><div class="flex-grow-1 ms-3">'
 							+ '<h3>' + user.userName + '</h3>'
 							+ '<p>' + JSON.parse(user.lastmsg).message + '</p></div></a>';
-console.log(222);
     			}else{
-console.log(333);
 	    			userRow = '<a href="#" class="d-flex align-items-center a" id="user' + user.userId + '" onclick="showUserChatBox();">'
     						+ '<div class="flex-shrink-0">'
-    						+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/page/customerService/images/user.png">'
+<%--     						+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/page/customerService/images/user.png">' --%>
+    						+ '<img alt="" class="img-fluid ps-1" src="<%=request.getContextPath()%>/customerService/GetMemberImg?userId=' + user.userId + '">'
     						+ '</div><div class="flex-grow-1 ms-3">'
     						+ '<h3>' + user.userName + '</h3>'
     						+ '<p>' + JSON.parse(user.lastmsg).message + '</p></div></a>';
-console.log(444);
     			}
     			if(user.onoff === 'online'){
     				onLineList.innerHTML += userRow;

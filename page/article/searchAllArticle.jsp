@@ -7,102 +7,31 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>推薦文章</title>
-    <link rel="stylesheet" href="../asset/css/my-bulma.css" />
+    <title>查詢文章</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/asset/css/my-bulma.css" />
     <link rel="stylesheet" href="./css/allArticle.css" />
     <script
       src="https://kit.fontawesome.com/0548105e54.js"
       crossorigin="anonymous"
     ></script>
+    <script
+      defer
+      src="<%=request.getContextPath()%>/asset/js/components.js"
+      type="text/javascript"
+    ></script>
+                <!-- jquery -->
+    <script src="<%=request.getContextPath()%>/asset/js/jquery-3.6.3.min.js"></script>
   </head>
   <body>
-    <!-- 導覽列 -->
-    <nav
-      class="navbar has-shadow"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <!-- Logo -->
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <!-- <img
-              src="https://bulma.io/images/bulma-logo.png"
-              width="112"
-              height="28"
-            /> -->
-          <strong>LazyTrip.io</strong>
-        </a>
-
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarBasicExample"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div id="navbarBasicExample" class="navbar-menu">
-        <!-- 靠左 -->
-        <div class="navbar-start"></div>
-
-        <!-- 靠右 -->
-        <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon"><i class="fas fa-plus"></i></span>
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 新的行程 </a>
-              <a class="navbar-item"> 新的揪團 </a>
-            </div>
-          </div>
-
-          <a href="#" class="navbar-item"> 揪團 </a>
-
-          <a href="#" class="navbar-item"> 行程 </a>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">
-              <span class="icon-text"
-                ><span class="icon"><i class="fas fa-user"></i></span
-                ><span>周杰倫</span></span
-              >
-            </a>
-            <div class="navbar-dropdown">
-              <a class="navbar-item"> 我的頁面 </a>
-              <a class="navbar-item"> 我的訂單 </a>
-              <a href="page/friend/friend_main.html" class="navbar-item">
-                我的好友
-              </a>
-              
-			  <FORM METHOD="post" ACTION="<%=request.getContextPath()%>/article/ArticleServlet2">
-			     <input type="hidden" name="memberId"  value="${articleVO.memberId}">
-			     <input type="hidden" name="action"	value="getMember_For_Display">
-			     <a class="navbar-item" href="myArticle.jsp"> 我的文章</a> </FORM>
-              
-
-              
-              
-              
-              
-              <hr class="navbar-divider" />
-              <a href="index_not_in.html" class="navbar-item"> 登出 </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+         <!-- 導覽列 -->
+   <header-component></header-component>
 
      <div class="columns" style="
                 margin: 15px 5px 15px;
                 display: flex;
   				align-items: center;
     ">
-    <b style="font-size: 40px;" > 推薦文章 </b>
+    <b style="font-size: 40px;" > 查詢文章 </b>
     
     <a href="addArticle.jsp"><button class="button is-link is-outlined" style="margin-left: 990px ">
     新增
@@ -147,28 +76,10 @@
 </section>
 
 
+      <!-- 頁尾 -->
+    <footer-component></footer-component>
 
-   <footer class="footer">
-      <div class="columns">
-        <div class="column">
-          <div class="content">
-            <h4>關於</h4>
-            <p>
-              <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
-              TGA105 梯第三組所製作之結訓專題。
-            </p>
-          </div>
-        </div>
-        <div class="column">
-          <div class="content">
-            <h4>合作廠商</h4>
-            <a href="#">後台登入</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    <script src="../../asset/js/bulma-init.js"></script>
+    <script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
 
 </body>
 </html>
