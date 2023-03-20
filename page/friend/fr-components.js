@@ -101,7 +101,7 @@ class Suggestion extends ResultCard {
     this.querySelector("button._add_friend").addEventListener("click", (event) => {
       let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
       if(!confirm("確認邀請？")) return;
-      // addRequest(specifier_id, other_id);
+      addRequest(specifier_id, other_id);
       this.toastActionResult(PRIMARY, `你已對 ${this.username} 提出好友邀請`);
       this.remove();
     });
@@ -109,7 +109,7 @@ class Suggestion extends ResultCard {
     this.querySelector("button._block").addEventListener("click", (event) => {
       let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
       if(!confirm("確認封鎖對方？")) return;
-      // block(other_id);
+      block(other_id);
       this.toastActionResult(DANGER, `你已封鎖 ${this.username}`);
       this.remove();
     });
@@ -143,7 +143,7 @@ class Friend extends ResultCard {
     this.querySelector("button._unfriend").addEventListener("click", (event) => {
       let other_id = event.target.closest("friend-component").getAttribute("member-id");
       if(!confirm("確認解除好友？")) return;
-      // unfriend(other_id);
+      unfriend(other_id);
       this.toastActionResult(INFO, `你跟 ${this.username} 已解除好友`);
       this.remove();
     });
@@ -176,7 +176,7 @@ class SentRequest extends ResultCard {
     this.querySelector("button._cancel").addEventListener("click", (event) => {
       let other_id = event.target.closest("sent-request-component").getAttribute("member-id");
       if(!confirm("確認取消？")) return;
-      // cancelRequest(other_id);
+      cancelRequest(other_id);
       this.toastActionResult(WARNING, `你已取消對 ${this.username} 的好友邀請`);
       this.remove();
     });
@@ -265,7 +265,7 @@ class Blocklist extends ResultCard {
     this.querySelector("button._unfriend").addEventListener("click", (event) => {
       let other_id = event.target.closest("blocklist-component").getAttribute("member-id");
       if(!confirm("確認解除封鎖？")) return;
-      // unblock(other_id);
+      unblock(other_id);
       this.toastActionResult(DANGER, `你已解除對 ${this.username} 的封鎖`);
       this.remove();
     });

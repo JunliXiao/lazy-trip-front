@@ -245,7 +245,9 @@ function showContent(type) {
     const column = node_control_panel.getSortingColumn();
     const order = node_control_panel.getSortingOrder();
     const text = node_control_panel.getSearchText();
-    return `?member_id=${specifier_id}&query_type=${type}&limit=10&offset=${content_row_count}&sortingColumn=${column}&sortingOrder=${order}&search_text=${text}` + directionParam;
+    const url =  `?member_id=${specifier_id}&query_type=${type}&limit=10&offset=${content_row_count}&sortingColumn=${column}&sortingOrder=${order}&search_text=${text}` + directionParam;
+    console.log(url)
+    return url;
   }
 
   function createChatLayout() {
