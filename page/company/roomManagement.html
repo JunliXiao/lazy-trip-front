@@ -106,7 +106,7 @@
               <div style="flex-basis: 30%">
                 <img
                   class="companyID"
-                  style="height: 200px; width: 200px"
+                  style="max-width: 100%; height: auto"
                   alt=""
                   id="companyImg"
                 />
@@ -118,6 +118,8 @@
                   </li>
                 </ul>
               </div>
+              <button class="button 3dbtn" id="3dbtn">3D環景</button>
+              <!-- <a class="button is-primary"> </a> -->
             </div>
 
             <hr />
@@ -292,7 +294,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th colspan="20"></th>
+                    <th colspan="21"></th>
                   </tr>
                   <tr class="orderShow">
                     <th><abbr title="order_id">編號</abbr></th>
@@ -312,6 +314,13 @@
                         title="order_check_out_date"
                         class="orderCheckOutDate"
                         >退房日期</abbr
+                      >
+                    </th>
+                    <th>
+                      <abbr
+                        title="orderNumberOfNights"
+                        class="orderNumberOfNights"
+                        >入住天數</abbr
                       >
                     </th>
                     <th>
