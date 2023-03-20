@@ -39,9 +39,7 @@
               <p>將在三秒後跳轉回首頁，若無自動跳轉可以點擊下方按鈕</p>
               <br />
               <p>
-                <a href="http://localhost:8080/lazy-trip-back/index.html"
-                  >點我回首頁</a
-                >
+                <a class="back_main">點我回首頁</a>
               </p>
             </div>
           </form>
@@ -53,5 +51,11 @@
     <footer-component></footer-component>
 
     <script src="member/js/logout.js?ver=2"></script>
+    <script>
+      $("a.back_main").on("click", function () {
+        let loc = location.origin;
+        location.href = loc + "/lazy-trip-back/";
+      });
+    </script>
   </body>
 </html>
