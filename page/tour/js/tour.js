@@ -4,6 +4,9 @@ const endDate = document.getElementById("endDate");
 const tourImg = document.getElementById("tourImg");
 const memberId = document.getElementById("memberId");
 const selectTagElem = document.getElementById("trip_tag");
+tourTitle.addEventListener("input", enableButton_addTour);
+startDate.addEventListener("input", enableButton_addTour);
+endDate.addEventListener("input", enableButton_addTour);
 
 const loc = location.origin;
 
@@ -125,47 +128,54 @@ $(document).on("click", "i.fa-tag", function renderTagMessageBox() {
 
 $(function () {
   init();
+  enableButton_addTour();
 });
 
 // 執行創建主行程
 document
   .querySelector("button.button.trip_create_btn")
   .addEventListener("click", function addTourData() {
-    $.ajax({
-      url: `${loc}/lazy-trip-back/tourCreate`,
-      type: "POST",
-      data: JSON.stringify({
-        tourTitle: tourTitle.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
-        tourImg: base64,
-        memberId: member_Id,
-      }),
-      dataType: "json",
-      contentType: "application/json",
-      success: function (data) {
-        tour_arr.push({
-          tourId: data.tourId,
-          tourTitle: data.tourTitle,
-          startDate: data.startDate,
-          endDate: data.endDate,
+    // 前端圖片驗證
+    if (base64 == undefined) {
+      alert("請上傳一張圖片");
+      return;
+    } else {
+      $.ajax({
+        url: `${loc}/lazy-trip-back/tourCreate`,
+        type: "POST",
+        data: JSON.stringify({
+          tourTitle: tourTitle.value,
+          startDate: startDate.value,
+          endDate: endDate.value,
           tourImg: base64,
           memberId: member_Id,
-        });
-        renderOneTourData(tour_arr);
-        // 清空input欄位
-        tourTitle.value = "";
-        startDate.value = "";
-        endDate.value = "";
-        base64 = "";
-        $("span.file-name").html("");
-        // 創建行程的彈跳視窗隱藏
-        $(".trip_create_lightbox").addClass("none");
-      },
-      error: function (xhr) {
-        console.log("error");
-      },
-    });
+        }),
+        dataType: "json",
+        contentType: "application/json",
+        success: function (data) {
+          tour_arr.push({
+            tourId: data.tourId,
+            tourTitle: data.tourTitle,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            tourImg: base64,
+            memberId: member_Id,
+          });
+          renderOneTourData(tour_arr);
+          // 清空input欄位
+          tourTitle.value = "";
+          startDate.value = "";
+          endDate.value = "";
+          base64 = undefined;
+          $("span.file-name").html("");
+          // 創建行程的彈跳視窗隱藏
+          $(".trip_create_lightbox").addClass("none");
+        },
+        error: function (xhr) {
+          console.log("error");
+        },
+      });
+    }
   });
 
 // 將資料渲染到主視窗
@@ -489,7 +499,6 @@ $(".trip_tag_create").on("click", function createNewTag() {
       // 對本地Set新增
       tag_set.add(inputText);
       renderTagInfo(inputText);
-      alert("儲存成功");
     },
     error: function (xhr) {
       console.log("error");
@@ -511,7 +520,7 @@ function renderTagToEachTour(tag_obj) {
 
 function renderTagInfo(inputText) {
   let tagDetail = "";
-  tagDetail = `<li data-tag=${inputText} class="trip_tag_el"><input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox" /><span>${inputText}</span><button class="button delete"></button></li>`;
+  tagDetail = `<li data-tag=${inputText} class="trip_tag_el"><input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox" /><span>${inputText}</span><button class="button delete is-primary"></button></li>`;
   $(".contents > ul.trip_tag_detail").prepend(tagDetail);
   // select選單動態新增option tag
   // let optionTag = "";
@@ -523,7 +532,7 @@ function renderTagInfo(inputText) {
 function initRenderTagInfo(data) {
   for (let i = 0; i < data.length; i++) {
     let tagDetail = "";
-    tagDetail = `<li data-tag=${data[i]} class="trip_tag_el"><input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox" /><span>${data[i]}</span><button class="button delete"></button></li>`;
+    tagDetail = `<li data-tag=${data[i]} class="trip_tag_el"><input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox" /><span>${data[i]}</span><button class="button delete is-primary"></button></li>`;
     $(".contents > ul.trip_tag_detail").prepend(tagDetail);
     // select選單動態新增option tag
     // let optionTag = "";
@@ -552,7 +561,6 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
       dataType: "json",
       contentType: "application/json",
       success: function (data) {
-        alert("新增成功");
         let textContent = that.closest("li.trip_tag_el").find("span").text();
         // 更新tag_obj
         for (let i = 0; i < Object.keys(tag_obj).length; i++) {
@@ -575,7 +583,6 @@ $("ul.trip_tag_detail").on("change", "input#trip_tag_el_checkbox", function () {
       url: `${loc}/lazy-trip-back/tourTagOnTourDelete?tourId=${targetTourId}&memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
       type: "DELETE",
       success: function (data) {
-        alert(data);
         let currentDataTag = that.closest("li.trip_tag_el").attr("data-tag");
         let renderTargetTag = targetTour.find("div.trip_tag_place > ul > li");
         for (let i = 0; i < renderTargetTag.length; i++) {
@@ -614,7 +621,6 @@ $("ul.trip_tag_detail").on(
       url: `${loc}/lazy-trip-back/tourTagDelete?memberId=${member_Id}&tourTagTitle=${tourTagTitle}`,
       type: "DELETE",
       success: function (data) {
-        alert(data);
         targetTag_li.remove();
         // 對本地Set刪除
         for (let value of tag_set.values()) {
@@ -666,7 +672,7 @@ $("input#tour_search").on("keyup", function (e) {
   if (e.keyCode === 13) {
     let queryStr = $("input#tour_search").val();
     $.ajax({
-      url: `${loc}/lazy-trip-back/tourTitleQuery?queryStr=${queryStr}`,
+      url: `${loc}/lazy-trip-back/tourTitleQuery?queryStr=${queryStr}&memberId=${member_Id}`,
       type: "GET",
       beforeSend: function () {
         $("div.search_btn").addClass("control is-loading");
@@ -694,7 +700,6 @@ $(document).on("click", "div.trip_tag_place > ul > li", function () {
     url: `${loc}/lazy-trip-back/tourQueryByTourTagTitle?tourTagTitle=${tourTagContent}&memberId=${member_Id}`,
     type: "GET",
     success: function (data) {
-      console.log(data);
       $(`div.column.item[data-card]`).each(function () {
         let card = $(this);
         let dataCard = card.attr("data-card");
@@ -719,18 +724,15 @@ $(document).on("keyup", "#trip_tag_search", function (e) {
       url: `${loc}/lazy-trip-back/tourTagQuery?queryStr=${queryStr}&memberId=${member_Id}`,
       type: "GET",
       success: function (data) {
-        console.log(data);
-        $("ul.trip_tag_detail").html("");
-        let str = "";
+        let tag = $("li.trip_tag_el");
+        tag.addClass("-none");
         for (let i = 0; i < data.length; i++) {
-          str += `
-          <li data-tag=${data[i]} class="trip_tag_el">
-            <input type="checkbox" name="trip_tag_el_checkbox" id="trip_tag_el_checkbox"/>
-            <span>${data[i]}</span>
-            <button class="button delete"></button>         
-          </li>`;
+          for (let j = 0; j < tag.length; j++) {
+            if (data[i] == $(tag[j]).attr("data-tag")) {
+              $(tag[j]).removeClass("-none");
+            }
+          }
         }
-        $("ul.trip_tag_detail").html(str);
       },
       error: function (xhr) {
         console.log("error");
@@ -860,6 +862,18 @@ $(document).on("click", "li.recommend_tour", function () {
     },
   });
 });
+
+function enableButton_addTour() {
+  if (
+    tourTitle.value !== "" &&
+    startDate.value !== "" &&
+    endDate.value !== ""
+  ) {
+    $("button.trip_create_btn").prop("disabled", false);
+  } else {
+    $("button.trip_create_btn").prop("disabled", true);
+  }
+}
 
 // ================edit編輯觸發跳轉下個視窗=======================
 $(document).on("click", "a.trip_edit", function (e) {
