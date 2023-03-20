@@ -69,24 +69,19 @@
 
           <!-- 付款結果內容開始 -->
           <div>
-            <div>
-              <strong class="is-size-5" style="padding-left: 5%"
-                >訂單編號:&emsp;<span id="pay_orderID">123123</span></strong
-              >
-            </div>
             <div style="height: 80px"></div>
             <div style="height: 80px; display: flex; flex-direction: row">
               <div style="flex-basis: 20%"></div>
               <!-- <div style="flex-basis: 30%"></div> -->
-              <div style="flex-basis: 75%">
+              <div style="flex-basis: 80%; display: flex; align-items: center">
                 <span class="icon has-text-success">
                   <i
                     class="fa-sharp fa-regular fa-square-check"
-                    style="font-size: 100px"
+                    style="font-size: 100px; vertical-align: middle"
                   ></i>
                 </span>
 
-                <strong class="is-size-1" style="padding-left: 8%"
+                <strong style="padding-left: 8%; font-size: 50px"
                   >您已完成結帳！</strong
                 >
               </div>
@@ -115,11 +110,13 @@
 
     <!-- 頁尾 -->
     <footer-component></footer-component>
-
     <script>
-      const loc = location.origin;
-      // 查詢訂單按鈕綁定網址
-      $("#myOrders");
+      let myOrders = $("#myOrders");
+      let ROOT = location.origin;
+      myOrders.attr(
+        "href",
+        `${ROOT}/lazy-trip-back/page/order/order_member_orders.html`
+      );
     </script>
   </body>
 </html>

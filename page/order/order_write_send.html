@@ -49,15 +49,26 @@
               box-shadow: 0px 0px 5px 2px rgba(137, 200, 232, 0.5);
             "
           >
-            <div style="height: 20px"></div>
+            <div style="height: 13px"></div>
             <div style="height: 50px">
               <span class="is-size-3" style="padding-left: 5%"
                 >主要旅客資訊</span
               >
             </div>
-            <div style="height: 40px; margin-top: 10px">
-              <span class="is-size-6" style="padding-left: 5%"
-                >請填寫以下資訊(參與住宿的旅客其中一人資料):</span
+            <div style="height: 5px; display: flex; justify-content: center">
+              <div
+                style="height: 1px; width: 90%; border: 1px solid #cbe3ec"
+              ></div>
+            </div>
+            <div style="height: 30px; margin-top: 10px">
+              <strong class="is-size-6" style="padding-left: 5%"
+                >請填寫以下資訊(參與住宿的旅客其中一人資料):</strong
+              >
+            </div>
+            <div style="padding-left: 5%">
+              <input type="checkbox" id="checkIsMember" />&nbsp;<span
+                class="is-size-6"
+                >同會員資料(需再加填身分證字號)</span
               >
             </div>
             <div style="height: 90px; padding-left: 5%">
@@ -70,7 +81,7 @@
                 type="input"
                 id="travelerName"
                 class="input is-info is-outlined"
-                style="width: 30%"
+                style="width: 45%"
               />
             </div>
             <div style="height: 90px; padding-left: 5%">
@@ -96,7 +107,7 @@
                 type="input"
                 id="travelerEmail"
                 class="input is-info is-outlined"
-                style="width: 65%"
+                style="width: 75%"
               />
             </div>
             <div style="height: 90px; padding-left: 5%">
@@ -292,7 +303,10 @@
       let travelerEmail = $("#travelerEmail");
       let travelerPhone = $("#travelerPhone");
       let orderNumberOfNights;
+      let checkIsMember = $("#checkIsMember");
       const ROOT = location.origin;
+
+      // const ROOT = "http://localhost:8080";
       const ROOT_PROJ = "/lazy-trip-back";
       const LOGIN = "/page/login.html";
 
@@ -315,17 +329,17 @@
                 >
                   <div style="flex-basis: 35%">
                     <span
-                      class="is-size-5 roomTypeName"
+                      class="is-size-6 roomTypeName"
                       style="padding-left: 18%"
                     ></span>
                   </div>
                   <div style="flex-basis: 45%">
-                    <span class="is-size-5" style="padding-left: 5%">$</span>
-                    <span class="is-size-5 roomTypePrice"></span>
+                    <span class="is-size-6" style="padding-left: 5%">$</span>
+                    <span class="is-size-6 roomTypePrice"></span>
                   </div>
                   <div style="flex-basis: 20%">
-                    <span class="is-size-5 roomTypeQuantity"></span>
-                    <span class="is-size-5">間</span>
+                    <span class="is-size-6 roomTypeQuantity"></span>
+                    <span class="is-size-6">間</span>
                   </div>
                 </div>
                 <div
@@ -386,16 +400,28 @@
 
       $(function () {
         init();
+
+        checkIsMember.on("click", function () {
+          if ($(this).prop("checked")) {
+            let member = JSON.parse(sessionStorage.getItem("member"));
+            console.log(member);
+            travelerName.val(member.name);
+            travelerEmail.val(member.account);
+            travelerPhone.val(member.phone);
+          }
+        });
       });
 
       function init() {
         if (getCookie("memId") == null) {
           alert("您尚未登入，轉至登入畫面");
-
           let loc = location.href;
+          console.log(loc);
+
           sessionStorage.setItem("loc", loc);
           location.href = ROOT + ROOT_PROJ + LOGIN;
         } else {
+          getMemberData(getCookie("memId"));
           cmBookingList = JSON.parse(sessionStorage.getItem("cmBookingList"));
           let dateInfo = JSON.parse(sessionStorage.getItem("dateInfo"));
 
@@ -446,6 +472,7 @@
                 .text(cmBookingList[i].roomTypeVO.roomTypeQuantity);
               num +=
                 cmBookingList[k].roomTypeVO.roomTypePrice *
+                orderNumberOfNights *
                 parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity);
               k++;
             }
@@ -455,37 +482,59 @@
         }
       }
 
+      function getMemberData(id) {
+        fetch(
+          `${ROOT}/lazy-trip-back/Order.do?type=showMemberByMemberID&memberID=${id}`
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (memberData) {
+            try {
+              sessionStorage.setItem("member", JSON.stringify(memberData));
+              console.log("get member資料成功");
+            } catch (e) {
+              console.log(e);
+            }
+          })
+          .catch(function (error) {
+            console.log("get member資料失敗");
+          });
+      }
+
       function sendOrder() {
         // 一個空陣列 orderVOs
         let memberID = getCookie("memId");
         let orderVOs = new Array();
         for (let i = 0; i < cmBookingList.length; i++) {
           // 一個 新 orderVO 物件裝進訂單與訂單明細資料
-          let orderVO = {
-            memberID: memberID,
-            companyID: cmBookingList[i].companyID,
-            orderCheckInDate: orderCheckInDate.text().replaceAll("\/", "-"),
-            orderCheckOutDate: orderCheckOutDate.text().replaceAll("\/", "-"),
-            orderNumberOfNights: orderNumberOfNights,
-            orderTotalPrice: orderTotalPrice.text(),
-            travelerName: travelerName.val().trim(),
-            travelerIDNumber: travelerIDNumber.val().trim(),
-            travelerEmail: travelerEmail.val().trim(),
-            travelerPhone: travelerPhone.val().trim(),
-            orderDetailVO: {
-              roomTypeID: cmBookingList[i].roomTypeVO.roomTypeID,
-              roomTypeName: cmBookingList[i].roomTypeVO.roomTypeName,
-              roomTypePerson: cmBookingList[i].roomTypeVO.roomTypePerson,
-              orderDetailRoomPrice: cmBookingList[i].roomTypeVO.roomTypePrice,
-              orderDetailRoomQuantity:
-                cmBookingList[i].roomTypeVO.roomTypeQuantity,
-            },
-          };
-          orderVOs[i] = orderVO;
+          if (cmBookingList[i].roomTypeVO.roomTypeQuantity > 0) {
+            let orderVO = {
+              memberID: memberID,
+              companyID: cmBookingList[i].companyID,
+              orderCheckInDate: orderCheckInDate.text().replaceAll("\/", "-"),
+              orderCheckOutDate: orderCheckOutDate.text().replaceAll("\/", "-"),
+              orderNumberOfNights: orderNumberOfNights,
+              orderTotalPrice: orderTotalPrice.text(),
+              travelerName: travelerName.val().trim(),
+              travelerIDNumber: travelerIDNumber.val().trim(),
+              travelerEmail: travelerEmail.val().trim(),
+              travelerPhone: travelerPhone.val().trim(),
+              orderDetailVO: {
+                roomTypeID: cmBookingList[i].roomTypeVO.roomTypeID,
+                roomTypeName: cmBookingList[i].roomTypeVO.roomTypeName,
+                roomTypePerson: cmBookingList[i].roomTypeVO.roomTypePerson,
+                orderDetailRoomPrice: cmBookingList[i].roomTypeVO.roomTypePrice,
+                orderDetailRoomQuantity:
+                  cmBookingList[i].roomTypeVO.roomTypeQuantity,
+              },
+            };
+            orderVOs[i] = orderVO;
+          }
         }
         console.log("物件準備完畢等待傳送");
 
-        fetch("http://localhost:8080/lazy-trip-back/CreateOrderAll", {
+        fetch(`${ROOT}/lazy-trip-back/CreateOrderAll`, {
           method: "POST",
           body: JSON.stringify(orderVOs),
         })
@@ -499,9 +548,9 @@
               } else if (orderID > 0) {
                 sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
                 if (confirm("送出訂單成功! 立即付款請按確定")) {
-                  location.href = "./order_pay_order.html";
+                  location = `${ROOT}/lazy-trip-back/page/order/order_pay_order.html`;
                 } else {
-                  location.href = "./order_member_orders.html";
+                  location = `${ROOT}/lazy-trip-back/page/order/order_member_orders.html`;
                 }
               }
             } catch (e) {

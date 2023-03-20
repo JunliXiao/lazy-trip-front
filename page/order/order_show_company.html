@@ -288,6 +288,7 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB75Ia4BV0cZ_y1mqYUR6j7H7q3KJliMF8&libraries=places&callback=initMap"
     ></script>
     <script>
+      const loc = location.origin;
       let id_table = document.querySelector("#id_table");
       let id_tbody = $("#id_tbody");
       let map;
@@ -337,7 +338,7 @@
             flatpickrOutputDate = selectedDates[0].getTime();
           },
           onClose: function (selectedDates, dateStr, instance) {
-        	  flatpickrOutputDate = selectedDates[0].getTime();
+            flatpickrOutputDate = selectedDates[0].getTime();
           },
         });
 
@@ -354,8 +355,7 @@
       function init() {
         let companyID = sessionStorage.getItem("showCompanyInformation");
         fetch(
-          "http://localhost:8080/lazy-trip-back/BookingCompany.do?type=showCompanyInformation&companyID=" +
-            companyID
+          `${loc}/lazy-trip-back/BookingCompany.do?type=showCompanyInformation&companyID=${companyID}`
         )
           .then(function (response) {
             return response.json();
@@ -569,8 +569,9 @@
           let dateInfo = {
             inputCheckInDate: inputCheckInDate.value,
             inputCheckOutDate: inputCheckOutDate.value,
-            inputOrderNumberOfNights: (flatpickrOutputDate - flatpickrInputDate) /
-                (1000 * 60 * 60 * 24),
+            inputOrderNumberOfNights:
+              (flatpickrOutputDate - flatpickrInputDate) /
+              (1000 * 60 * 60 * 24),
           };
           sessionStorage.setItem("dateInfo", JSON.stringify(dateInfo));
 
@@ -596,7 +597,7 @@
                 "cmBookingList",
                 JSON.stringify(cmBookingList)
               );
-              location.href = "./order_write_send.html";
+              location = `${loc}/lazy-trip-back/page/order/order_write_send.html`;
               return;
             }
           }
