@@ -3,8 +3,14 @@
 // 參考來源：https://www.freecodecamp.org/news/reusable-html-components-how-to-reuse-a-header-and-footer-on-a-website/
 
 // 頁首 Header (置頂導覽列)
+
 class Header extends HTMLElement {
-  header_html = `
+   constructor() {
+    super();
+    let loc = window.location;
+    const ORIGIN = loc.origin;
+
+  this.header_html = `
     <nav
     class="navbar has-shadow"
     role="navigation"
@@ -75,14 +81,7 @@ class Header extends HTMLElement {
           </div>
         </div>
 
-        <div class="navbar-item has-dropdown is-hoverable group">
-        <a href="/lazy-trip-back/page/group/group_htmls/group_all.html" class="navbar-item"> 行程 </a>
-        <div class="navbar-dropdown">
-        <a href="/lazy-trip-back/page/group/group_htmls/all_invite.html" class="navbar-item"> 揪團邀請 </a>
-        </div>
-        </div>
-
-        <a href="#" class="navbar-item"> 行程 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item mem_main">
             <span class="icon-text">
@@ -93,29 +92,20 @@ class Header extends HTMLElement {
             </span>
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="http://localhost:8080/lazy-trip-back/page/member/main.html"> 我的頁面 </a>
-            <a class="navbar-item"> 我的訂單 </a>
-            <a href="page/friend/friend_main.html" class="navbar-item">
-              我的好友
-            </a>
-            <a class="navbar-item"> 我的文章 </a>
-            <hr class="navbar-divider" />
-            <a href="http://localhost:8080/lazy-trip-back/page/logout.html" class="navbar-item"> 登出 </a>
+            <a class="navbar-item company_logout"> 登出 </a>
           </div>
         </div>
       </div>
     </div>
     </nav>`;
-
-  constructor() {
-    super();
-  }
+   }
+  
 
   connectedCallback() {
     this.innerHTML = this.header_html;
     $(document).on("click", "a.mem_main", function () {
       let ori = location.origin;
-      location.href = ori + "/lazy-trip-back/page/member/main.html";
+      location.href = ori + "/lazy-trip-back/page/company/roomManagement.html";
     });
     $(function () {
       // Function-----------------
@@ -125,10 +115,10 @@ class Header extends HTMLElement {
         if (parts.length === 2) return parts.pop().split(";").shift();
       }
       //   ---------------
-      let username = getCookie("memUsername");
+      let companyName = getCookie("companyUsername");
       let location = window.location.origin;
-      if (username != null) {
-        $("span.username").text(username);
+      if (companyName != null) {
+        $("span.username").text(companyName);
       } else {
         let html = `
         <div class="navbar-item">

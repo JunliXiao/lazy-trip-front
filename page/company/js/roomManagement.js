@@ -12,19 +12,20 @@ let roomList = [];
 let companyID;
 let companyId;
 let roomTypeID=null;
-
+const loc = location.origin;
 function init() {
 	//getCookie
   companyId = getCookie("companyId");
-  let companyName = getCookie("companyUsername");
-  // let companyImg = getCookie("companyImg");
+  let companyName =getCookie("companyUsername");
+  let companyImg =getCookie("companyImg");
   console.log(companyImg);
   $("#showCompanyName").text(companyName);  
   // $("#companyImg").attr("src", "data:image/*;base64,"+companyImg);
   roomList = [];
   console.log(companyId);
+  
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
+    url: `${loc}/lazy-trip-back/roomtypeservlet`,
     type: "POST",
     data: {
       action:'getAllByCompanyID',
@@ -44,8 +45,7 @@ function init() {
           roomTypeQuantity: data[i].roomTypeQuantity,
           roomTypePrice: data[i].roomTypePrice,
           roomTypeImgVO: data[i].roomTypeImgVO,
-          orderCheckInDate: data[i].orderCheckInDate,
-          orderCheckOutDate: data[i].orderCheckOutDate		  
+          roomDateVo: data[i].roomDateVo	  
         });
       } 
       document.querySelector("tbody.roomList").innerHTML = "";
@@ -125,6 +125,7 @@ $("button.roomTypeIDSearch").on("click",(event) => {
   for (let i = 0; i < roomList.length; i++) {
     console.log(roomList[i].roomTypeID);
     if(roomList[i].roomTypeID == searchValue){
+      
       newRoomList.push({
         roomTypeID: roomList[i].roomTypeID,
         companyID: roomList[i].companyID,
@@ -133,6 +134,7 @@ $("button.roomTypeIDSearch").on("click",(event) => {
         roomTypeQuantity: roomList[i].roomTypeQuantity,
         roomTypePrice: roomList[i].roomTypePrice,
         roomTypeImgVO: roomList[i].roomTypeImgVO,
+        roomDateVo: roomList[i].roomDateVo	
       });
     }
     document.querySelector("tbody.roomList").innerHTML = "";
@@ -161,6 +163,7 @@ $("button.twoRoom").on("click",(event) => {
         roomTypeQuantity: roomList[i].roomTypeQuantity,
         roomTypePrice: roomList[i].roomTypePrice,
         roomTypeImgVO: roomList[i].roomTypeImgVO,
+        roomDateVo: roomList[i].roomDateVo	
       });
     }
     //篩選後送到前端
@@ -175,7 +178,7 @@ $("tbody.roomList").on("click","button#roomAddDelete",function() {
   let newRoomTypeID = $(this).closest("tr").attr("data-card");
   console.log(newRoomTypeID);
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
+       url: `${loc}/lazy-trip-back/roomtypeservlet`,
     type: "POST",
     data: {
       action:'delete',
@@ -244,6 +247,7 @@ $("button.threeRoom").on("click",(event) => {
         roomTypeQuantity: roomList[i].roomTypeQuantity,
         roomTypePrice: roomList[i].roomTypePrice,
         roomTypeImgVO: roomList[i].roomTypeImgVO,
+        roomDateVo: roomList[i].roomDateVo	
       });
     }
     document.querySelector("tbody.roomList").innerHTML = "";
@@ -280,8 +284,8 @@ if(newRoomTypeName.trim()== ''){
   }
 
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
-    type: "POST",
+    url: `${loc}/lazy-trip-back/roomtypeservlet`,
+      type: "POST",
     data: {
       action:'insert',
       companyID:companyId,
@@ -329,7 +333,7 @@ $("#roomAddUpdateSubmit").on("click",(event) => {
       const base64Image = reader.result.split(",")[1];
     //上傳圖片
     $.ajax({
-      url: "http://localhost:8080/lazy-trip-back/roomtypeimgservlet",
+      url: `${loc}/lazy-trip-back/roomtypeimgservlet`,
       type: "POST",
       data: {
         action:'insert',
@@ -366,10 +370,9 @@ $("#roomAddUpdateSubmit").on("click",(event) => {
     alert('請輸入房間價格');
     return;
   }
-
-  let companyId = getCookie("companyId");
+    let companyId = getCookie("companyId");
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/roomtypeservlet",
+    url: `${loc}/lazy-trip-back/roomtypeimgservlet`,
     type: "POST",
     data: {
       action:'update',
@@ -408,24 +411,35 @@ function renderRoomData(roomList) {
     for (let i = 0; i < roomList.length; i++) {
       var id ="roomAddDate"+i;
       var none = "";
-      if(roomList[i].orderCheckInDate ==null && roomList[i].orderCheckOutDate==null){
-        none ="-none";
-      }
+      
       var img = ""
       if(roomList[i].roomTypeImgVO != null && roomList[i].roomTypeImgVO.roomTypeImgOutput != null){
         img =roomList[i].roomTypeImgVO.roomTypeImgOutput
       }
+      //日期邏輯
+      let dateList =""
+      for(let x = 0; x < roomList[i].roomDateVo.length; x++){
+        if(roomList[i].roomDateVo[x].orderCheckInDate ==null && roomList[i].roomDateVo[x].orderCheckOutDate==null){
+          none ="-none";
+        }
+        let start = roomList[i].roomDateVo[x].orderCheckInDate;
+        let end =roomList[i].roomDateVo[x].orderCheckOutDate;
+        dateList+=`<button class="button is-primary roomAddDate ${none}" id=${id+x} data-start=${start} data-end=${end}>訂房時間</button>`;
+
+      }
+      console.log(dateList);
+
       newList+=`<tr data-card=${roomList[i].roomTypeID} class="roomList" id="roomList">
                   <td >${roomList[i].roomTypeID}</td>  
                   <td>${roomList[i].roomTypeName}</td>
                   <td>${roomList[i].roomTypePerson}</td>
                   <td>${roomList[i].roomTypeQuantity}</td>
                   
-                  <td><img src="data:image/jpeg;base64, ${img}" alt="Image"></td>
+                  <td><img src="data:image/png;base64, ${img}" alt="Image" style="width:400; height:300px;"></td>
                   <td>${roomList[i].roomTypePrice}</td>
                   <td> <button class="button is-primary" id="roomAddUpdate">修改</button></td>
                   <td> <button class="button is-primary" id="roomAddDelete">刪除</button></td>                  
-                  <td> <button class="button is-primary roomAddDate ${none}" id=${id} >訂房時間</button></td>
+                  <td> ${dateList}</td>
                   <td class="none">${roomList[i].orderCheckInDate}</td>
                   <td class="none">${roomList[i].orderCheckOutDate}</td>
                 </tr>`;
@@ -438,24 +452,22 @@ function renderRoomData(roomList) {
     console.log(8888888888);
      console.log(index.target.id);
      var id="#"+index.target.id;
-     let start =  $(this).closest("tr.roomList").find("td:nth-child(10)").text();
-
-     let end =  $(this).closest("tr.roomList").find("td:nth-child(11)").text()
-
+     let start =  $(id).data('start');
+     let end =  $(id).data('end');
     var calendar = bulmaCalendar.attach(id, {
       color: "link",
       startDate:start,
       endDate:end,
       enableTime: false,
       timePicker: false,
-      dateFormat: 'yyyyMMDD',
+      dateFormat: 'yyyyMMdd',
       displayMode: 'dialog',
       readonly: true,
       isRange: true,           // 設定日期選擇器為範圍模式
       showFooter: false
     });
     console.log(1111111111111);
-    calendar.show();
+    // calendar.show();
   });
   //上傳圖片
   function previewImage() {
@@ -475,22 +487,30 @@ let orderShowList = [];
 function orderShowInit() {
   orderShowList = [];
     $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/Order.do?type=showOrderByCompanyID&companyID=${companyId}`,
+      url: `${loc}/lazy-trip-back/Order.do?type=showOrderByCompanyID&companyID=${companyId}`,
     type: "GET",
      // 將物件資料(不用雙引號) 傳送到指定的 url
     success: function (data) {
       console.log(797979);
         console.log(data);
+       
       for (let i = 0; i < data.length; i++) {
+        // let orderPayDatetime ="";
+        // if(data[i].orderPayDatetime ==null){
+        //   orderPayDatetime ="無資料";
+        // }else{
+        //   orderPayDatetime =data[i].orderPayDatetime;
+        // }
         orderShowList.push({
           orderID: data[i].orderID,
           orderCheckInDate: data[i].orderCheckInDate,
           orderCheckOutDate: data[i].orderCheckOutDate,
+          orderNumberOfNights: data[i].orderNumberOfNights,
           orderTotalPrice: data[i].orderTotalPrice,
           orderStatus: data[i].orderStatus,
           orderCreateDatetime: data[i].orderCreateDatetime,
           orderPayDeadline: data[i].orderPayDeadline,
-          orderPayDatetime: data[i].orderPayDatetime,
+          orderPayDatetime: data[i].orderPayDatetime !=null ?orderPayDatetime =data[i].orderPayDatetime:"無資料" ,
           travelerName: data[i].travelerName,
           travelerIDNumber: data[i].travelerIDNumber,
           travelerEmail: data[i].travelerEmail,
@@ -516,7 +536,8 @@ function renderOrderShow(orderShowList) {
   newOrderList+=`<tr data-card=${orderShowList[i].orderID} class="orderShowList" id="orderShowList">
     <td >${orderShowList[i].orderID}</td>  
     <td>${orderShowList[i].orderCheckInDate}</td>
-    <td>${orderShowList[i].orderCheckOutDate}</td>  
+    <td>${orderShowList[i].orderCheckOutDate}</td>
+    <td>${orderShowList[i].orderNumberOfNights}</td>  
     <td>${orderShowList[i].orderTotalPrice}</td>
     <td>${orderShowList[i].orderStatus}</td>
     <td>${orderShowList[i].orderCreateDatetime}</td>
@@ -542,7 +563,7 @@ $(document).on("click","button#orderdetailbutton",function() {
   console.log(neworderDetailID);
   console.log(orderID);
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/Order.do?type=showOrderDetailByOrderID&orderID=${orderID}`,
+    url: `${loc}/lazy-trip-back/Order.do?type=showOrderDetailByOrderID&orderID=${orderID}`,
     type: "GET",
             success: function (data) {
             console.log(data);
@@ -589,3 +610,10 @@ function renderOrderData(orderDataList) {
   $(".trans-right-orderShow").addClass("none")
   $(".trans-right-orderData").removeClass("none")
 }
+
+//3d環景btn
+$(document).ready(function() {
+  $("#3dbtn").on("click", function(){
+    window.location.href = `${loc}/Photo_Sphere3DViewer/Room_Sphere3DView.html`;
+  })
+});

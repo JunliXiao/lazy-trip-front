@@ -191,26 +191,10 @@ div.lightbox{
   z-index: 990;
 }
 
-/* 創建行程中 圖片輪播 */
-.trip_pic_box {
-  width: 400px;
-}
-#show_el img {
-  width: 100%;
-}
-.all_img {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-.all_img img {
-  width: 80%;
-  cursor: pointer;
-}
-
 /*日曆*/
 /* FullCalendar styles */
 #calendar {
-  max-width: 800px;
+  max-width: 100px;
   margin: 0 auto;
 }
 .calendar-nav {
@@ -220,7 +204,9 @@ div.lightbox{
 }
 
 .calendar-nav button {
-  width: 33.33%;
+  width: 5%;
 }
-
+.datetimepicker-header {
+  display: none;
+}
 .calendar-container
