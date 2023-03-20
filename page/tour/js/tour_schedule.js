@@ -417,7 +417,7 @@ $(document).on("click", "button.edit_attraction", function () {
 // ===================回到行程總表頁面======================== //
 $(document).on("click", ".return_tripList", function () {
   console.log(222);
-  location = "http://localhost:8080/lazy-trip-back/page/tour/tour.html";
+  location = `${loc}/lazy-trip-back/page/tour/tour.html`;
 });
 
 // =========================崁入google地圖============================== //
@@ -439,6 +439,16 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: 15,
     center: center,
+  });
+
+  const draggable = new google.maps.Marker({
+    position: map.getCenter(),
+    map: map,
+    draggable: true,
+  });
+
+  draggable.addListener("drag", () => {
+    map.setCenter(draggable.getPosition());
   });
 
   if (navigator.geolocation) {
@@ -468,6 +478,11 @@ function initMap() {
       autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
 
+        if (place.photos == undefined) {
+          alert("此景點近期維護中，請查詢其他景點");
+          return;
+        }
+
         // 將搜尋到的地點設定為下一次查詢的起點
         const start_location = selected_attraction
           ? selected_attraction.location
@@ -483,6 +498,7 @@ function initMap() {
           latitude: place.geometry.location.lat(),
           longitude: place.geometry.location.lng(),
         };
+
         // 將搜尋到的結果渲染畫面，且給予marker
         map.setCenter(selected_attraction.location);
 

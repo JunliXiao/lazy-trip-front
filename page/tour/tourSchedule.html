@@ -225,7 +225,12 @@
         left: 400px;
         top: 0;
         right: 0;
-        z-index: -999;
+        z-index: 0;
+      }
+
+      div.tour_info {
+        z-index: 5;
+        background-color: #fff;
       }
 
       /* 填寫景點欄位新增show class */
@@ -236,7 +241,7 @@
         background-color: #fff;
         position: absolute;
         top: 0;
-        z-index: -10;
+        z-index: 1;
       }
       .add_info.show {
         position: absolute;
@@ -244,7 +249,7 @@
         transform: translateX(400px);
         transition: ease-out 1s;
         box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
-        z-index: 0;
+        z-index: 1;
       }
       .create_plan_trip > ul {
         display: flex;
@@ -259,6 +264,10 @@
           transform: translateX(0px);
           width: 400px;
         }
+      }
+
+      div.tour_info {
+        box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
       }
 
       /* 景點細節資訊的button */
@@ -328,6 +337,12 @@
         font-size: 1.2rem;
         padding-top: 10px;
       }
+      li.date {
+        padding-bottom: 5px;
+      }
+      li.title {
+        font-size: 1.5rem;
+      }
     </style>
   </head>
   <body>
@@ -375,7 +390,6 @@
               <div class="information">
                 <ul class="attraction_detail">
                   <li>
-                    <!--放置toggleClass轉換current，當點擊此li時-->
                     <div>
                       <div class="attraction_detail_show"></div>
                     </div>
