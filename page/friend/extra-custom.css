@@ -9,7 +9,7 @@ ul#left-menu li:last-child {
 } */
 
 div._main_body {
-  min-height: 600px;
+  min-height: 700px;
 }
 
 div._left_menu {
@@ -21,7 +21,7 @@ div._chat_layout {
 }
 
 div._chatroom_container {
-  min-height: 550px;
+  min-height: 650px;
   border-right: 2px solid hsl(197deg, 47%, 96%);
 }
 

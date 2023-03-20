@@ -55,9 +55,10 @@ class Chatroom extends HTMLElement {
     if(this.CHATROOM_NAME.trim().length === 0) {
       fetch(`${API_ROOT}${API_CHAT_MEMBER}?action=chatroom_member&chatroom_id=${this.CHATROOM_ID}`)
         .then((res) => res.json())
-        .then((members) => 
+        .then((body) => 
           {
             // 排除使用者本人
+            let members = body.dataList;
             let others = members.filter(m => m.id != specifier_id);
             let title_names = [];
             for (let i = 0; i < others.length; i++) {
@@ -806,24 +807,25 @@ class OtherMessage extends ChatMessageTemplate {
 class SearchFromInput extends HTMLElement {
 
   async onInputChange(event) {
-    // 驗證查詢字串不為空
-    let search_text = event.target.value.trim();
+    // 驗證查詢字串是否為空
+    let search_text =  event.target.value.trim();
 
     // 取得此 DOM 元件和搜尋會員的 API 端點
     const thisModal = document.querySelector(".modal.is-active").parentElement;
     const spinner = thisModal.querySelector("span._search_loading");
-
-    if (search_text == '') {
-      thisModal.NODE_LIST_SEARCH.innerHTML = '';
-      thisModal.NODE_NO_RESULTS.style["display"] = "block";
-      return;
-    };
-
+    
     spinner.style["display"] = "block";
 
     // 取得 Ajax 回傳資料
-    const ajax_call_url = API_ROOT + API_CHAT_MEMBER + `?action=member&search_text=${search_text}`;
-    const searchResults = await fetch(ajax_call_url).then(response => response.json());
+    let ajax_call_url;
+    if (search_text == '') {
+      ajax_call_url = `${API_ROOT}${API_FRIEND}?member_id=${specifier_id}&query_type=friend&limit=100&offset=0&sortingColumn=member_account&sortingOrder=ASC`;
+    } else {
+      ajax_call_url = `${API_ROOT}${API_CHAT_MEMBER}?action=member&search_text=${search_text}&limit=100&offset=0&sortingColumn=member_account&sortingOrder=ASC`;
+    }
+    
+    const response_data = await fetch(ajax_call_url).then(response => response.json());
+    const searchResults = response_data.dataList;
 
     // 處理回傳結果
     if (searchResults.length == 0) {
@@ -906,6 +908,7 @@ class ChatroomSettingModal extends SearchFromInput {
 
   constructor() {
     super();
+
     this.innerHTML = 
     `
     <div id="modal-chatroom-setting" class="modal">
@@ -987,7 +990,23 @@ class ChatroomSettingModal extends SearchFromInput {
   attributeChangedCallback(attr, prev, curr) {
     switch (attr) {
       case "chatroom-id":
-        this.querySelector("nav#level-chatroom-name span.ml-4.mb-2").textContent = this.getAttribute("chatroom-id");
+        const chatroomId = this.getAttribute("chatroom-id")
+        this.querySelector("nav#level-chatroom-name span.ml-4.mb-2").textContent = chatroomId;
+        if (chatroomId == '') return;
+        fetch(`${API_ROOT}${API_CHAT_MEMBER}?action=chatroom_member&chatroom_id=${chatroomId}`)
+          .then((res) => res.json())
+          .then(body => {
+            const members = body.dataList;
+            members.forEach(m => {
+              if (m.id != specifier_id) {
+                let newItem = document.createElement("span");
+                newItem.classList.add("ml-4");
+                newItem.classList.add("mb-2");
+                newItem.textContent = m.username;
+                this.querySelector('nav#level-chatroom-members .level-left .level-item').append(newItem);
+              }
+            })
+          });
         break;
     }
   }
@@ -1071,17 +1090,11 @@ class CreateChatroomModal extends SearchFromInput {
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
       } else {
         arr.push(specifier_id);
-        // 建立聊天室，沒問題便會移動至新聊天室畫面
-        // if (this.createChatroom(arr)) {
-        //   closeAllModals();
-        // };
-        if (true) {
-          closeAllModals();
-          this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+        this.createChatroom(arr);
         }
       }
       
-    });
+    );
 
   }
 
@@ -1098,11 +1111,17 @@ class CreateChatroomModal extends SearchFromInput {
 
     fetch(API_ROOT + API_CHAT, requestOptions)
       .then(response => response.json())
-      .then(result => {
-        let resultText = result == true ? "成功建立聊天室" : "成員間已有共同的聊天室";
-        this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+      .then(chatroom => {
+        let resultText = chatroom.id != undefined ? "成功建立聊天室" : "成員間已有共同的聊天室";
         confirm(resultText);
-        return true;
+
+        const list = document.querySelector("ul._chatroom_list");
+        
+        let newItem = document.createElement("chatroom-component");
+        newItem = prepareAttributes(newItem, chatroom, "chatroom");
+        list.append(newItem);
+        this.NODE_BUTTON_CREATE.classList.remove("is-loading");
+        closeAllModals();
       })
       .catch(error => {
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");

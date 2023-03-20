@@ -20,7 +20,7 @@ const API_CHAT = "/api/chat";
 const API_CHAT_MEMBER = "/api/chat/member";
 const API_IMG_AVATAR = "/img/avatar.png";
 
-const WS_ROOT = `${PROT_WS}//${HOSTNAME}/lazy-trip-back`;
+const WS_ROOT = `${ORIGIN.replace('http', 'ws')}/lazy-trip-back`;
 
 // ======= 資料物件類型 =======
 const TYPE_SUGGESTION = "suggestion";
@@ -39,6 +39,9 @@ const node_show_chatrooms = document.getElementById("li-chatrooms");
 const node_show_blocklists = document.getElementById("li-blocklists");
 const node_no_result = document.getElementById("div-no-result");
 const node_results = document.getElementById("div-results");
+const node_loading_result = document.getElementById("div-loading-result");
+const node_control_panel = document.querySelector('control-panel-component');
+const node_footer = document.querySelector('footer-component');
 
 // 顏色常數
 const PRIMARY = "is-primary";
@@ -55,6 +58,11 @@ const WARNING_LIGHT = "is-warning is-light";
 const DANGER_LIGHT = "is-danger is-light";
 
 // ======= 頁面初始化 =======
+const content_fetch_limit = 10;
+let content_row_count = 0;
+let existMoreData = true;
+let observer;
+
 document.addEventListener("DOMContentLoaded", () => {
     node_show_suggestions.addEventListener("click", (event) => {
       selectFromMenu(event);
@@ -91,28 +99,34 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log(specifier_username);
             })
             .catch(error => console.log('error', error));
+
   }
 );
 
 // ======= 版面內容控制 =======
 function selectFromMenu(event) {
-    event.target.closest("ul.menu-list").childNodes.forEach(node => {
-      if (node.nodeName == "LI") {
-        let a = node.firstElementChild;
-        if(a.classList.contains("is-active")) a.classList.remove("is-active");
-      } else if (node.nodeName == "CHATROOM-COMPONENT") {
-        let a_list = $(node).find("a");
-        if(a_list[0].classList.contains("is-active")) a_list[0].classList.remove("is-active");
-      }
-    });
-    event.target.classList.add("is-active");
+  observer.unobserve(node_footer);
+  event.target.closest("ul.menu-list").childNodes.forEach(node => {
+    if (node.nodeName == "LI") {
+      let a = node.firstElementChild;
+      if(a.classList.contains("is-active")) a.classList.remove("is-active");
+    } else if (node.nodeName == "CHATROOM-COMPONENT") {
+      let a_list = $(node).find("a");
+      if(a_list[0].classList.contains("is-active")) a_list[0].classList.remove("is-active");
+    }
+  });
+  event.target.classList.add("is-active");
+  node_control_panel.querySelector('input._search').value = '';
+  content_row_count = 0;
+  existMoreData = true;
 }
 
 function showContent(type) {
   // type: suggestion, friend, sent-request, received-request, chatroom, blocklist
 
+  node_no_result.style.display = "none";
   node_results.innerHTML = '';
-  document.querySelector("control-panel-component").setAttribute("control-target", type);
+  node_control_panel.setAttribute("control-target", type);
 
   const component_type = type + "-component";
   let ajax_call_url;
@@ -122,14 +136,20 @@ function showContent(type) {
     case TYPE_SUGGESTION:
     case TYPE_FRIEND:
     case TYPE_BLOCKLIST:
-      ajax_call_url = `${API_ROOT}${API_FRIEND}?member_id=${specifier_id}&query_type=${type}`;
+      column = node_control_panel.getSortingColumn();
+      order = node_control_panel.getSortingOrder(); 
+      ajax_call_url = `${API_ROOT}${API_FRIEND}` + asParamsString(type, null);
       fetchDataToAppend(ajax_call_url, component_type, node_to_append);
+      setTimeout(setLazyLoading(type), 500);
       break;
     case TYPE_SENT_REQUEST:
     case TYPE_RECEIVED_REQUEST:
       const direction = type.split("-")[0];
-      ajax_call_url = `${API_ROOT}${API_FRIEND_REQUEST}?member_id=${specifier_id}&direction=${direction}`;
+      column = node_control_panel.getSortingColumn();
+      order = node_control_panel.getSortingOrder(); 
+      ajax_call_url = `${API_ROOT}${API_FRIEND}` + asParamsString(type, direction);
       fetchDataToAppend(ajax_call_url, component_type, node_to_append);
+      setTimeout(setLazyLoading(type), 500);
       break;
     case TYPE_CHATROOM:
       createChatLayout();
@@ -139,10 +159,10 @@ function showContent(type) {
             .then((res) => res.json())
             .then((body) => {
               if(body.dataList.length == 0) {
-                node_no_result.style.display = "block";
+                document.querySelector('div._no_chatrooms').style.display = "block";
                 return;
               } else {
-                node_no_result.style.display = "none";
+                document.querySelector('div._no_chatrooms').style.display = "none";
               }
               
               body.dataList.forEach(data => {
@@ -156,12 +176,52 @@ function showContent(type) {
       break;
   }
 
+  function setLazyLoading(type) {
+      // Interception Handler
+      const callback = (entries, observer) => {
+        for (const entry of entries) {
+          // Load more data;
+          if (entry.isIntersecting) {
+            if (existMoreData) {
+              node_loading_result.style.display = "block";
+              let new_ajax_call;
+              column = node_control_panel.getSortingColumn();
+              order = node_control_panel.getSortingOrder(); 
+              switch (type) {
+                case TYPE_SUGGESTION:
+                case TYPE_FRIEND:
+                case TYPE_BLOCKLIST:
+                  new_ajax_call = `${API_ROOT}${API_FRIEND}` + asParamsString(type, null);
+                  break;
+                case TYPE_SENT_REQUEST:
+                case TYPE_RECEIVED_REQUEST:
+                  const direction = type.split("-")[0];
+                  new_ajax_call = `${API_ROOT}${API_FRIEND_REQUEST}` + asParamsString(type, direction);
+                  break;
+              }
+              fetchDataToAppend(new_ajax_call, type + "-component", node_results);
+              node_loading_result.style.display = "none";    
+            } else {
+              observer.unobserve(node_footer);
+            }
+          }
+        }
+      }
+  
+      // Observe the end of the list
+      observer = new IntersectionObserver(callback, {
+        threshold: 0.75,
+      });
+      observer.observe(node_footer);
+  }
+
   function fetchDataToAppend(ajax_call_url, component_type, node_to_append) {
     fetch(ajax_call_url)
           .then((res) => res.json())
           .then((body) => {
             if(body.dataList.length == 0) {
               node_no_result.style.display = "block";
+              existMoreData = false;
               return;
             } else {
               node_no_result.style.display = "none";
@@ -171,23 +231,28 @@ function showContent(type) {
               let newItem = document.createElement(component_type);
               node_to_append.appendChild(prepareAttributes(newItem, data, body.dataType));
           });
+            if (body.dataList.length < content_fetch_limit) {
+              existMoreData = false;
+            }
+            content_row_count += body.dataList.length;
         })
           .catch((err) => console.log(err));
+
   }
 
-  function prepareAttributes(element, data, affix) {
-    // DOM element, object, string
-    for (const [key, value] of Object.entries(data)) {
-      const suffix = key.replace(/[A-Z]/g, s => '-' + s.toLowerCase()); // 例：createdAt -> created-at
-      element.setAttribute(`${affix}-${suffix}`, value);
-    }
-    return element;
+  function asParamsString(type, direction) {
+    const directionParam = direction != null ? "&direction=" + direction : "";
+    const column = node_control_panel.getSortingColumn();
+    const order = node_control_panel.getSortingOrder();
+    const text = node_control_panel.getSearchText();
+    return `?member_id=${specifier_id}&query_type=${type}&limit=10&offset=${content_row_count}&sortingColumn=${column}&sortingOrder=${order}&search_text=${text}` + directionParam;
   }
 
   function createChatLayout() {
     let layout = `
       <div class="columns _chat_layout p-0 m-0">
         <div class="column is-one-third _chatroom_container p-0 m-0">
+          <div class="content box is-shadowless _no_chatrooms pt-6 pl-6" style="display: none;"><h3>未建立任何聊天室</h3></div>
           <aside class="menu" style="width: 100%">
             <ul
               class="menu-list _chatroom_list has-text-left"
@@ -201,6 +266,8 @@ function showContent(type) {
   }
 
 }
+
+
 
 // ======= 好友功能控制 =======
 function addRequest(requesterId, addresseeId) {
@@ -293,6 +360,15 @@ function debounce(debouncedFunction, duration) {
   }
 }
 
+function prepareAttributes(element, data, affix) {
+  // DOM element, object, string
+  for (const [key, value] of Object.entries(data)) {
+    const suffix = key.replace(/[A-Z]/g, s => '-' + s.toLowerCase()); // 例：createdAt -> created-at
+    element.setAttribute(`${affix}-${suffix}`, value);
+  }
+  return element;
+}
+
 // ======= Modal 控制 =======
 function setBulmaModal() {
   // Add a click event on buttons to open a specific modal
@@ -326,13 +402,28 @@ function setBulmaModal() {
 
 function openModal($el) {
   $el.classList.add('is-active');
+  const modalComponent = document.querySelector(".modal.is-active").parentElement;
+  const modalType = modalComponent.tagName;
+  switch (modalType) {
+    case "CHATROOM-SETTING-MODAL":
+      modalComponent.NODE_INPUT_SEARCH.focus();
+      modalComponent.NODE_INPUT_SEARCH.dispatchEvent(new Event('input'));
+      break;
+    case "CREATE-CHATROOM-MODAL":
+      modalComponent.NODE_INPUT_SEARCH.focus();
+      modalComponent.NODE_INPUT_SEARCH.dispatchEvent(new Event('input'));
+      break;
+  }
 }
 
 function closeModal($el) {
-  const modalType = document.querySelector(".modal.is-active").parentElement.tagName;
+  const modalComponent = document.querySelector(".modal.is-active").parentElement;
+  const modalType = modalComponent.tagName;
   switch (modalType) {
     case "CHATROOM-SETTING-MODAL":
       $el.classList.remove('is-active');
+      modalComponent.setAttribute("chatroom-id", "");
+      $el.querySelector('nav#level-chatroom-members .level-left .level-item').innerHTML = '<lable class="label">聊天室成員</lable>';
       break;
     case "CREATE-CHATROOM-MODAL":
       $el.classList.remove('is-active');

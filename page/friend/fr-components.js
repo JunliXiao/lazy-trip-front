@@ -1,9 +1,8 @@
-
-
 // 結果卡片元件 ResultCard
 class ResultCard extends HTMLElement {
 
   card_html;
+  id;
   name;
   username;
 
@@ -21,7 +20,7 @@ class ResultCard extends HTMLElement {
           <div class="media-left">
             <figure class="image is-48x48">
               <img
-                src="${API_ROOT}${API_IMG_AVATAR}?member_id=${this.getAttribute("member-id")}"
+                src="${API_ROOT}${API_IMG_AVATAR}?member_id=${this.id}"
                 alt="Placeholder image"
               />
             </figure>
@@ -31,8 +30,11 @@ class ResultCard extends HTMLElement {
             <div class="columns">
               <div class="column is-one-third">
                 <div class="content">
-                  <span class="title is-4">${this.username}</span><span class="is-6">&nbsp;&nbsp;&nbsp;&nbsp;${this.name}</span><br>
-                  <p class="subtitle is-6">@${this.getAttribute("member-account")}</p>
+                  <a href="${API_ROOT}/page/member/other.html?member_id=${this.id}">
+                    <span class="title is-4">${this.username}</span>
+                    <span class="subtitle is-6">&nbsp;&nbsp;&nbsp;&nbsp;${this.name}</span><br>
+                    <p class="subtitle is-6">${this.getAttribute("member-account")}</p>
+                  </a>
                 </div>
               </div>              
             </div>
@@ -47,19 +49,21 @@ class ResultCard extends HTMLElement {
   `;
   }
 
-  setNameAndUsername() {
-    this.name = this.getAttribute("member-name");
-    this.username = this.getAttribute("member-username") == undefined ? this.getAttribute("member-name") : this.getAttribute("member-username");
+  setMemberProperties() {
+    this.id = this.getAttribute("member-id");
+    this.name = this.getAttribute("member-name") == null ? this.getAttribute("member-username") : this.getAttribute("member-name");
+    this.username = this.getAttribute("member-username") == null ? this.getAttribute("member-name") : this.getAttribute("member-username");
   }
 
   toastActionResult(colorType, resultText) {
     bulmaToast.toast({
       message: `<h1><b>${resultText}</b></h1>`,
       type: colorType,
-      "position": "top-right",
-      "offsetTop": "55px",
+      position: "top-right",
+      offsetTop: "55px",
       dismissible: true,
       pauseOnHover: true,
+      duration: 3000,
       animate: { in: 'fadeIn', out: 'fadeOut' },
     });
   }
@@ -75,13 +79,13 @@ class Suggestion extends ResultCard {
   }
 
   connectedCallback() {
-    this.setNameAndUsername();
+    this.setMemberProperties();
     this.buildCard(
       `
       <div class="buttons are-medium">
         <button class="_add_friend button ${PRIMARY_LIGHT} has-text-weight-bold">
-          <span class="icon is-small"><i class="fas fa-plus"></i></span>
-          <span>加好友</span>
+          <span class="icon is-small"><i class="fas fa-user-group"></i></span>
+          <span>加為好友</span>
         </button> 
         </button>
         <button class="_block button ${DANGER_LIGHT} has-text-weight-bold">
@@ -98,14 +102,16 @@ class Suggestion extends ResultCard {
       let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
       if(!confirm("確認邀請？")) return;
       // addRequest(specifier_id, other_id);
-      this.toastActionResult(PRIMARY, '你已對對方提出好友邀請');
+      this.toastActionResult(PRIMARY, `你已對 ${this.username} 提出好友邀請`);
+      this.remove();
     });
 
     this.querySelector("button._block").addEventListener("click", (event) => {
       let other_id = event.target.closest("suggestion-component").getAttribute("member-id");
       if(!confirm("確認封鎖對方？")) return;
       // block(other_id);
-      this.toastActionResult(DANGER, '你已封鎖對方');
+      this.toastActionResult(DANGER, `你已封鎖 ${this.username}`);
+      this.remove();
     });
     
   }
@@ -120,7 +126,7 @@ class Friend extends ResultCard {
   }
 
   connectedCallback() {
-    this.setNameAndUsername();
+    this.setMemberProperties();
     this.buildCard(
       `
       <div class="buttons are-medium">
@@ -138,7 +144,8 @@ class Friend extends ResultCard {
       let other_id = event.target.closest("friend-component").getAttribute("member-id");
       if(!confirm("確認解除好友？")) return;
       // unfriend(other_id);
-      this.toastActionResult(INFO, '你跟對方已解除好友');
+      this.toastActionResult(INFO, `你跟 ${this.username} 已解除好友`);
+      this.remove();
     });
   }
 
@@ -152,7 +159,7 @@ class SentRequest extends ResultCard {
   }
 
   connectedCallback() {
-    this.setNameAndUsername();
+    this.setMemberProperties();
     this.buildCard(
       `
       <div class="buttons are-medium">
@@ -170,7 +177,8 @@ class SentRequest extends ResultCard {
       let other_id = event.target.closest("sent-request-component").getAttribute("member-id");
       if(!confirm("確認取消？")) return;
       // cancelRequest(other_id);
-      this.toastActionResult(WARNING, '你已取消好友邀請');
+      this.toastActionResult(WARNING, `你已取消對 ${this.username} 的好友邀請`);
+      this.remove();
     });
   }
 
@@ -183,7 +191,7 @@ class ReceivedRequest extends ResultCard {
     super();
   }
   connectedCallback() {
-    this.setNameAndUsername();
+    this.setMemberProperties();
     this.buildCard(
       `
         <div class="buttons are-medium">
@@ -209,21 +217,24 @@ class ReceivedRequest extends ResultCard {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認接受？")) return;
       // acceptRequest(other_id);
-      this.toastActionResult(SUCCESS, '你已接受對方好友邀請');
+      this.toastActionResult(SUCCESS, `你已接受 ${this.username} 的好友邀請`);
+      this.remove();
     });
 
     this.querySelector("button._decline").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認婉拒？")) return;
       // declineRequest(other_id);
-      this.toastActionResult(WARNING, '你已婉拒對方好友邀請');
+      this.toastActionResult(WARNING, `你已婉拒 ${this.username} 的好友邀請`);
+      this.remove();
     });
 
     this.querySelector("button._block").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認封鎖對方？")) return;
       // block(other_id);
-      this.toastActionResult(DANGER, '你已封鎖對方');
+      this.toastActionResult(DANGER, `你已封鎖 ${this.username}`);
+      this.remove();
     });
   }
 
@@ -237,7 +248,7 @@ class Blocklist extends ResultCard {
   }
 
   connectedCallback() {
-    this.setNameAndUsername();
+    this.setMemberProperties();
     this.buildCard(
       `
       <div class="buttons are-medium">
@@ -255,12 +266,12 @@ class Blocklist extends ResultCard {
       let other_id = event.target.closest("blocklist-component").getAttribute("member-id");
       if(!confirm("確認解除封鎖？")) return;
       // unblock(other_id);
-      this.toastActionResult(DANGER, '你已解除對對方的封鎖');
+      this.toastActionResult(DANGER, `你已解除對 ${this.username} 的封鎖`);
+      this.remove();
     });
   }
 
 }
-
 
 customElements.define('suggestion-component', Suggestion);
 customElements.define('friend-component', Friend);
