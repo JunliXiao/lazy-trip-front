@@ -305,7 +305,7 @@
 
             <!-- 查詢 / 加入景點 -->
             <div class="card mb-6 search-add-attraction -none">
-              <div class="card-content">
+              <div class="card-content" style="height: max-content">
                 <div class="field has-addons">
                   <input
                     class="input search-add-attraction"
@@ -448,8 +448,8 @@
             </div>
 
             <!-- 行程管理 -->
-            <div class="card mb-6 mamage-attraction -none">
-              <div class="card-content">
+            <div class="card mb-6 mamage-attraction-search -none">
+              <div class="card-content" style="height: fit-content">
                 <div
                   class="field has-addons"
                   style="display: flex; justify-content: space-around"
@@ -493,8 +493,11 @@
                     開始搜尋
                   </button>
                 </div>
-                <hr />
-                <br />
+              </div>
+            </div>
+
+            <div class="card mb-6 mamage-attraction -none">
+              <div class="card-content">
                 <section class="trip_list_page">
                   <article>
                     <table class="table is-hoverable is-bordered is-fullwidth">
@@ -505,6 +508,7 @@
                           <th><abbr title="trip_end_date">結束日期</abbr></th>
                           <th><abbr title="people">人數</abbr></th>
                           <th><abbr title="trip_price">總價</abbr></th>
+                          <th><abbr title="trip_feature">特色</abbr></th>
                           <th><abbr title="trip_img_upload">圖片</abbr></th>
                           <th>
                             <abbr title="trip_detail">明細</abbr>

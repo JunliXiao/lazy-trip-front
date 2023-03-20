@@ -29,7 +29,7 @@ div.icon_total>.icon:hover {
 }
 
 time.startDate, time.endDate {
-	font-size: 1.2rem;
+	font-size: 1rem;
 }
 
 div.nav_tab>div.tabs {
@@ -157,6 +157,10 @@ input.trip_tag_text {
 	overflow-y: scroll;
 }
 
+li.trip_tag_el {
+	margin: 2px;
+}
+
 div.icon_total {
 	right: 0;
 	position: absolute;
@@ -168,8 +172,8 @@ div.card-content {
 }
 
 div.trip_item_block>h2.title {
-	margin: 10px 0px;
-	font-size: 1.5rem;
+	margin: 5px 0px;
+	font-size: 1.2rem;
 }
 
 div.wrapper {
@@ -269,3 +273,4 @@ li.recommend_tour:hover {
 .-none {
 	display: none;
 }
+

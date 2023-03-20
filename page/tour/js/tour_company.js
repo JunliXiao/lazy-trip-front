@@ -12,6 +12,9 @@ const search_add_attraction_li = document.querySelector(
   "li#li-search-add-attraction"
 );
 const mamage_attraction_li = document.querySelector("li#li-mamage-attraction");
+const mamage_attraction_search = document.querySelector(
+  "div.mamage-attraction-search"
+);
 const create_attraction_li = document.querySelector("li#li-create-attraction");
 const basic_info_div_card = document.querySelector("div.card.basic-info");
 const basic_schedule_info = document.querySelector("div.basic-schedule-info");
@@ -65,6 +68,7 @@ basic_info_li.addEventListener("click", function () {
   basic_info_div_card.classList.remove("-none");
   search_add_attraction_div_card.classList.add("-none");
   mamage_attraction_div_card.classList.add("-none");
+  mamage_attraction_search.classList.add("-none");
   basic_schedule_info.classList.add("-none");
 });
 search_add_attraction_li.addEventListener("click", function () {
@@ -74,6 +78,7 @@ search_add_attraction_li.addEventListener("click", function () {
   basic_info_div_card.classList.add("-none");
   search_add_attraction_div_card.classList.remove("-none");
   mamage_attraction_div_card.classList.add("-none");
+  mamage_attraction_search.classList.add("-none");
   basic_schedule_info.classList.add("-none");
 });
 mamage_attraction_li.addEventListener("click", function () {
@@ -83,6 +88,7 @@ mamage_attraction_li.addEventListener("click", function () {
   basic_info_div_card.classList.add("-none");
   search_add_attraction_div_card.classList.add("-none");
   mamage_attraction_div_card.classList.remove("-none");
+  mamage_attraction_search.classList.remove("-none");
   basic_schedule_info.classList.remove("-none");
 });
 
@@ -129,28 +135,14 @@ trip_img_upload.on("change", function () {
 
 function add_BasicInfo() {
   trip_comfirm_btn.on("click", function () {
-    $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourComCreate`,
-      type: "POST",
-      data: JSON.stringify({
-        tourTitle: trip_name.val().trim(),
-        startDate: trip_start_date.val().trim(),
-        endDate: trip_end_date.val().trim(),
-        tourPerson: people.val().trim(),
-        cost: trip_price.val().trim(),
-        feature: trip_feature.val().trim(),
-        tourImg: base64,
-        companyId: company_id,
-      }),
-      dataType: "json",
-      contentType: "application/json",
-      beforeSend: function () {
-        tbody_tour.append(
-          "<div class='temp_loading is-centered'><span><i class='fas fa-spinner fa-spin fa-2x'></i></span></div>"
-        );
-      },
-      success: function (data) {
-        tourCom_arr.push({
+    if (base64 == undefined) {
+      alert("請上傳一張圖片");
+      return;
+    } else {
+      $.ajax({
+        url: `http://localhost:8080/lazy-trip-back/tourComCreate`,
+        type: "POST",
+        data: JSON.stringify({
           tourTitle: trip_name.val().trim(),
           startDate: trip_start_date.val().trim(),
           endDate: trip_end_date.val().trim(),
@@ -159,28 +151,47 @@ function add_BasicInfo() {
           feature: trip_feature.val().trim(),
           tourImg: base64,
           companyId: company_id,
-          tourComId: data.tourComId,
-        });
-        // 清空輸入欄位值
-        trip_name.val("");
-        trip_start_date.val("");
-        trip_end_date.val("");
-        people.val("");
-        trip_price.val("");
-        trip_feature.val("");
-        base64 = "";
-        $("span.file-name").text("");
-      },
-      error: function (xhr) {
-        console.log("error");
-      },
-      complete: function (xhr) {
-        renderToManageTour(tourCom_arr);
-        renderToButtons(tourCom_arr);
-        tbody_tour.children("div.temp_loading").remove();
-        $("div.field").removeClass("control is-loading");
-      },
-    });
+        }),
+        dataType: "json",
+        contentType: "application/json",
+        beforeSend: function () {
+          tbody_tour.append(
+            "<div class='temp_loading is-centered'><span><i class='fas fa-spinner fa-spin fa-2x'></i></span></div>"
+          );
+        },
+        success: function (data) {
+          tourCom_arr.push({
+            tourTitle: trip_name.val().trim(),
+            startDate: trip_start_date.val().trim(),
+            endDate: trip_end_date.val().trim(),
+            tourPerson: people.val().trim(),
+            cost: trip_price.val().trim(),
+            feature: trip_feature.val().trim(),
+            tourImg: base64,
+            companyId: company_id,
+            tourComId: data.tourComId,
+          });
+          // 清空輸入欄位值
+          trip_name.val("");
+          trip_start_date.val("");
+          trip_end_date.val("");
+          people.val("");
+          trip_price.val("");
+          trip_feature.val("");
+          base64 = undefined;
+          $("span.file-name").text("");
+        },
+        error: function (xhr) {
+          console.log("error");
+        },
+        complete: function (xhr) {
+          renderToManageTour(tourCom_arr);
+          renderToButtons(tourCom_arr);
+          tbody_tour.children("div.temp_loading").remove();
+          $("div.field").removeClass("control is-loading");
+        },
+      });
+    }
   });
 }
 
@@ -208,6 +219,10 @@ function renderToManageTour(tourCom_arr) {
           <td class="trip_price">${tourCom_arr[i - 1].cost}</td>
           <td class="-none update_trip_price"><input type="number" name="update_trip_price" id="update_trip_price" class="update_trip_price" value=${
             tourCom_arr[i - 1].cost
+          }></td>
+          <td class="trip_feature">${tourCom_arr[i - 1].feature}</td>
+          <td class="-none update_trip_feature"><input type="text" name="update_trip_feature" id="update_trip_feature" class="update_trip_feature" value=${
+            tourCom_arr[i - 1].feature
           }></td>
           <td class="tour_img">
             <img class="tour_img" src="data:image/*;base64,${
@@ -316,6 +331,8 @@ function initRenderToManageTour() {
           <td class="-none update_people"><input type="number" name="update_people" id="update_people" class="update_people" value=${tourCom_arr[i].tourPerson}></td>
           <td class="trip_price">${tourCom_arr[i].cost}</td>
           <td class="-none update_trip_price"><input type="number" name="update_trip_price" id="update_trip_price" class="update_trip_price" value=${tourCom_arr[i].cost}></td>
+          <td class="trip_feature">${tourCom_arr[i].feature}</td>
+          <td class="-none update_trip_feature"><input type="text" name="update_trip_feature" id="update_trip_feature" class="update_trip_feature" value=${tourCom_arr[i].feature}></td>
           <td class="tour_img">
             <img class="tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="min-width: 50px; height: 50px"/>
           </td>
@@ -366,6 +383,7 @@ $(document).on("click", ".edit_tour_btn", function () {
   let update_trip_end_date;
   let update_people;
   let update_trip_price;
+  let update_trip_feature;
   // let update_tour_img;
   let targetTour = $(this).closest("tr");
   let targetTourId = targetTour.attr("data-tourid");
@@ -385,6 +403,8 @@ $(document).on("click", ".edit_tour_btn", function () {
     $(this).closest("tr").find("td.update_trip_end_date").toggleClass("-none");
     $(this).closest("tr").find("td.update_people").toggleClass("-none");
     $(this).closest("tr").find("td.update_trip_price").toggleClass("-none");
+    $(this).closest("tr").find("td.update_feature").toggleClass("-none");
+    $(this).closest("tr").find("td.update_trip_feature").toggleClass("-none");
   } else {
     update_trip_name = $(this)
       .closest("tr")
@@ -411,6 +431,11 @@ $(document).on("click", ".edit_tour_btn", function () {
       .find("input.update_trip_price")
       .val()
       .trim();
+    update_trip_feature = $(this)
+      .closest("tr")
+      .find("input.update_trip_feature")
+      .val()
+      .trim();
     // update_tour_img = $(this)
     //   .closest("tr")
     //   .find("input.update_tour_img")
@@ -423,7 +448,7 @@ $(document).on("click", ".edit_tour_btn", function () {
       let that = this;
       //-------------------------
       $.ajax({
-        url: "http://localhost:8080/lazy-trip-back/tourComUpdate",
+        url: `http://localhost:8080/lazy-trip-back/tourComUpdate`,
         type: "POST",
         data: JSON.stringify({
           tourTitle: update_trip_name,
@@ -488,6 +513,17 @@ $(document).on("click", ".edit_tour_btn", function () {
             .html(update_trip_price)
             .toggleClass("-none");
           $(that).removeAttr("data-edit");
+          targetTour
+            .find("td.update_trip_feature")
+            .html(
+              `<input type="text" name="update_trip_feature" id="update_trip_feature" class="update_trip_feature" value=${update_trip_feature}>`
+            )
+            .toggleClass("-none");
+          targetTour
+            .find("td.trip_price")
+            .html(update_trip_feature)
+            .toggleClass("-none");
+          $(that).removeAttr("data-edit");
 
           // 更新 tour_arr
           for (let i = 0; i < tourCom_arr.length; i++) {
@@ -545,6 +581,11 @@ function initMap() {
 
       autocomplete.addListener("place_changed", function () {
         const place = autocomplete.getPlace();
+
+        if (place.photos == undefined) {
+          alert("此景點近期維護中，請查詢其他景點");
+          return;
+        }
 
         // 將搜尋到的地點設定為下一次查詢的起點
         const start_location = selected_attraction
@@ -800,7 +841,7 @@ trip_clear_btn.on("click", function () {
   people.val("");
   trip_price.val("");
   trip_feature.val("");
-  base64 = "";
+  base64 = undefined;
   $("span.file-name").text("");
 });
 
@@ -853,6 +894,8 @@ $("button#btn-mamage-attraction").on("click", function () {
           <td class="-none update_people"><input type="number" name="update_people" id="update_people" class="update_people" value=${tourCom_arr[i].tourPerson}></td>
           <td class="trip_price">${tourCom_arr[i].cost}</td>
           <td class="-none update_trip_price"><input type="number" name="update_trip_price" id="update_trip_price" class="update_trip_price" value=${tourCom_arr[i].cost}></td>
+          <td class="trip_feature">${tourCom_arr[i].feature}</td>
+          <td class="-none update_trip_feature"><input type="text" name="update_trip_feature" id="update_trip_feature" class="update_trip_feature" value=${tourCom_arr[i].feature}></td>
           <td class="tour_img">
             <img class="tour_img" src="data:image/*;base64,${tourCom_arr[i].tourImg}" style="min-width: 50px; height: 50px"/>
           </td>
