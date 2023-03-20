@@ -39,6 +39,13 @@
     </div>
 
 <section class="section">
+<c:choose>
+  <c:when test="${empty Msgs}">
+    <div style="color: red">查無此文章</div>
+    <br>
+    <button class="button is-info is-outlined is-samll" onclick="goBack()">返回上一頁</button>
+  </c:when>
+  <c:otherwise>
   <table
       class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth "
     >
@@ -73,6 +80,8 @@
 	</c:forEach>
 
     </table>
+  </c:otherwise>
+ </c:choose>
 </section>
 
 
@@ -80,6 +89,12 @@
     <footer-component></footer-component>
 
     <script src="<%=request.getContextPath()%>/asset/js/bulma-init.js"></script>
+	<script>
+		function goBack() {
+			window.history.back();
+		}
+	</script>
+
 
 </body>
 </html>

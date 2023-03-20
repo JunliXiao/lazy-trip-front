@@ -43,7 +43,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
       class="hero is-medium has-background-primary-light has-text-centered"
     >
       <div id="picture-behind-search" class="hero-body">
-        <p class="title">網頁維修中</p>
+        <p class="title">開始您美好的一天</p>
         <div class="columns">
           <div class="column"></div>
           <div class="column">
@@ -55,8 +55,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
             <div class="column">
               <button
                 class="button is-primary"
-                onclick="location.href='https://www.wibibi.com/info.php?tid=117'"
-              >
+                onclick="location.href='index.jsp'">
                 查詢
               </button>
             </div>
@@ -67,67 +66,7 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
       </div>
     </section>
 
-    <div class="column"></div>
-    <section class="section">
-<!--     <div class="columns is-centered"> -->
-<!--       <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">熱門行程</a></b></h2> -->
-<!--     </div> -->
-<!--     <div class="columns"> -->
-<!--       <div class="column"> -->
-<!--         <span>台中3天兩夜</span> -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">花東5日遊 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">夜遊台北 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">台南古城 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--     </div> -->
-<!--     <hr> -->
-
-<!--     <div class="columns is-centered"> -->
-<!--       <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">揪團活動</a></b></h2> -->
-<!--     </div> -->
-<!--     <div class="columns"> -->
-<!--       <div class="column"> -->
-<!--         <span>台中3天兩夜</span> -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">花東5日遊 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">夜遊台北 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--       <div class="column">台南古城 -->
-<!--         <img src="../asset/img/dog.jpg" alt=""> -->
-<!--       </div> -->
-<!--     </div> -->
-<!--     <hr> -->
-
-    <div class="columns is-centered">
-      <h2><b><a class="hot" href="https://www.kkday.com/zh-tw">廠商推薦</a></b></h2>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">花東5日遊
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">夜遊台北
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-      <div class="column">台南古城
-        <img src="../asset/img/dog.jpg" alt="">
-      </div>
-    </div>
-    <hr>
+<section class="section">
 
     <div class="columns is-centered">
       <h2><b><a class="hot" href="<%=request.getContextPath()%>/page/article/allArticle.jsp">推薦文章</a></b></h2>
@@ -147,6 +86,49 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
       </div>
     </div>
     <hr>
+
+
+    <div class="columns is-centered">
+      <h2><b><a class="hot" href="${ORIGIN}/lazy-trip-back/page/tour/tour.html">熱門行程</a></b></h2>
+<%--       <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a> --%>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <span>台中3天兩夜</span>
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">花東5日遊
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">夜遊台北
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">台南古城
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+    </div>
+    <hr>
+
+<div class="columns is-centered">
+      <h2><b><a class="hot" href="${ORIGIN}/lazy-trip-back/page/order/order_booking_search.html">熱門訂房</a></b></h2>
+  </div>
+    <div class="columns">
+      <div class="column">
+        <span>台中3天兩夜</span>
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">花東5日遊
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">夜遊台北
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+      <div class="column">台南古城
+        <img src="asset/img/dog.jpg" alt="">
+      </div>
+    </div>
+    <hr>
+
 </section>
 
 
