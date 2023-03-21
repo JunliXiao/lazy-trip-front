@@ -239,7 +239,7 @@
         // 最高預算篩選
         highestPriceCeiling.addEventListener("input", (event) => {
           const rangeValue = parseInt(event.target.value);
-          inputRangeValue.innerText = rangeValue;
+          inputRangeValue.innerText = "$" + rangeValue;
           companyChildrenStart.empty();
           for (let i = 0; i < cmVOList.length; i++) {
             if (cmVOList[i].roomTypeVO.roomTypePrice < rangeValue) {
@@ -313,7 +313,7 @@
             });
             highestPriceCeiling.max = ceilingPrice;
             highestPriceCeiling.value = ceilingPrice;
-            inputRangeValue.innerText = ceilingPrice;
+            inputRangeValue.innerText = "$" + ceilingPrice;
 
             searchBtn.removeClass("is-loading");
             console.log("search companys success!");
@@ -411,7 +411,7 @@
             </div>
             <div style="padding-bottom: 25px">
               <span class="is-size-4 has-text-weight-bold roomTypePrice"
-                >${cmVO.roomTypeVO.roomTypePrice}</span
+                >$${cmVO.roomTypeVO.roomTypePrice}</span
               >
             </div>
           </div>

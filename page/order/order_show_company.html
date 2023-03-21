@@ -28,13 +28,40 @@
     <link rel="stylesheet" href="./css/flatpickr-calendar-theme.css" />
     <!-- 初始化 -->
     <!-- <script defer src="../../asset/js/bulma-init.js"></script> -->
+    <style>
+      #modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #modal-content {
+        border: 5px solid #fff;
+        width: 800px;
+        height: 500px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -400px;
+        margin-top: -250px;
+      }
+    </style>
   </head>
   <body>
     <!-- 導覽列 -->
     <header-component></header-component>
 
     <!-- 內容 -->
-
+    <!-- 彈跳放大圖片 -->
+    <div id="modal">
+      <img src="" id="modal-content" />
+    </div>
     <!-- 飯店資料結構 欄位寬度佔畫面8/12 欄位居中 -->
     <div
       class="columns is-mobile is-centered"
@@ -181,6 +208,7 @@
         <div style="height: 10px"></div>
         <!-- 日曆 -->
         <div
+          id="dateBar"
           class="columns"
           style="
             display: flex;
@@ -240,7 +268,7 @@
         <!-- 房型資料表格開始 -->
         <div
           id="id_table"
-          class="columns"
+          class="columns id_table"
           style="
             height: 380px;
             background-color: #ffffff;
@@ -302,11 +330,40 @@
       let flatpickrInputDate;
       let flatpickrOutputDate;
       let inputOrderNumberOfNights;
+      // let imgRoomTypeImg = $(".roomTypeImg");
+      let imgCompanyImg = $(".companyImg");
+      let imgDateBar = $("#dateBar");
+      let imgIDtable = $("#id_table");
 
       $(function () {
         dateBtn();
         init();
         bookingBtn();
+
+        $(document).on("click", ".roomTypeImg", function () {
+          let imgSrc = $(this).attr("src");
+          $("#modal-content").attr("src", imgSrc);
+          $("#companyMap").fadeOut();
+          imgDateBar.fadeOut();
+          imgIDtable.fadeOut();
+          $("#modal").fadeIn();
+        });
+
+        imgCompanyImg.on("click", function () {
+          let imgSrc = $(this).attr("src");
+          $("#modal-content").attr("src", imgSrc);
+          $("#companyMap").fadeOut();
+          imgDateBar.fadeOut();
+          imgIDtable.fadeOut();
+          $("#modal").fadeIn();
+        });
+
+        $(document).on("click", "#modal", function () {
+          $(this).fadeOut();
+          imgDateBar.fadeIn();
+          imgIDtable.fadeIn();
+          $("#companyMap").fadeIn();
+        });
       });
 
       function dateBtn() {
@@ -403,12 +460,12 @@
                 );
                 $(".companyImg")
                   .eq(i)
-                  .attr("src", "data:image/jpg;base64," + cmList[i].companyImg);
+                  .attr("src", "data:image/*;base64," + cmList[i].companyImg);
                 $(".roomTypeImg")
                   .eq(i)
                   .attr(
                     "src",
-                    "data:image/jpg;base64," +
+                    "data:image/*;base64," +
                       cmList[i].roomTypeVO.roomTypeImgVO.roomTypeImg
                   );
 
@@ -577,31 +634,42 @@
 
           // 抓取旅客選定的各個房型數量
           let selectRtQuan = $("select[class*='roomTypeQuantity']");
+          let choice = false;
           for (let i = 0; i < selectRtQuan.length; i++) {
-            if (selectRtQuan.eq(i).val() > 0) {
-              for (let i = 0; i < cmBookingList.length; i++) {
-                // 確定抓取的房型ID陣列位置跟cmBookingList的陣列位置一樣再存進房型數量
-                if (
-                  cmBookingList[i].roomTypeVO.roomTypeID ==
-                  selectRtQuan.eq(i).data("roomtype-id")
-                ) {
-                  cmBookingList[i].roomTypeVO.roomTypeQuantity = selectRtQuan
-                    .eq(i)
-                    .val();
-                } else {
-                  alert("資料錯誤，重新登入");
-                  return;
-                }
-              }
-              sessionStorage.setItem(
-                "cmBookingList",
-                JSON.stringify(cmBookingList)
-              );
-              location = `${loc}/lazy-trip-back/page/order/order_write_send.html`;
-              return;
+            if (parseInt(selectRtQuan.eq(i).val()) > 0) {
+              choice = true;
             }
           }
-          alert("目前無任何選擇房型，請再次選擇!");
+          if (choice === false) {
+            alert("目前無任何選擇房型，請再次選擇!");
+            return;
+          }
+
+          for (let i = 0; i < selectRtQuan.length; i++) {
+            // if (selectRtQuan.eq(i).val() > 0) {
+            // for (let j = 0; j < cmBookingList.length; i++) {
+            // 確定抓取的房型ID陣列位置跟cmBookingList的陣列位置一樣再存進房型數量
+            if (
+              cmBookingList[i].roomTypeVO.roomTypeID ==
+              selectRtQuan.eq(i).data("roomtype-id")
+            ) {
+              cmBookingList[i].roomTypeVO.roomTypeQuantity = selectRtQuan
+                .eq(i)
+                .val();
+            } else {
+              alert("資料錯誤，重新登入");
+              return;
+            }
+            // }
+
+            // }
+          }
+          console.log(cmBookingList);
+          sessionStorage.setItem(
+            "cmBookingList",
+            JSON.stringify(cmBookingList)
+          );
+          location = `${loc}/lazy-trip-back/page/order/order_write_send.html`;
         });
       }
     </script>

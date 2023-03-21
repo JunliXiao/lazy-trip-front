@@ -404,7 +404,6 @@
         checkIsMember.on("click", function () {
           if ($(this).prop("checked")) {
             let member = JSON.parse(sessionStorage.getItem("member"));
-            console.log(member);
             travelerName.val(member.name);
             travelerEmail.val(member.account);
             travelerPhone.val(member.phone);
@@ -416,7 +415,6 @@
         if (getCookie("memId") == null) {
           alert("您尚未登入，轉至登入畫面");
           let loc = location.href;
-          console.log(loc);
 
           sessionStorage.setItem("loc", loc);
           location.href = ROOT + ROOT_PROJ + LOGIN;
@@ -432,9 +430,13 @@
 
           let num = 0;
           for (let i = 0; i < cmBookingList.length; i++) {
-            if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
-              // 插入每個房型html
-              orderDetailChild.append(orderDetailHtml);
+            if (
+              !isNaN(parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity))
+            ) {
+              if (parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity) != 0) {
+                // 插入每個房型html
+                orderDetailChild.append(orderDetailHtml);
+              }
             }
           }
           let roomTypeName = $("span[class*='roomTypeName']");
@@ -457,7 +459,7 @@
                   cmBookingList[0].addressStreet
               );
             }
-            if (cmBookingList[i].roomTypeVO.roomTypeQuantity != 0) {
+            if (parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity) != 0) {
               roomTypeName.eq(k).text(cmBookingList[i].roomTypeVO.roomTypeName);
               roomTypePrice
                 .eq(k)
@@ -471,13 +473,12 @@
                 .eq(k)
                 .text(cmBookingList[i].roomTypeVO.roomTypeQuantity);
               num +=
-                cmBookingList[k].roomTypeVO.roomTypePrice *
+                cmBookingList[i].roomTypeVO.roomTypePrice *
                 orderNumberOfNights *
                 parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity);
               k++;
             }
           }
-
           orderTotalPrice.text(num);
         }
       }
@@ -504,11 +505,15 @@
 
       function sendOrder() {
         // 一個空陣列 orderVOs
-        let memberID = getCookie("memId");
+        // let memberID = getCookie("memId");
+        let member = JSON.parse(sessionStorage.getItem("member"));
+
+        let memberID = member.id;
+
         let orderVOs = new Array();
         for (let i = 0; i < cmBookingList.length; i++) {
           // 一個 新 orderVO 物件裝進訂單與訂單明細資料
-          if (cmBookingList[i].roomTypeVO.roomTypeQuantity > 0) {
+          if (parseInt(cmBookingList[i].roomTypeVO.roomTypeQuantity) > 0) {
             let orderVO = {
               memberID: memberID,
               companyID: cmBookingList[i].companyID,
@@ -529,7 +534,7 @@
                   cmBookingList[i].roomTypeVO.roomTypeQuantity,
               },
             };
-            orderVOs[i] = orderVO;
+            orderVOs.push(orderVO);
           }
         }
         console.log("物件準備完畢等待傳送");

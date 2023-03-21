@@ -121,6 +121,10 @@ class Suggestion extends ResultCard {
 // 好友 Friend
 class Friend extends ResultCard {
 
+  member_status;
+
+  // static observedAttributes = ["member-status"];
+
   constructor() {
     super();
   }
@@ -130,6 +134,10 @@ class Friend extends ResultCard {
     this.buildCard(
       `
       <div class="buttons are-medium">
+        <button class="_ring button ${PRIMARY_LIGHT} has-text-weight-bold">
+          <span class="icon is-small"><i class="fas fa-bell"></i></span>
+          <span>噹噹噹</span> 
+        </button>
         <button class="_unfriend button ${INFO_LIGHT} has-text-weight-bold">
           <span class="icon is-small"><i class="fas fa-minus"></i></span>
           <span>解除好友</span> 
@@ -140,6 +148,16 @@ class Friend extends ResultCard {
 
     this.innerHTML = this.card_html;
 
+    this.querySelector("button._ring").addEventListener('click', (event) => {
+      let other_id = event.target.closest("friend-component").getAttribute("member-id");
+      if (!this.hasAttribute("member-online")) {
+        alert("這位好友未上線");
+        return;
+      }
+      const ring = {memberId: other_id, updateType: "ring", status: specifier_username};
+      notification_ws.send(JSON.stringify(ring));
+    });
+
     this.querySelector("button._unfriend").addEventListener("click", (event) => {
       let other_id = event.target.closest("friend-component").getAttribute("member-id");
       if(!confirm("確認解除好友？")) return;
@@ -147,6 +165,13 @@ class Friend extends ResultCard {
       this.toastActionResult(INFO, `你跟 ${this.username} 已解除好友`);
       this.remove();
     });
+
+    this.requestStatus(this.id);
+  }
+
+  requestStatus(memberId) {
+    const request = {memberId: memberId, updateType: "request"};
+    notification_ws.send(JSON.stringify(request));
   }
 
 }
@@ -216,7 +241,7 @@ class ReceivedRequest extends ResultCard {
     this.querySelector("button._accept").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認接受？")) return;
-      // acceptRequest(other_id);
+      acceptRequest(other_id);
       this.toastActionResult(SUCCESS, `你已接受 ${this.username} 的好友邀請`);
       this.remove();
     });
@@ -224,7 +249,7 @@ class ReceivedRequest extends ResultCard {
     this.querySelector("button._decline").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認婉拒？")) return;
-      // declineRequest(other_id);
+      declineRequest(other_id);
       this.toastActionResult(WARNING, `你已婉拒 ${this.username} 的好友邀請`);
       this.remove();
     });
@@ -232,7 +257,7 @@ class ReceivedRequest extends ResultCard {
     this.querySelector("button._block").addEventListener("click", (event) => {
       let other_id = event.target.closest("received-request-component").getAttribute("member-id");
       if(!confirm("確認封鎖對方？")) return;
-      // block(other_id);
+      block(other_id);
       this.toastActionResult(DANGER, `你已封鎖 ${this.username}`);
       this.remove();
     });
