@@ -1189,7 +1189,7 @@ class CreateChatroomModal extends SearchFromInput {
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
       } else {
         arr.push(specifier_id);
-        this.createChatroom(ar, this.CHATROOM_ID);
+        this.createChatroom(arr, this.CHATROOM_ID);
         }
       }
       
