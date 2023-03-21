@@ -5,6 +5,8 @@ let tourTotalInfo_arr = [];
 let attractionId;
 let base64;
 
+const loc = location.origin;
+
 const specifier_id = parseCookieTokens(document.cookie).get("companyId");
 // ======= 輔助功能 =======
 function parseCookieTokens(cookie) {
@@ -318,7 +320,7 @@ function initRenderToAddAttractionButtons() {
 
 function initRenderToManageTour() {
   $.ajax({
-    url: `${loc}0/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
+    url: `${loc}/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
