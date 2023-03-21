@@ -1,11 +1,23 @@
-const company_id = 2;
-
 let tourCom_arr = [];
 let tourSchedule_arr = [];
 let attraction_arr = [];
 let tourTotalInfo_arr = [];
 let attractionId;
 let base64;
+
+const specifier_id = parseCookieTokens(document.cookie).get("companyId");
+// ======= 輔助功能 =======
+function parseCookieTokens(cookie) {
+  let tokens = cookie.split("; ");
+  let map = new Map();
+  for (let token of tokens) {
+    let keyValue = token.split("=");
+    map.set(keyValue[0], keyValue[1]);
+  }
+  return map;
+}
+
+const company_id = specifier_id;
 
 const basic_info_li = document.querySelector("li#li-basic-info");
 const search_add_attraction_li = document.querySelector(
@@ -140,7 +152,7 @@ function add_BasicInfo() {
       return;
     } else {
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/tourComCreate`,
+        url: `${loc}/lazy-trip-back/tourComCreate`,
         type: "POST",
         data: JSON.stringify({
           tourTitle: trip_name.val().trim(),
@@ -273,7 +285,7 @@ function selectTourByButtons() {
 
 function initRenderToAddAttractionButtons() {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
+    url: `${loc}/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -306,7 +318,7 @@ function initRenderToAddAttractionButtons() {
 
 function initRenderToManageTour() {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
+    url: `${loc}0/lazy-trip-back/tourComQueryOne?companyId=${company_id}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -359,7 +371,7 @@ function deleteTour() {
     let targetTour = $(this).closest("tr");
     let targetTourId = targetTour.attr("data-tourid");
     $.ajax({
-      url: `http://localhost:8080/lazy-trip-back/tourComDelete?tourComId=${targetTourId}`,
+      url: `${loc}/lazy-trip-back/tourComDelete?tourComId=${targetTourId}`,
       type: "DELETE",
       success: function (data) {
         targetTour.remove();
@@ -448,7 +460,7 @@ $(document).on("click", ".edit_tour_btn", function () {
       let that = this;
       //-------------------------
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/tourComUpdate`,
+        url: `${loc}/lazy-trip-back/tourComUpdate`,
         type: "POST",
         data: JSON.stringify({
           tourTitle: update_trip_name,
@@ -674,7 +686,7 @@ function addAttractionIntoDB() {
       });
     } else {
       $.ajax({
-        url: `http://localhost:8080/lazy-trip-back/attractionCreate`,
+        url: `${loc}/lazy-trip-back/attractionCreate`,
         type: "POST",
         dataType: "json",
         data: JSON.stringify({
@@ -747,7 +759,7 @@ function addAttractionToTourSchedule() {
     },
   ];
   $.ajax({
-    url: "http://localhost:8080/lazy-trip-back/tourScheComCreate",
+    url: `${loc}/lazy-trip-back/tourScheComCreate`,
     type: "POST",
     data: JSON.stringify(transfer_arr),
     dataType: "json",
@@ -772,7 +784,7 @@ function addAttractionToTourSchedule() {
 
 function initRenderScheduleToManageTour(targetTourId) {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourScheComQueryOne?tourComId=${targetTourId}`,
+    url: `${loc}/lazy-trip-back/tourScheComQueryOne?tourComId=${targetTourId}`,
     type: "GET",
     dataType: "json",
     contentType: "application/json",
@@ -818,7 +830,7 @@ $(document).on("click", "button.delete_tour_sche_btn", function () {
   let tourScheId = $(this).closest("tr").attr("data-scheid");
   let that = this;
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourScheComDelete?tourScheduleComId=${tourScheId}`,
+    url: `${loc}/lazy-trip-back/tourScheComDelete?tourScheduleComId=${tourScheId}`,
     type: "DELETE",
     success: function (data) {
       $(that).closest("tr").remove();
@@ -866,7 +878,7 @@ const mamage_attraction_feature = $("input#mamage-attraction-feature");
 
 $("button#btn-mamage-attraction").on("click", function () {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourComSelected`,
+    url: `${loc}/lazy-trip-back/tourComSelected`,
     type: "POST",
     dataType: "json",
     data: JSON.stringify({
@@ -920,7 +932,7 @@ $("button#btn-mamage-attraction").on("click", function () {
 const search_add_attraction_title = $("input#search-add-attraction-title");
 $("button#btn-search-add-attraction").on("click", function () {
   $.ajax({
-    url: `http://localhost:8080/lazy-trip-back/tourComSelected`,
+    url: `${loc}/lazy-trip-back/tourComSelected`,
     type: "POST",
     dataType: "json",
     data: JSON.stringify({
