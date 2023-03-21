@@ -101,13 +101,17 @@
 
     <script>
       $(function () {
-        const newPs = $("input#input-newps");
-        const confirmedPs = $("input#input-confirmps");
-
         $("button#btn-resetps").on("click", function () {
+          let newPs = $("input#input-newps");
+          let confirmedPs = $("input#input-confirmps");
           let check = true;
-          if (newPs.val() == "" || confirmedPs == "") {
+          if (newPs.val() == "" || confirmedPs.val() == "") {
             $("p.msg").text("欄位不能為空");
+            $("p.msg").css("color", "red");
+            check = false;
+            return check;
+          } else if (newPs.val() != confirmedPs.val()) {
+            $("p.msg").text("密碼不一致，請確認輸入相同的密碼");
             $("p.msg").css("color", "red");
             check = false;
             return check;
