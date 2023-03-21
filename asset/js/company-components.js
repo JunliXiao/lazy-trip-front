@@ -81,7 +81,7 @@ class Header extends HTMLElement {
           </div>
         </div>
 
-        <a href="${ORIGIN}/lazy-trip-back/page/tour/tour.html" class="navbar-item"> 行程 </a>
+        <a href="${ORIGIN}/lazy-trip-back/page/tour/tour_company.html" class="navbar-item"> 行程 </a>
         <div class="navbar-item has-dropdown is-hoverable member">
           <a class="navbar-item mem_main">
             <span class="icon-text">
