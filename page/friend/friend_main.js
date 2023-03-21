@@ -427,6 +427,9 @@ function closeModal($el) {
     case "CHATROOM-SETTING-MODAL":
       $el.classList.remove('is-active');
       modalComponent.setAttribute("chatroom-id", "");
+      $el.querySelector("div._chatroom_members").innerHTML = ``;
+      $el.querySelector("ul._search_results").innerHTML = ``;
+      $el.querySelector("#ipt-search-text").value = ``;
       $el.querySelector('nav#level-chatroom-members .level-left .level-item').innerHTML = '<lable class="label">聊天室成員</lable>';
       break;
     case "CREATE-CHATROOM-MODAL":
