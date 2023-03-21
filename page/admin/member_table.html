@@ -51,6 +51,9 @@
               <li id="li-basic-info">
                 <a class="is-size-4 py-5 is-active">會員管理</a>
               </li>
+              <li id="li-basic-info">
+                <a class="is-size-4 py-5" id="customer_service">客服回復</a>
+              </li>
             </ul>
           </aside>
         </div>
@@ -269,6 +272,7 @@
         const ROOT_PROJ = "/lazy-trip-back";
         const MEM_LIST = "/page/member/listall";
         const MEM_UPDATE = "/page/admin/updatemember";
+        const CUS_SERVICE = "/page/customerService/customerServiceBack.jsp";
 
         let acc = $("#input-account");
         let ps = $("#input-password");
@@ -351,7 +355,7 @@
                       </button>
                   </div>
                   </td>
-                  
+
               </tr>`;
               }
               table.html(html);
@@ -449,6 +453,9 @@
           if (e.keyCode == 13) {
             $("#btn_search").click();
           }
+        });
+        $("a#customer_service").on("click", function () {
+          location.href = ROOT + ROOT_PROJ + CUS_SERVICE;
         });
       });
     </script>
