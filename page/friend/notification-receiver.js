@@ -116,4 +116,3 @@ notification_ws.onmessage = (event) => {
   }
   
 };
-

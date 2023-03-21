@@ -165,7 +165,7 @@
               <div class="content intro">
                 <p id="address">
                   <span class="icon is-small is-left mr-2">
-                    <i class="fa-solid fa-building"></i></span
+                    <i class="fa-solid fa-building"></i> </span
                   >居住於
                 </p>
 
@@ -481,7 +481,7 @@
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success btn_shareImg">保存</button>
+          <button class="button is-success btn_shareImg">發送</button>
           <button class="button">取消</button>
         </footer>
       </div>
@@ -542,7 +542,7 @@
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success btn_comment">保存</button>
+          <button class="button is-success btn_comment">發送</button>
           <button class="button">取消</button>
         </footer>
       </div>
@@ -665,11 +665,15 @@
                 $("p#address").empty();
               } else {
                 let adr = member.address;
-                $("p#address").append(
-                  `<span> ${adr.substr(0, adr.indexOf("市") + 1)}</span>`
+                $("p#address").html(
+                  `<span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-building"></i> </span
+                  >居住於<span> ${adr.substr(0, adr.indexOf("市") + 1)}</span>`
                 );
               }
-              $("p#reg_date").append(`<span>${member.reg_date} </span>`);
+              $("p#reg_date").html(`<span class="icon is-small is-left mr-2">
+                    <i class="fa-solid fa-calendar"></i></span
+                  >加入於 <span> ${member.reg_date} </span>`);
               if (member.intro == "" || member.intro == null) {
                 $("textarea#intro").remove();
               } else {

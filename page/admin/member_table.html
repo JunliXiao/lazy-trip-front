@@ -415,9 +415,9 @@
             },
             body: JSON.stringify({
               id: id,
-              account: acc.val(),
-              password: ps.val(),
-              username: un.val(),
+              account: acc.val().trim(),
+              password: ps.val().trim(),
+              username: un.val().trim(),
               gender: gender.val(),
               birthday: birth.value,
               accessnum: status.val(),

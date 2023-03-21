@@ -917,6 +917,8 @@ class ChatroomSettingModal extends SearchFromInput {
   NODE_LIST_SEARCH;
   NODE_BUTTON_CREATE;
 
+  CHATROOM_ID;
+
   static observedAttributes = ["chatroom-id"];
 
   constructor() {
@@ -939,9 +941,10 @@ class ChatroomSettingModal extends SearchFromInput {
           </nav>
           <nav id="level-chatroom-name" class="level mb-4">
             <div class="level-left">
-              <div class="level-item"><lable class="label">聊天室名稱</lable><span class="ml-4 mb-2">XXX</span></div>
+              <div class="level-item"><lable class="label">聊天室名稱</lable><span class="ml-4 mb-2 _chatroom_name"></span></div>
             </div>
             <div class="level-right">
+              <div class="level-item"><button class="button _save_name is-success is-light" disabled>儲存</button></div>
               <div class="level-item"><button class="button _edit_chatroom_name is-info is-light">編輯</button></div>
             </div>
           </nav>
@@ -979,7 +982,7 @@ class ChatroomSettingModal extends SearchFromInput {
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-info _create_chatroom">
+          <button class="button is-info _add_chatmember">
           <span>
             加入
           </span>
@@ -993,19 +996,62 @@ class ChatroomSettingModal extends SearchFromInput {
 
     this.NODE_DIV_MEMBERS = this.querySelector("div._chatroom_members");
     this.NODE_INPUT_SEARCH = this.querySelector("#ipt-search-text");
-    this.NODE_BUTTON_CREATE = this.querySelector("button._create_chatroom");
+    this.NODE_BUTTON_ADD = this.querySelector("button._add_chatmember");
     this.NODE_LIST_SEARCH = this.querySelector("ul._search_results");
     this.NODE_NO_RESULTS = this.querySelector("div.menu p");
+    const node_button_exit = this.querySelector('button._exit_chatroom');
+    const node_button_edit_chatroom_name = this.querySelector('button._edit_chatroom_name');
+    const node_button_save = this.querySelector('button._save_name');
+    const node_span_name = this.querySelector('span._chatroom_name');
 
+    // 退出
+    node_button_exit.addEventListener('click', (event) => {
+      this.exitChatroom(specifier_id, this.CHATROOM_ID);
+    });
+    // 搜尋會員
     this.NODE_INPUT_SEARCH.addEventListener("input", debounce(this.onInputChange, 1500));
+    // 加入新成員
+    this.NODE_BUTTON_ADD.addEventListener("click", (event) => {
+      this.NODE_BUTTON_ADD.classList.add("is-loading");
+      let members = this.NODE_DIV_MEMBERS.querySelectorAll(`a[class="tag is-info is-light"]`);
+      let arr = [];
+      for (const member of members) {
+        arr.push(member.getAttribute("data-id"));
+      }
+      if (arr.length == 0) {
+        alert("沒有選擇任何成員！");
+        this.NODE_BUTTON_ADD.classList.remove("is-loading");
+      } else {
+        this.addNewMember(arr, this.CHATROOM_ID);
+        }
+      }
+      
+    );
+    // 編輯聊天室名字
+    node_button_edit_chatroom_name.addEventListener('click', (event) => {
+      node_span_name.contentEditable = true;
+      node_button_save.disabled = false;
+      event.target.disabled = true;
+    });
+    // 儲存新的聊天室名字
+    node_button_save.addEventListener('click', (event) => {
+      // node_span_name.contentEditable = false;
+      // node_button_edit_chatroom_name.disabled = false;
+      // event.target.disabled = true;
+      let name = node_span_name.textContent;
+      fetch(`${API_ROOT}${API_CHAT}?new_name=${name}&chatroom_id=${this.CHATROOM_ID}`, requestMethod('PUT'));
+      location.reload();
+    });
+
   }
 
   attributeChangedCallback(attr, prev, curr) {
     switch (attr) {
       case "chatroom-id":
         const chatroomId = this.getAttribute("chatroom-id")
-        this.querySelector("nav#level-chatroom-name span.ml-4.mb-2").textContent = chatroomId;
         if (chatroomId == '') return;
+        this.querySelector("span.ml-4.mb-2._chatroom_name").textContent = document.querySelector(`chatroom-component[chatroom-id="${chatroomId}"]`).getAttribute("chatroom-name");
+        this.CHATROOM_ID = chatroomId;
         fetch(`${API_ROOT}${API_CHAT_MEMBER}?action=chatroom_member&chatroom_id=${chatroomId}`)
           .then((res) => res.json())
           .then(body => {
@@ -1022,6 +1068,46 @@ class ChatroomSettingModal extends SearchFromInput {
           });
         break;
     }
+  }
+
+  exitChatroom(memberId, chatroomId) {
+    if(!confirm('注意：退出聊天室將無法再看到過去訊息，是否繼續？')) return;
+    fetch(`http://localhost:8080/lazy-trip-back/api/chat/member?member_id=${memberId}&chatroom_id=${chatroomId}`, requestMethod('DELETE'))
+      .then(response => response.text())
+      .then(result => {
+        console.log(result);
+        location.reload();
+      })
+      .catch(error => console.log('error', error));
+  }
+
+  addNewMember(arrayOfMembersId, chatroomId) {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "text/plain");
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(arrayOfMembersId),
+      redirect: 'follow'
+    };
+
+    fetch(API_ROOT + API_CHAT_MEMBER + `?chatroom_id=${chatroomId}`, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        // let resultText = result === "true" ? "成功加入新成員" : "加入失敗；請選擇其他會員";
+        // confirm(resultText);
+
+        // this.NODE_BUTTON_ADD.classList.remove("is-loading");
+        // closeAllModals();
+        location.reload();
+      })
+      .catch(error => {
+        this.NODE_BUTTON_ADD.classList.remove("is-loading");
+        // console.log('error', error);
+        alert("所選會員已存在，請重新選擇");
+        return false;
+      });
   }
 
 }
@@ -1103,7 +1189,7 @@ class CreateChatroomModal extends SearchFromInput {
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
       } else {
         arr.push(specifier_id);
-        this.createChatroom(arr);
+        this.createChatroom(arr, this.CHATROOM_ID);
         }
       }
       
