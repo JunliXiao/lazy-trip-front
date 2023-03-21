@@ -157,6 +157,7 @@
       }
       // 已完成訂單貼進標籤裡
       function alreadyFinishOrderAppend(html) {
+        console.log(html);
         alreadyFinishChildStart.append(html);
       }
 
@@ -409,7 +410,7 @@
                               >
                             </td>
                             <td style="text-align: center; vertical-align: middle">
-                              <span class="is-size-6 orderTotalPrice">${order.orderTotalPrice}</span>
+                              <span class="is-size-6 orderTotalPrice">$${order.orderTotalPrice}</span>
                             </td>
                             <td style="text-align: center; vertical-align: middle">
                               <span class="is-size-6"
@@ -675,7 +676,7 @@
                               <span class="is-size-6">${order.companyVO.companyName}</span>
                             </td>
                             <td style="text-align: center; vertical-align: middle">
-                              <span class="is-size-6">${order.orderTotalPrice}</span>
+                              <span class="is-size-6">$${order.orderTotalPrice}</span>
                             </td>
                             <td style="text-align: center; vertical-align: middle">
                               <span class="is-size-6">${order.orderPayDatetime}</span>
@@ -815,7 +816,7 @@
                             <div style="height: 40px"></div>
                             <strong class="is-size-4" style="padding-left: 10%">
                               <span>總金額:&emsp;</span
-                              ><span style="color: #3bc0e8">${order.orderTotalPrice}</span>
+                              ><span style="color: #3bc0e8">$${order.orderTotalPrice}</span>
                             </strong>
                           </div>
                         </div>
