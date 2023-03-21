@@ -46,7 +46,7 @@ Integer memberId = member.getId();
 	<div class="columns"
 		style="margin: 15px 5px 15px; display: flex; align-items: center;">
 		<b style="font-size: 40px;"> 我的文章 </b>
-		<a href="addArticle.jsp"><button class="button is-link is-outlined" style="margin-left: 990px ">
+		<a href="<%=request.getContextPath()%>/page/article/addArticle.jsp"><button class="button is-link is-outlined" style="margin-left: 990px ">
     		新增
     	</button></a>
 

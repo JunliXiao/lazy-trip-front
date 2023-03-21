@@ -44,7 +44,7 @@
     ">
     <b style="font-size: 40px;" > 推薦文章 </b>
     
-    <a href="addArticle.jsp"><button class="button is-link is-outlined" style="margin-left: 990px ">
+    <a href="<%=request.getContextPath()%>/page/article/addArticle.jsp"><button class="button is-link is-outlined" style="margin-left: 990px ">
     新增
     </button></a>
     </div>
