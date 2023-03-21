@@ -71,8 +71,8 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 
     <div class="columns" style="margin-left: 5px;">
       <div class="column is-three-fifths">
-        <div>文章內容 ${articleVO.articleContent}</div>
-        <div>圖片 
+        <div> ${articleVO.articleContent}</div>
+        <div> 
         <img alt="" src="<%=request.getContextPath()%>/article/ArticleServlet2?articleId=${articleVO.articleId}" 
          width="200" height="200">
         </div>

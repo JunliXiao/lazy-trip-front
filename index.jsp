@@ -94,17 +94,20 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
     </div>
     <div class="columns">
       <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="asset/img/dog.jpg" alt="">
+        <span>夜遊象山</span>
+        <img src="asset/img/象山.jpg" alt="">
       </div>
-      <div class="column">花東5日遊
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>南庄矮靈祭</span>
+        <img src="asset/img/南庄矮靈祭.jpg" alt="">
       </div>
-      <div class="column">夜遊台北
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>熱氣球嘉年華</span>
+        <img src="asset/img/熱氣球嘉年華.jpg" alt="">
       </div>
-      <div class="column">台南古城
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>鹽水蜂炮</span>
+        <img src="asset/img/鹽水蜂炮.jpg" alt="">
       </div>
     </div>
     <hr>
@@ -112,19 +115,22 @@ ArticleVO articleVO = (ArticleVO) request.getAttribute("articleVO"); //EmpServle
 <div class="columns is-centered">
       <h2><b><a class="hot" href="${ORIGIN}/lazy-trip-back/page/order/order_booking_search.html">熱門訂房</a></b></h2>
   </div>
-    <div class="columns">
+    <div class="columns pic">
       <div class="column">
-        <span>台中3天兩夜</span>
-        <img src="asset/img/dog.jpg" alt="">
+        <span>台北花園大酒店</span>
+        <img src="asset/img/台北花園大酒店.jpg" alt="">
       </div>
-      <div class="column">花東5日遊
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>萬豪酒店</span>
+        <img src="asset/img/萬豪.jpg" alt="">
       </div>
-      <div class="column">夜遊台北
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>U.I.J Hotel & Hostel</span>
+        <img src="asset/img/U.I.J Hotel & Hostel.jpg" alt="">
       </div>
-      <div class="column">台南古城
-        <img src="asset/img/dog.jpg" alt="">
+      <div class="column">
+      <span>文華東方</span>
+        <img src="asset/img/文華東方.jpg" alt="">
       </div>
     </div>
     <hr>

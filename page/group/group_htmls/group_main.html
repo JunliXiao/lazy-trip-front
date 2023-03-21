@@ -578,7 +578,9 @@
               })
               .then(() => {
                 //get好友
-                fetch(`${apiUrlFriend}?member_id=${user_id}&query_type=friend`)
+                fetch(
+                  `${apiUrlFriend}?member_id=${user_id}&query_type=friend&limit=10&offset=0&sortingColumn=member_account&sortingOrder=ASC`
+                )
                   .then((response) => response.json())
                   .then((result) => {
                     $("#fr_list").html("");
