@@ -164,13 +164,13 @@ class Footer extends HTMLElement {
             <h4>關於</h4>
             <p>
               <strong>LazyTrip.io</strong> 由 緯育 Java 雲端服務開發技術養成班
-              TGA105 梯第三組所製作之結訓專題。
+              TGA105 梯第三組所製作之結訓專題。此專題作品僅為教育練習使用。
             </p>
           </div>
         </div>
         <div class="column">
           <div class="content">
-            <h4>合作廠商</h4>
+            <h4>平台管理</h4>
             <a class="admin_login">後台登入</a>
           </div>
         </div>

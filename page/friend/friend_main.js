@@ -301,6 +301,10 @@ function declineRequest(other_id) {
 function unfriend(other_id) {
   // 須適用於不同的好友邀請方向
   console.log(`解除好友 other_id = ${other_id}`);
+  fetch(`${API_ROOT}${API_FRIEND_REQUEST}?requester_id=${other_id}&addressee_id=${specifier_id}`, requestMethod('DELETE'))
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error)); 
 }
 
 function block(other_id) {
