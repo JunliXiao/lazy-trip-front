@@ -265,6 +265,7 @@
             linePayOrderID: new Date().getTime().toString(),
             orderID: $(this).closest("tr").find("span[class*=orderID]").text(),
           };
+          console.log(payJson);
 
           // 送出Json物件
           fetch(`${ROOT}/lazy-trip-back/Pay.do`, {
@@ -410,7 +411,7 @@
                               >
                             </td>
                             <td style="text-align: center; vertical-align: middle">
-                              <span class="is-size-6 orderTotalPrice">$${order.orderTotalPrice}</span>
+                              <span class="is-size-6">$<span class=orderTotalPrice>${order.orderTotalPrice}</span></span>
                             </td>
                             <td style="text-align: center; vertical-align: middle">
                               <span class="is-size-6"
