@@ -604,34 +604,47 @@ class ChatLogArea extends HTMLElement {
     // 收到伺服器端的訊息時
     chat_ws.onmessage = (event) => {
       let wrapper = JSON.parse(event.data);
-      
-      // 處理歷史聊天訊息
-      if (wrapper.messageType == "reload-history") {
-
-        let messages = wrapper.messageContent;
-        console.log(messages);
-        if(messages.length == 0) return;
-        messages.forEach(m => {
-          let newItem =  m.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
-          newItem.textContent = m.message;
-          newItem.setAttribute("sender-id", m.senderId);
-          newItem.setAttribute("sender-nickname", m.senderNickname);
+      switch (wrapper.messageType) {
+        case 'reload-history': // 處理歷史聊天訊息
+          let messages = wrapper.messageContent;
+          if(messages.length == 0) return;
+          messages.forEach(m => {
+            let newItem =  m.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
+            newItem.textContent = m.message;
+            newItem.setAttribute("sender-id", m.senderId);
+            newItem.setAttribute("sender-nickname", m.senderNickname);
+            messageList.appendChild(newItem);
+          });
+          messageList.scrollTop = messageList.scrollHeight;
+          break;
+        case 'new-message': // 處理新的聊天訊息
+          let msg = wrapper.messageContent;
+          let newItem = msg.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
+          if (msg.senderId == specifier_id) {
+            newItem = document.createElement("msg-self");
+            newItem.setAttribute("sender-id", specifier_id);
+            newItem.setAttribute("sender-nickname", specifier_username);
+          } else {
+            newItem = document.createElement("msg-other");
+            newItem.setAttribute("sender-id", msg.senderId);
+            newItem.setAttribute("sender-nickname", msg.senderNickname);
+          }
+          newItem.textContent = msg.message;
           messageList.appendChild(newItem);
-        });
-        messageList.scrollTop = messageList.scrollHeight;
-
-        // 處理新的聊天訊息
-      } else if (wrapper.messageType == "new-message") {
-
-        let msg = wrapper.messageContent;
-        let newItem = msg.senderId == specifier_id ? document.createElement("msg-self") : document.createElement("msg-other");
-        newItem.textContent = msg.message;
-        newItem.setAttribute("sender-id", specifier_id);
-        newItem.setAttribute("sender-nickname", "(施工中)");
-        messageList.appendChild(newItem);
-        messageList.scrollTop = messageList.scrollHeight;
-
-      } 
+          messageList.scrollTop = messageList.scrollHeight;
+          break;
+        case 'new-chatroom':
+          console.log(wrapper.messageContent);
+          let list = document.querySelector("ul._chatroom_list");
+          let newChatroom = document.createElement("chatroom-component");
+          newChatroom = prepareAttributes(newChatroom, wrapper.messageContent, 'chatroom');
+          newChatroom.setAttribute("chatroom-active", 'false');
+          list.append(newChatroom);
+          break;
+        default:
+          console.log(`chat_ws.onmessage failed: ${wrapper}`)
+          break;
+      }
       
     };
 	
@@ -1115,11 +1128,11 @@ class CreateChatroomModal extends SearchFromInput {
         let resultText = chatroom.id != undefined ? "成功建立聊天室" : "成員間已有共同的聊天室";
         confirm(resultText);
 
-        const list = document.querySelector("ul._chatroom_list");
-        
-        let newItem = document.createElement("chatroom-component");
-        newItem = prepareAttributes(newItem, chatroom, "chatroom");
-        list.append(newItem);
+        // const list = document.querySelector("ul._chatroom_list");
+        // let newItem = document.createElement("chatroom-component");
+        // newItem = prepareAttributes(newItem, chatroom, "chatroom");
+        // list.append(newItem);
+
         this.NODE_BUTTON_CREATE.classList.remove("is-loading");
         closeAllModals();
       })
