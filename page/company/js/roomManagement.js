@@ -76,7 +76,6 @@ const right_show_roomAdd = $(".trans-right-roomAdd");
 const right_show_orderShow = $(".trans-right-orderShow");
 const right_show_orderData = $(".trans-right-orderData");
 
-
 //房間總覽介面切換按鈕
 left_show_roomManagement.addEventListener("click",(event) => {
     console.log(111);
@@ -86,6 +85,7 @@ left_show_roomManagement.addEventListener("click",(event) => {
     $(".trans-right-orderData").addClass("none")
     init();      
 });
+
   //房型新增修改介面切換按鈕
 left_show_roomAdd.addEventListener("click",(event) => {
     console.log(111);
@@ -95,17 +95,9 @@ left_show_roomAdd.addEventListener("click",(event) => {
     $(".trans-right-orderData").addClass("none")
 
     $(".updateBtn").addClass("-none")
-    $("#roomAddInsert").removeClass("-none")
-       
+    $("#roomAddInsert").removeClass("-none") 
 });
-//訂單資料介面切換按鈕
-// left_show_orderData.addEventListener("click",(event) => {
-//   console.log(222);
-//   $(".trans-right-roomManagement").addClass("none")
-//   $(".trans-right-roomAdd").addClass("none")
-//   $(".trans-right-orderShow").addClass("none")
-//   $(".trans-right-orderData").removeClass("none")
-// });
+
 //廠商訂單介面切換按鈕
 left_show_orderShow.addEventListener("click",(event) => {
   console.log(333);
@@ -142,7 +134,6 @@ $("button.roomTypeIDSearch").on("click",(event) => {
     console.log('new___'+newRoomList);
   } 
 });
-
 
 //雙人房&&三人房按鈕
 const twoRoom_button = $("button.twoRoom");
@@ -255,7 +246,6 @@ $("button.threeRoom").on("click",(event) => {
     console.log('new___'+newRoomList);
   } 
 });
-
 
 //新增房型ID用法 上傳資料
 $("#roomAddInsert").on("click",(event) => {
@@ -469,7 +459,7 @@ function renderRoomData(roomList) {
     console.log(1111111111111);
     // calendar.show();
   });
-  //上傳圖片
+  //上傳圖片顯示在瀏覽器
   function previewImage() {
     var fileInput = document.getElementById("fileToUpload");
     var file = fileInput.files[0];

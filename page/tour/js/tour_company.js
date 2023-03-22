@@ -417,7 +417,7 @@ $(document).on("click", ".edit_tour_btn", function () {
     $(this).closest("tr").find("td.update_trip_end_date").toggleClass("-none");
     $(this).closest("tr").find("td.update_people").toggleClass("-none");
     $(this).closest("tr").find("td.update_trip_price").toggleClass("-none");
-    $(this).closest("tr").find("td.update_feature").toggleClass("-none");
+    $(this).closest("tr").find("td.trip_feature").toggleClass("-none");
     $(this).closest("tr").find("td.update_trip_feature").toggleClass("-none");
   } else {
     update_trip_name = $(this)
