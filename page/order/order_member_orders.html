@@ -250,46 +250,52 @@
       // 綁定付款按鈕事件並前往付款連結
       function payBtn() {
         $(document).on("click", "button[class*='payBtn']", function () {
-          // 創建送出支付Json物件
-          let payJson = {
-            productName: $(this)
-              .closest("tr")
-              .find("span[class*=companyName]")
-              .text(),
-            amount: $(this)
-              .closest("tr")
-              .find("span[class*=orderTotalPrice]")
-              .text(),
-            currency: "TWD",
-            confirmUrl: `${ROOT}/lazy-trip-back/Pay.do`,
-            linePayOrderID: new Date().getTime().toString(),
-            orderID: $(this).closest("tr").find("span[class*=orderID]").text(),
-          };
-          console.log(payJson);
+          let orderID = $(this)
+            .closest("tr")
+            .find("span[class*=orderID]")
+            .text();
+          sessionStorage.setItem("showPayTableFromTheOrderID", orderID);
+          location = `${ROOT}/lazy-trip-back/page/order/order_pay_order.html`;
+          //   // 創建送出支付Json物件
+          //   let payJson = {
+          // productName: $(this)
+          //   .closest("tr")
+          //   .find("span[class*=companyName]")
+          //   .text(),
+          //     amount: $(this)
+          //       .closest("tr")
+          //       .find("span[class*=orderTotalPrice]")
+          //       .text(),
+          //     currency: "TWD",
+          //     confirmUrl: `${ROOT}/lazy-trip-back/Pay.do`,
+          //     linePayOrderID: new Date().getTime().toString(),
+          //     orderID: $(this).closest("tr").find("span[class*=orderID]").text(),
+          //   };
+          //   console.log(payJson);
 
-          // 送出Json物件
-          fetch(`${ROOT}/lazy-trip-back/Pay.do`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payJson),
-          })
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (payData) {
-              try {
-                console.log(payData);
-                alert("前往LinePay頁面，請登入LinePay並開始支付訂單");
-                location = payData.info.paymentUrl.web;
-              } catch (e) {
-                console.log(e);
-              }
-            })
-            .catch(function (error) {
-              console.log("get pay data資料失敗");
-            });
+          //   // 送出Json物件
+          //   fetch(`${ROOT}/lazy-trip-back/Pay.do`, {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //     },
+          //     body: JSON.stringify(payJson),
+          //   })
+          //     .then(function (response) {
+          //       return response.json();
+          //     })
+          //     .then(function (payData) {
+          //       try {
+          //         console.log(payData);
+          //         alert("前往LinePay頁面，請登入LinePay並開始支付訂單");
+          //         location = payData.info.paymentUrl.web;
+          //       } catch (e) {
+          //         console.log(e);
+          //       }
+          //     })
+          //     .catch(function (error) {
+          //       console.log("get pay data資料失敗");
+          //     });
         });
       }
 
