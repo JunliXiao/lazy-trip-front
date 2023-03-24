@@ -6,8 +6,8 @@
 
 ## 分工
 瀚賢：會員系統、管理員後台  
-奕帆：行程系統、串接 Google Map API
-常富：訂房系統、串接 LinePay + Google Map API 
+奕帆：行程系統、串接 Google Map API  
+常富：訂房系統、串接 LinePay + Google Map API  
 俊立：好友系統、多人聊天、網站設計風格  
 思德：揪團系統、聊天室  
 力維：廠商房型系統  
