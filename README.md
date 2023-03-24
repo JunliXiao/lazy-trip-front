@@ -2,21 +2,22 @@
 
 ## 關於
 緯育 TGA105 第 3 組專題製作，網站前端部分。  
-Demo：[https://junlixiao.github.io/lazy-trip-front/](https://junlixiao.github.io/lazy-trip-front/)
+後端：[https://github.com/JunliXiao/lazy-trip-front](https://github.com/JunliXiao/lazy-trip-front)
 
 ## 分工
-瀚賢：會員系統、後台  
-奕帆：會員行程、廠商行程  
-常富：訂單  
-俊立：頁首頁尾、好友  
-思德：揪團  
-力維：廠商房型、優惠券  
-永澄：首頁、推薦文章  
+瀚賢：會員系統、管理員後台  
+奕帆：行程系統、串接 Google Map API
+常富：訂房系統、串接 LinePay + Google Map API 
+俊立：好友系統、多人聊天、網站設計風格  
+思德：揪團系統、聊天室  
+力維：廠商房型系統  
+永澄：首頁、推薦文章、客服聊天  
 
 ## 目錄結構
 asset 存放共同資源，如每一頁都會使用的 css、js、圖檔；sass 為自訂 Bulma 框架時所使用；vendor 存放外部函式庫的原始碼。  
 page 存放每個人負責的功能對應的資料夾，各自存放專屬其功能的 html、css 等資源。  
-基本上，大家應該都是只編輯自己資料夾的內容，某些人或某些時候才會去編輯共同的首頁、頁首或 asset 等。
+基本上，大家應該都是只編輯自己資料夾的內容，某些人或某些時候才會去編輯共同的首頁、頁首或 asset 等。  
+參考：[Re: [討論] 同一個程式碼段落超過一人以上在修改](https://www.ptt.cc/bbs/Soft_Job/M.1679371712.A.067.html)
 - root
   - asset
     - css
@@ -25,20 +26,20 @@ page 存放每個人負責的功能對應的資料夾，各自存放專屬其功
     - sass
     - vendor
   - page
-    - article
-    - comapny
-    - friend
-    - group
-    - member
-    - order
-    - tour
-    - 登入頁、404 錯誤頁等
-  - 首頁、README 文件等
+    - article、datetimepicker、customerService (永澄)
+    - comapny (力維)
+    - friend (俊立)
+    - group (思德)
+    - member (瀚賢)
+    - order (常富)
+    - tour (奕帆)
+    - 登入頁等 (瀚賢)
+  - 首頁、README 文件等 (永澄、俊立)
   
 ## 版本控制
-請以 dev 分支進行開發，main 分支當作是正式環境的版本。  
-有新的開發進度後，我會確認兩個分支是否有衝突，沒有的話就會將 dev 分支的新進度[併入](https://git-scm.com/docs/git-merge)到 main 分支，讓兩者同步。
-> Demo 網頁使用 [GitHub Pages](https://pages.github.com) 功能，以 main 分支作為來源。
+~~main 分支~~  
+僅使用 dev 分支。  
+每個人每次推 commit 到遠端 dev 分支，即一次進度整合；每次拉 commit 到每個人本地 dev 分支，即一次更新。  每次推 commit 時，除非離上次推的時間內沒有別人推過，不然都會需要先 merge 或 rebase 別人推的 commit。在大家沒有更動到別人的負責目錄的前提下，通常不會遇到衝突需要處理。
 
 ## CSS 框架
 
