@@ -1072,7 +1072,7 @@ class ChatroomSettingModal extends SearchFromInput {
 
   exitChatroom(memberId, chatroomId) {
     if(!confirm('注意：退出聊天室將無法再看到過去訊息，是否繼續？')) return;
-    fetch(`http://localhost:8080/lazy-trip-back/api/chat/member?member_id=${memberId}&chatroom_id=${chatroomId}`, requestMethod('DELETE'))
+    fetch(`${API_ROOT}${API_CHAT_MEMBER}?member_id=${memberId}&chatroom_id=${chatroomId}`, requestMethod('DELETE'))
       .then(response => response.text())
       .then(result => {
         console.log(result);
