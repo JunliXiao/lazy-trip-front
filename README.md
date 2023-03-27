@@ -2,7 +2,7 @@
 
 ## 關於
 緯育 TGA105 第 3 組專題製作，網站前端部分。  
-後端：[https://github.com/JunliXiao/lazy-trip-front](https://github.com/JunliXiao/lazy-trip-front)
+後端：[https://github.com/JunliXiao/lazy-trip-back](https://github.com/JunliXiao/lazy-trip-back)
 
 ## 分工
 瀚賢：會員系統、管理員後台  
@@ -39,7 +39,7 @@ page 存放每個人負責的功能對應的資料夾，各自存放專屬其功
 ## 版本控制
 ~~main 分支~~  
 僅使用 dev 分支。  
-每個人每次推 commit 到遠端 dev 分支，即一次進度整合；每次拉 commit 到每個人本地 dev 分支，即一次更新。  每次推 commit 時，除非離上次推的時間內沒有別人推過，不然都會需要先 merge 或 rebase 別人推的 commit。在大家沒有更動到別人的負責目錄的前提下，通常不會遇到衝突需要處理。
+每個人每次推 commit 到遠端 dev 分支，即一次進度整合；每次拉 commit 到每個人本地 dev 分支，即一次更新。每次推 commit 時，除非離上次推的時間內沒有別人推過，不然都會需要先 merge 或 rebase 別人推的 commit。在大家沒有更動到別人的負責目錄的前提下，通常不會遇到衝突需要處理。
 
 ## CSS 框架
 
